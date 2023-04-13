@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.baida.hb</groupId>
+        <artifactId>hb-countmoney</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>run-as-one</artifactId>
+    <packaging>jar</packaging>
+
+    <name>run-as-one</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.iohao.game</groupId>
+            <artifactId>bolt-run-one</artifactId>
+            <version>${ioGame.version}</version>
+        </dependency>
+
+        <!-- 游戏对外服 -->
+        <dependency>
+            <groupId>com.baida.hb</groupId>
+            <artifactId>external-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Broker（游戏网关） -->
+        <dependency>
+            <groupId>com.baida.hb</groupId>
+            <artifactId>broker-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+        <!-- EL实现。在Java SE环境中，您必须将实现作为依赖项添加到POM文件中-->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>${jakarta.el.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+        <!-- 验证器Maven依赖项 -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation-api.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>

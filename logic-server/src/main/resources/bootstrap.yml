@@ -1,0 +1,32 @@
+# spring配置
+spring:
+  profiles:
+    active: dev
+  application:
+    name: hb-countmoney-logic-server
+  cloud:
+    inetutils:
+      preferred-networks: 10.10 # 选择符合前缀的IP作为服务注册IP
+    nacos:
+      config:
+        # 配置中心地址, 此配置必须声明在bootstrap.yml中否则会使用默认http://localhost:8848
+        server-addr: nacos:8848
+        # 常用场景之一是不同环境的注册的区分隔离, 例如开发测试环境和生产环境的资源(如配置, 服务)隔离等. 默认为public命名空间, 可以省略不写, 如果指定需要设置"命名空间ID"
+        namespace: hb-game-dev
+        # 指定配置群组 --如果是public命名空间则可以省略群组配置
+        group: DEFAULT_GROUP
+        # 文件前缀 --如果没有配置则默认为 ${spring.appliction.name}
+        prefix: hb-countmoney-logic-server
+        # 文件扩展名
+        file-extension: yaml
+        # 扩展配置
+        extension-configs:
+          - dataId: hb-countmoney-logic-server-biz.yaml
+            refresh: true
+      discovery:
+        server-addr: nacos:8848
+        # 常用场景之一是不同环境的注册的区分隔离, 例如开发测试环境和生产环境的资源(如配置, 服务)隔离等.
+        namespace: hb-game-dev
+        metadata:
+          group: hb-group
+          version: 1.0
