@@ -4,9 +4,9 @@ import com.baida.countmoney.client.command.ClientCommandKit;
 import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
-import common.pb.pb.LogicRequestPb;
-import common.pb.pb.LoginVerifyPb;
-import common.pb.pb.UserInfoPb;
+import common.pb.pb.TestRequestPb;
+import common.pb.pb.LoginReqPb;
+import common.pb.pb.LoginResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -28,7 +28,7 @@ public class WebSocketClient {
         // 元信息相关
         attachmentCommands();
 
-        TimeUnit.MILLISECONDS.sleep(1);
+        TimeUnit.MILLISECONDS.sleep(5);
 
         // 请求构建
         initClientCommands();
@@ -101,32 +101,31 @@ public class WebSocketClient {
         int loginBizCode = 0;
 
         // 登录请求
-        LoginVerifyPb loginVerifyPb = new LoginVerifyPb();
-        loginVerifyPb.age = 273676;
-        loginVerifyPb.jwt = "luoyi";
-        loginVerifyPb.loginBizCode = loginBizCode;
+        LoginReqPb loginReqPb = new LoginReqPb();
+        loginReqPb.setLoginPlatform("dy");
+        loginReqPb.setToken("1111");
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
                 LoginCmdModule.loginVerify,
-                loginVerifyPb
+                loginReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageLogin, UserInfoPb.class, 1500);
+        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 1500);
     }
 
     private static void initClientCommands() {
-        LogicRequestPb logicRequestPb = new LogicRequestPb();
-        logicRequestPb.name = "塔姆";
+        TestRequestPb testRequestPb = new TestRequestPb();
+        testRequestPb.name = "塔姆";
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
                 LoginCmdModule.test,
-                logicRequestPb
+                testRequestPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, LogicRequestPb.class);
+        ClientCommandKit.createClientCommand(externalMessageHere, TestRequestPb.class);
 
 
         /**

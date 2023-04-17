@@ -1,4 +1,4 @@
-package common.pb;
+package common.pb.enums;
 
 import com.iohao.game.action.skeleton.core.exception.MsgExceptionInfo;
 import lombok.AccessLevel;
@@ -13,10 +13,13 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public enum ErrorCodeEnum implements MsgExceptionInfo {
+    /** 登录模块-错误码 **/
     /** 号已经在线上，不允许重复登录 */
-    accountOnline(103, "号已经在线上，不允许重复登录"),
+    accountOnline(10001, "用户已经在线上，不允许重复登录"),
+    /** 创建或者获取用户失败 */
+    addOrGetUserFailed(10002, "创建或者获取用户信息失败"),
     /** 登录异常 */
-    loginError(104, "登录异常"),
+    loginError(10003, "登录异常"),
     ;
 
     /** 消息码 */

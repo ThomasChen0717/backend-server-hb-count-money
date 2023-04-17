@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class NacosConfiguration {
+    /** xxljob **/
     @Value("${xxl.job.admin.addresses}")
     private String xxlJobAdminAddresses;
     public String getXxlJobAdminAddresses() { return xxlJobAdminAddresses; }
@@ -26,4 +27,15 @@ public class NacosConfiguration {
     @Value("${xxl.job.accessToken}")
     private String xxlJobAccessToken;
     public String getXxlJobAccessToken() { return xxlJobAccessToken; }
+
+    /** dy **/
+    @Value("${dy.url}")
+    private String dyUrl;
+    public String getDyUrl() { return dyUrl; }
+    @Value("${dy.appId}")
+    private String dyAppId;
+    public String getDyAppId() { return dyAppId; }
+    @Value("${dy.secret}")
+    private String dySecret;
+    public String getDySecret() { return dySecret; }
 }

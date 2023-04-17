@@ -12,18 +12,38 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_users")
-public class UsersPO extends BaseEntity{
+@TableName("t_user")
+public class UserPO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户id（也是主键id）
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private long id;
 
     /**
      * 名字
      */
     private String name;
+
+    /**
+     * 登录平台类型
+     */
+    private String loginPlatform;
+
+    /**
+     * token
+     */
+    private String token;
+
+    /**
+     * 唯一标识符
+     */
+    private String unionId;
+
+    /**
+     * openid
+     */
+    private String openid;
 }

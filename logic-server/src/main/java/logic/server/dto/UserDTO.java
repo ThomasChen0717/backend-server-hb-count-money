@@ -9,10 +9,13 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class UsersDTO implements DTO{
+public class UserDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
+    private long id;
     private String name;
+    private String loginPlatform;
+    private String token;
+    private String unionId;
+    private String openid;
 }

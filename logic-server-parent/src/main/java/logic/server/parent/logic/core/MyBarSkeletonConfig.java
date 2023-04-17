@@ -1,6 +1,6 @@
 package logic.server.parent.logic.core;
 
-import common.pb.ErrorCodeEnum;
+import common.pb.enums.ErrorCodeEnum;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilderParamConfig;

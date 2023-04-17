@@ -17,6 +17,6 @@ import lombok.experimental.FieldDefaults;
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
-public class LogicRequestPb {
+public class TestRequestPb {
     String name;
 }

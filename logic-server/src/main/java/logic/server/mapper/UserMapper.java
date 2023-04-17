@@ -1,7 +1,7 @@
 package logic.server.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import logic.server.po.UsersPO;
+import logic.server.po.UserPO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2023-04-12
  */
 @Mapper
-public interface UsersMapper extends BaseMapper<UsersPO> {
+public interface UserMapper extends BaseMapper<UserPO> {
 }
