@@ -20,6 +20,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     addOrGetUserFailed(10002, "创建或者获取用户信息失败"),
     /** 登录异常 */
     loginError(10003, "登录异常"),
+    /** 内存存储用户数据失败 */
+    addUserDataToCacheFailed(10004, "内存存储用户数据失败"),
     ;
 
     /** 消息码 */

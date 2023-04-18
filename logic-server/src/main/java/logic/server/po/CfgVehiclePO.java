@@ -6,49 +6,45 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * @author mark
- * @date 2023-04-12
- */
 @Data
 @Accessors(chain = true)
-@TableName("t_user")
-public class UserPO extends BaseEntity{
+@TableName("t_cfg_vehicle")
+public class CfgVehiclePO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id（也是主键id）
+     * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private long id;
 
     /**
-     * 名字
+     * 载具类型
      */
-    private String name;
+    private int vehicleType;
 
     /**
-     * 登录平台类型
+     * 载具名称
      */
-    private String loginPlatform;
+    private String vehicleName;
 
     /**
-     * token
+     * 条件类型：0 广告 1 金钱
      */
-    private String token;
+    private int conditionType;
 
     /**
-     * 唯一标识符
+     * 条件数值
      */
-    private String unionId;
+    private int conditionCount;
 
     /**
-     * openid
+     * 奖励条件数值
      */
-    private String openid;
+    private int rewardConditionCount;
 
     /**
-     * 金钱数量
+     * 奖励数值
      */
-    private long money;
+    private int rewardValue;
 }

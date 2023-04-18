@@ -1,7 +1,12 @@
 package logic.server.service.impl;
 
+import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserVehicleDTO;
+import logic.server.repository.UserAttributeRepository;
 import logic.server.repository.UserRepository;
+import logic.server.repository.UserVehicleRepository;
+import logic.server.repository.redis.RedisRepository;
 import logic.server.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserAttributeRepository userAttributeRepository;
+    @Autowired
+    private UserVehicleRepository userVehicleRepository;
 
     @Override
     public int addUser(UserDTO userDTO){
@@ -36,5 +45,23 @@ public class UserServiceImpl implements IUserService {
     @Override
     public int updateUser(UserDTO userDTO){
         return userRepository.update(userDTO);
+    }
+
+    @Override
+    public int addUserAttribute(UserAttributeDTO userAttributeDTO){
+        return userAttributeRepository.add(userAttributeDTO);
+    }
+    @Override
+    public UserAttributeDTO getUserAttributeById(long userId){
+        return userAttributeRepository.get(userId);
+    }
+
+    @Override
+    public int addUserVehicle(UserVehicleDTO userVehicleDTO){
+        return userVehicleRepository.add(userVehicleDTO);
+    }
+    @Override
+    public UserVehicleDTO getUserVehicleById(long userId){
+        return userVehicleRepository.get(userId);
     }
 }

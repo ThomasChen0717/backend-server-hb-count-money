@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum LoginPlatformEnum {
-    Dy(1, "dy","抖音");
+    dy(1, "dy","抖音");
 
     private final int id;
     private final String name;

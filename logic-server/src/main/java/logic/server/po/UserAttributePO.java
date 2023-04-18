@@ -8,47 +8,52 @@ import lombok.experimental.Accessors;
 
 /**
  * @author mark
- * @date 2023-04-12
+ * @date 2023-04-17
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_user")
-public class UserPO extends BaseEntity{
+@TableName("t_user_attribute")
+public class UserAttributePO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id（也是主键id）
+     * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private long id;
 
     /**
-     * 名字
+     * 用户id
      */
-    private String name;
+    private long userId;
 
     /**
-     * 登录平台类型
+     * 力量等级
      */
-    private String loginPlatform;
+    private int strengthLevel;
 
     /**
-     * token
+     * 体力等级
      */
-    private String token;
+    private int physicalLevel;
 
     /**
-     * 唯一标识符
+     * 体力恢复等级
      */
-    private String unionId;
+    private int physicalRestoreLevel;
 
     /**
-     * openid
+     * 耐力等级
      */
-    private String openid;
+    private int enduranceLevel;
 
     /**
-     * 金钱数量
+     * 宠物等级
      */
-    private long money;
+    private int petLevel;
+
+    /**
+     * 收益倍数
+     */
+    private float incomeMultiple;
 }

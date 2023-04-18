@@ -111,7 +111,7 @@ public class WebSocketClient {
                 loginReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 1500);
+        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 3000);
     }
 
     private static void initClientCommands() {

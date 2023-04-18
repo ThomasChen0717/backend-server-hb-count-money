@@ -6,49 +6,35 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * @author mark
- * @date 2023-04-12
- */
 @Data
 @Accessors(chain = true)
-@TableName("t_user")
-public class UserPO extends BaseEntity{
+@TableName("t_cfg_attribute")
+public class CfgAttributePO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id（也是主键id）
+     * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private long id;
 
     /**
-     * 名字
+     * 属性名称
      */
-    private String name;
+    private int attributeType;
 
     /**
-     * 登录平台类型
+     * 属性名称
      */
-    private String loginPlatform;
+    private String attributeName;
 
     /**
-     * token
+     * 属性升级公式
      */
-    private String token;
+    private String attributeLevelUpFormula;
 
     /**
-     * 唯一标识符
+     * 属性效果公式
      */
-    private String unionId;
-
-    /**
-     * openid
-     */
-    private String openid;
-
-    /**
-     * 金钱数量
-     */
-    private long money;
+    private String attributeEffectFormula;
 }
