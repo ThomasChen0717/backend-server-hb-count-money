@@ -21,12 +21,12 @@ public class CfgGlobalPO extends BaseEntity{
     /**
      * key
      */
-    private String key;
+    private String keyName;
 
     /**
      * value
      */
-    private String value;
+    private String valueName;
 
     /**
      * 备注

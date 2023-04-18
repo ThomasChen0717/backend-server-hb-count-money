@@ -2,8 +2,10 @@ package logic.server.repository;
 
 import logic.server.dto.UserVehicleDTO;
 
+import java.util.Map;
+
 public interface UserVehicleRepository {
     int add(UserVehicleDTO dto);
     int update(UserVehicleDTO dto);
-    UserVehicleDTO get(long userId);
+    Map<Integer,UserVehicleDTO> getMap(long userId);
 }

@@ -17,7 +17,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public int add(UserDTO dto) {
         UserPO po = Convertor.convert(UserPO.class, dto);
-        return userMapper.insert(po);
+        int result = userMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
     }
 
     @Override

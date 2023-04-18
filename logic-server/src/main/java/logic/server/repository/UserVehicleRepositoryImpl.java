@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Repository
 @AllArgsConstructor
@@ -28,9 +32,11 @@ public class UserVehicleRepositoryImpl implements UserVehicleRepository {
     }
 
     @Override
-    public UserVehicleDTO get(long userId){
-        UserVehiclePO po = userVehicleMapper.selectOne(new QueryWrapper<UserVehiclePO>()
-                .lambda().eq(UserVehiclePO::getUserId, userId));
-        return Convertor.convert(UserVehicleDTO.class, po);
+    public Map<Integer,UserVehicleDTO> getMap(long userId){
+        List<UserVehiclePO> cfgVehiclePOList = userVehicleMapper.selectList(new QueryWrapper<UserVehiclePO>()
+                .lambda());
+        List<UserVehicleDTO> vehicleDTOList = Convertor.convert(cfgVehiclePOList, UserVehicleDTO.class);
+        Map<Integer, UserVehicleDTO> cfgVehicleDTOmap = vehicleDTOList.stream().collect(Collectors.toMap(UserVehicleDTO::getVehicleId, UserVehicleDTO -> UserVehicleDTO));
+        return cfgVehicleDTOmap;
     }
 }

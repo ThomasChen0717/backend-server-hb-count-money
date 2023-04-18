@@ -21,7 +21,7 @@ public class CfgVehiclePO extends BaseEntity{
     /**
      * 载具类型
      */
-    private int vehicleType;
+    private int vehicleId;
 
     /**
      * 载具名称
@@ -29,7 +29,12 @@ public class CfgVehiclePO extends BaseEntity{
     private String vehicleName;
 
     /**
-     * 条件类型：0 广告 1 金钱
+     * 载具图片
+     */
+    private String vehicleImg;
+
+    /**
+     * 条件类型：0 广告 1 金钱 2 挑战boss
      */
     private int conditionType;
 

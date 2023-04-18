@@ -23,7 +23,7 @@ public class CfgGlobalRepositoryImpl implements CfgGlobalRepository{
         List<CfgGlobalPO> cfgGlobalPOList = cfgGlobalMapper.selectList(new QueryWrapper<CfgGlobalPO>()
                 .lambda());
         List<CfgGlobalDTO> cfgGlobalDTOList = Convertor.convert(cfgGlobalPOList, CfgGlobalDTO.class);
-        Map<String, CfgGlobalDTO> cfgGlobalDTOmap = cfgGlobalDTOList.stream().collect(Collectors.toMap(CfgGlobalDTO::getKey, CfgGlobalDTO -> CfgGlobalDTO));
+        Map<String, CfgGlobalDTO> cfgGlobalDTOmap = cfgGlobalDTOList.stream().collect(Collectors.toMap(CfgGlobalDTO::getKeyName, CfgGlobalDTO -> CfgGlobalDTO));
         return cfgGlobalDTOmap;
     }
 }

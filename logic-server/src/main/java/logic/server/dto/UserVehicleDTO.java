@@ -9,6 +9,10 @@ public class UserVehicleDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private long UserId;
-    private String vehicleList;
+    private long userId;
+    private int vehicleId;
+    private Byte isInUse;
+    private int conditionCurrCount;
+    private Byte isUnlocked;
+    private int moneyAmount;
 }

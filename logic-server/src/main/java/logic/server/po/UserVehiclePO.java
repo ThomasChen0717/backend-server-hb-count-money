@@ -24,7 +24,27 @@ public class UserVehiclePO extends BaseEntity{
     private long userId;
 
     /**
-     * 拥有的载具id列表
+     * 载具id
      */
-    private String vehicleList;
+    private int vehicleId;
+
+    /**
+     * 是否使用中：0 未使用 1 使用中
+     */
+    private Byte isInUse;
+
+    /**
+     * 当前条件数值
+     */
+    private int conditionCurrCount;
+
+    /**
+     * 是否已解除锁定：0 未解锁 1 已解锁
+     */
+    private Byte isUnlocked;
+
+    /**
+     * 装载金钱数量
+     */
+    private int moneyAmount;
 }

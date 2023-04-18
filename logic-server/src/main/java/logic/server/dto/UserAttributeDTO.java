@@ -14,10 +14,10 @@ public class UserAttributeDTO implements DTO{
 
     private long id;
     private long userId;
-    private int strengthLevel;
-    private int physicalLevel;
-    private int physicalRestoreLevel;
-    private int enduranceLevel;
-    private int petLevel;
-    private float incomeMultiple;
+    private int strengthLevel = 1;
+    private int physicalLevel = 1;
+    private int physicalRestoreLevel = 1;
+    private int enduranceLevel = 1;
+    private int petLevel = 1;
+    private float incomeMultiple = 1.0f;
 }

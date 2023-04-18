@@ -4,6 +4,8 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserVehicleDTO;
 
+import java.util.Map;
+
 /**
  * @author mark
  * @date 2023-04-14
@@ -22,5 +24,5 @@ public interface IUserService {
 
     /** t_user_vehicle **/
     int addUserVehicle(UserVehicleDTO userVehicleDTO);
-    UserVehicleDTO getUserVehicleById(long userId);
+    Map<Integer,UserVehicleDTO> getUserVehicleMapById(long userId);
 }

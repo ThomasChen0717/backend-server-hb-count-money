@@ -3,7 +3,6 @@ package logic.server.singleton;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserVehicleDTO;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +14,9 @@ import java.util.Map;
 @Service
 public class UserManagerSingleton {
     private static UserManagerSingleton instance;
-    private Map<Long, UserDTO> userDTOMap;
-    private Map<Long, UserAttributeDTO> userAttributeDTOMap;
-    private Map<Long, UserVehicleDTO> userVehicleDTOMap;
+    private Map<Long, UserDTO> allUserDTOMap;
+    private Map<Long, UserAttributeDTO> allUserAttributeDTOMap;
+    private Map<Long, Map<Integer,UserVehicleDTO> > allUserVehicleDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -25,20 +24,20 @@ public class UserManagerSingleton {
         }
         return instance;
     }
-    private UserManagerSingleton() {
-        userDTOMap = new HashMap<>();
-        userAttributeDTOMap = new HashMap<>();
-        userVehicleDTOMap = new HashMap<>();
+    public UserManagerSingleton() {
+        allUserDTOMap = new HashMap<>();
+        allUserAttributeDTOMap = new HashMap<>();
+        allUserVehicleDTOMap = new HashMap<>();
     }
 
     @Transactional
-    public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,UserVehicleDTO userVehicleDTO){
+    public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,Map<Integer,UserVehicleDTO> userVehicleDTOMap){
         boolean isSuccess = true;
 
         try{
             addUserToCache(userId,userDTO);
             addUserAttributeToCache(userId,userAttributeDTO);
-            addUserVehicleToCache(userId,userVehicleDTO);
+            addUserVehicleToCache(userId,userVehicleDTOMap);
             log.info("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
         }catch (Exception e){
             isSuccess = false;
@@ -49,32 +48,32 @@ public class UserManagerSingleton {
     }
 
     public void addUserToCache(long userId,UserDTO userDTO){
-        userDTOMap.put(userId,userDTO);
+        allUserDTOMap.put(userId,userDTO);
     }
     public void removeUserToCache(long userId){
-        userDTOMap.remove(userId);
+        allUserDTOMap.remove(userId);
     }
     public UserDTO getUserByIdFromCache(long userId){
-        return userDTOMap.get(userId);
+        return allUserDTOMap.get(userId);
     }
 
     public void addUserAttributeToCache(long userId,UserAttributeDTO userAttributeDTO){
-        userAttributeDTOMap.put(userId,userAttributeDTO);
+        allUserAttributeDTOMap.put(userId,userAttributeDTO);
     }
     public void removeUserAttributeToCache(long userId){
-        userAttributeDTOMap.remove(userId);
+        allUserAttributeDTOMap.remove(userId);
     }
     public UserAttributeDTO getUserAttributeFromCache(long userId){
-        return userAttributeDTOMap.get(userId);
+        return allUserAttributeDTOMap.get(userId);
     }
 
-    public void addUserVehicleToCache(long userId,UserVehicleDTO userVehicleDTO){
-        userVehicleDTOMap.put(userId,userVehicleDTO);
+    public void addUserVehicleToCache(long userId,Map<Integer,UserVehicleDTO> userVehicleDTOMap){
+        allUserVehicleDTOMap.put(userId,userVehicleDTOMap);
     }
     public void removeUserVehicleToCache(long userId){
-        userVehicleDTOMap.remove(userId);
+        allUserVehicleDTOMap.remove(userId);
     }
-    public UserVehicleDTO getUserVehicleByIdFromCache(long userId){
-        return userVehicleDTOMap.get(userId);
+    public Map<Integer,UserVehicleDTO> getUserVehicleByIdFromCache(long userId){
+        return allUserVehicleDTOMap.get(userId);
     }
 }

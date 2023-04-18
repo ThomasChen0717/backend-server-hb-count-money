@@ -26,11 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author mark
@@ -43,10 +40,6 @@ public class LoginServiceImpl implements ILoginService {
     private NacosConfiguration nacosConfiguration;
     @Autowired
     private IUserService userService;
-    @Autowired
-    private UserManagerSingleton userManagerSingleton;
-    @Autowired
-    private CfgManagerSingleton cfgManagerSingleton;
 
     public void Test(){
 
@@ -66,8 +59,8 @@ public class LoginServiceImpl implements ILoginService {
         long userId = userDTO.getId();
         UserAttributeDTO userAttributeDTO = userService.getUserAttributeById(userId);
         ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userAttributeDTO);
-        UserVehicleDTO userVehicleDTO = userService.getUserVehicleById(userId);
-        ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userVehicleDTO);
+        Map<Integer,UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapById(userId);
+        ErrorCodeEnum.addOrGetUserFailed.assertTrue(userVehicleDTOMap.size() > 0);
 
         // 获取用户数据后处理逻辑
         if (!isForcedOffline) {
@@ -89,7 +82,7 @@ public class LoginServiceImpl implements ILoginService {
         ErrorCodeEnum.loginError.assertTrue(success);
 
         // 从数据库获取的用户数据存储到内存中
-        boolean isAddSuccess = userManagerSingleton.addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTO);
+        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTOMap);
         ErrorCodeEnum.addUserDataToCacheFailed.assertTrue(isAddSuccess);
 
         // 填充登录报文回复数据
@@ -109,8 +102,10 @@ public class LoginServiceImpl implements ILoginService {
             String stringRes = HttpUtil.get(url);
             log.info("LoginService::dyLogin:stringRes = {}",stringRes);
             JSONObject jsonRes = JSONObject.parseObject(stringRes);
-            String unionId = jsonRes.getString("unionid");
-            String openid = jsonRes.getString("openid");
+            String unionId = "11111111";
+            String openid = "22222222";
+            //String unionId = jsonRes.getString("unionid");
+            //String openid = jsonRes.getString("openid");
             if (jsonRes != null && unionId != null) {
                 userDTO = userService.getUserByUnionId(unionId);
                 String newToken = createToken();
@@ -139,7 +134,6 @@ public class LoginServiceImpl implements ILoginService {
      * @param unionId
      * @param newToken
      */
-    @Transactional
     private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken){
         try{
             // t_user表插入新记录
@@ -154,20 +148,22 @@ public class LoginServiceImpl implements ILoginService {
             userService.addUserAttribute(newUserAttributeDTO);
 
             // t_user_vehicle表插入记录
-            UserVehicleDTO newUserVehicleDTO = new UserVehicleDTO();
-            newUserVehicleDTO.setUserId(newUserDTO.getId());
-            // 检测载具配置表是否有无条件开启的载具
-            List<String> vehicleTypeList = new ArrayList<>();
-            Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap = cfgManagerSingleton.getCfgVehicleDTOMap();
+            int defaultUnlockedVehicleCount = 0;
+            Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleDTOMap();
             for(Map.Entry<Integer,CfgVehicleDTO> entry : cfgVehicleDTOMap.entrySet()){
+                UserVehicleDTO newUserVehicleDTO = new UserVehicleDTO();
                 CfgVehicleDTO cfgVehicleDTO = entry.getValue();
+                Byte isInUse = Byte.valueOf("0");
+                Byte isUnlocked = Byte.valueOf("0");
                 if(cfgVehicleDTO.getConditionCount() == 0){
-                    vehicleTypeList.add(String.valueOf(cfgVehicleDTO.getVehicleType()));
+                    isInUse = defaultUnlockedVehicleCount == 0 ? Byte.valueOf("1") : Byte.valueOf("0");
+                    defaultUnlockedVehicleCount++;
+                    isUnlocked = Byte.valueOf("1");
                 }
+                newUserVehicleDTO.setUserId(newUserDTO.getId()).setVehicleId(cfgVehicleDTO.getVehicleId())
+                        .setIsUnlocked(isUnlocked).setIsInUse(isInUse);
+                userService.addUserVehicle(newUserVehicleDTO);
             }
-            String stringVehicleTypeList = vehicleTypeList.stream().collect(Collectors.joining(","));
-            newUserVehicleDTO.setVehicleList(stringVehicleTypeList);
-            userService.addUserVehicle(newUserVehicleDTO);
 
             log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新用户成功",loginPlatform,unionId,newUserDTO.getId());
             return newUserDTO;
@@ -178,35 +174,34 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     private LoginResPb makeLoginResPb(long userId){
-        UserDTO userDTO = userManagerSingleton.getUserByIdFromCache(userId);
-        UserAttributeDTO userAttributeDTO = userManagerSingleton.getUserAttributeFromCache(userId);
-        UserVehicleDTO userVehicleDTO = userManagerSingleton.getUserVehicleByIdFromCache(userId);
+        UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
+        UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
+        Map<Integer,UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleByIdFromCache(userId);
 
         LoginResPb loginResPb = new LoginResPb();
         loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney());
 
-        int energyAddValue = Integer.valueOf((cfgManagerSingleton.getCfgGlobalByKeyFromCache("energyAddValue")).getValue()).intValue();
-        int energyMaxValue = Integer.valueOf((cfgManagerSingleton.getCfgGlobalByKeyFromCache("energyMaxValue")).getValue()).intValue();
+        int energyAddValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyAddValue")).getValueName()).intValue();
+        int energyMaxValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyMaxValue")).getValueName()).intValue();
         loginResPb.setEnergyAddValue(energyAddValue).setEnergyMaxValue(energyMaxValue);
 
         loginResPb.setStrengthLevel(userAttributeDTO.getStrengthLevel()).setPhysicalLevel(userAttributeDTO.getPhysicalLevel())
                 .setPhysicalRestoreLevel(userAttributeDTO.getPhysicalRestoreLevel()).setEnduranceLevel(userAttributeDTO.getEnduranceLevel())
                 .setPetLevel(userAttributeDTO.getPetLevel()).setIncomeMultiple(userAttributeDTO.getIncomeMultiple());
 
-        float incomeMultiple = .1f;
+        float incomeMultiple = userAttributeDTO.getIncomeMultiple();
         loginResPb.setIncomeMultiple(incomeMultiple);
 
-        CfgAttributeDTO cfgAttributeDTO = cfgManagerSingleton.getCfgAttributeByTypeFromCache(AttributeEnum.strengthLevel.getAttributeType());
+        CfgAttributeDTO cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.strengthLevel.getAttributeType());
         loginResPb.setStrengthLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setStrengthEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
-        cfgAttributeDTO = cfgManagerSingleton.getCfgAttributeByTypeFromCache(AttributeEnum.physicalLevel.getAttributeType());
+        cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.physicalLevel.getAttributeType());
         loginResPb.setPhysicalLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setPhysicalEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
-        cfgAttributeDTO = cfgManagerSingleton.getCfgAttributeByTypeFromCache(AttributeEnum.physicalRestoreLevel.getAttributeType());
+        cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.physicalRestoreLevel.getAttributeType());
         loginResPb.setPhysicalRestoreLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setPhysicalRestoreEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
-        cfgAttributeDTO = cfgManagerSingleton.getCfgAttributeByTypeFromCache(AttributeEnum.enduranceLevel.getAttributeType());
+        cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.enduranceLevel.getAttributeType());
         loginResPb.setEnduranceLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setEnduranceEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
-        cfgAttributeDTO = cfgManagerSingleton.getCfgAttributeByTypeFromCache(AttributeEnum.petLevel.getAttributeType());
+        cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.petLevel.getAttributeType());
         loginResPb.setPetLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setPetEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
-
 
         return loginResPb;
     }

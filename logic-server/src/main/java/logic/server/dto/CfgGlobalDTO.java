@@ -9,7 +9,7 @@ public class CfgGlobalDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private String key;
-    private String value;
+    private String keyName;
+    private String valueName;
     private String remark;
 }

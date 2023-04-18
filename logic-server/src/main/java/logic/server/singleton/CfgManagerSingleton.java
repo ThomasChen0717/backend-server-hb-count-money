@@ -3,19 +3,17 @@ package logic.server.singleton;
 import logic.server.dto.CfgAttributeDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgVehicleDTO;
-import logic.server.service.ICfgService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
 @Slf4j
 @Service
 public class CfgManagerSingleton {
-    @Autowired
-    private ICfgService cfgService;
     private static CfgManagerSingleton instance;
     private Map<String,CfgGlobalDTO> cfgGlobalDTOMap;
     private Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap;
@@ -27,10 +25,10 @@ public class CfgManagerSingleton {
         }
         return instance;
     }
-    private CfgManagerSingleton() {
-        cfgGlobalDTOMap = cfgService.getCfgGlobalMap();
-        cfgVehicleDTOMap = cfgService.getCfgVehicleMap();
-        cfgAttributeDTOMap = cfgService.getCfgAttributeMap();
+    public CfgManagerSingleton() {
+        cfgGlobalDTOMap = new HashMap<>();
+        cfgVehicleDTOMap = new HashMap<>();
+        cfgAttributeDTOMap = new HashMap<>();
     }
 
     public CfgGlobalDTO getCfgGlobalByKeyFromCache(String key){

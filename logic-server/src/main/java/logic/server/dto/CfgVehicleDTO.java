@@ -9,7 +9,8 @@ public class CfgVehicleDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private int vehicleType;
+    private int vehicleId;
+    private String vehicleImg;
     private String vehicleName;
     private int conditionType;
     private int conditionCount;

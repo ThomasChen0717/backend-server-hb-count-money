@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
@@ -61,7 +63,7 @@ public class UserServiceImpl implements IUserService {
         return userVehicleRepository.add(userVehicleDTO);
     }
     @Override
-    public UserVehicleDTO getUserVehicleById(long userId){
-        return userVehicleRepository.get(userId);
+    public Map<Integer,UserVehicleDTO> getUserVehicleMapById(long userId){
+        return userVehicleRepository.getMap(userId);
     }
 }

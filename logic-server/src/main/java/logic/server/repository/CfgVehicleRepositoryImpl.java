@@ -23,7 +23,7 @@ public class CfgVehicleRepositoryImpl implements CfgVehicleRepository{
         List<CfgVehiclePO> cfgVehiclePOList = cfgVehicleMapper.selectList(new QueryWrapper<CfgVehiclePO>()
                 .lambda());
         List<CfgVehicleDTO> cfgVehicleDTOList = Convertor.convert(cfgVehiclePOList, CfgVehicleDTO.class);
-        Map<Integer, CfgVehicleDTO> cfgVehicleDTOmap = cfgVehicleDTOList.stream().collect(Collectors.toMap(CfgVehicleDTO::getVehicleType, CfgVehicleDTO -> CfgVehicleDTO));
+        Map<Integer, CfgVehicleDTO> cfgVehicleDTOmap = cfgVehicleDTOList.stream().collect(Collectors.toMap(CfgVehicleDTO::getVehicleId, CfgVehicleDTO -> CfgVehicleDTO));
         return cfgVehicleDTOmap;
     }
 }
