@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@TableName("t_cfg_vehicle")
-public class CfgVehiclePO extends BaseEntity{
+@TableName("t_cfg_equipment")
+public class CfgEquipmentPO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
@@ -19,14 +19,14 @@ public class CfgVehiclePO extends BaseEntity{
     private long id;
 
     /**
-     * 载具类型
+     * 装备id
      */
-    private int vehicleId;
+    private int equipmentId;
 
     /**
-     * 载具名称
+     * 装备名称
      */
-    private String vehicleName;
+    private String equipmentName;
 
     /**
      * 解锁条件类型：0 广告 1 金钱 2 挑战boss
@@ -39,12 +39,17 @@ public class CfgVehiclePO extends BaseEntity{
     private int unlockConditionCount;
 
     /**
-     * 载具容量（满足奖励的条件）
+     * 影响属性类型
      */
-    private int vehicleCapacity;
+    private int effectAttributeType;
 
     /**
-     * 额外奖励数值
+     * 影响属性公式
      */
-    private int extraRewardValue;
+    private float effectAttributeMultiple;
+
+    /**
+     * 影响属性说明
+     */
+    private String effectAttributeRemark;
 }

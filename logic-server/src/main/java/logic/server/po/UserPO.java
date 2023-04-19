@@ -51,4 +51,9 @@ public class UserPO extends BaseEntity{
      * 金钱数量
      */
     private long money;
+
+    /**
+     * 历史金钱数量
+     */
+    private long moneyHistory;
 }

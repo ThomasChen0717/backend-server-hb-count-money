@@ -9,6 +9,9 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 登录请求响应
  *
@@ -28,6 +31,8 @@ public class LoginResPb {
     long userId;
     /** 金钱数量 */
     long money;
+    /** 历史金钱数量 */
+    long moneyHistory;
 
     /** 完成一次数钱操作增加能量点数 */
     int energyAddValue;
@@ -67,4 +72,10 @@ public class LoginResPb {
     String enduranceEffectFormula;
     /** 宠物效果公式 */
     String petEffectFormula;
+
+    /** 用户载具列表 **/
+    List<VehicleInfoPb> vehicleInfoPbList = new ArrayList<>();
+
+    /** 用户装备列表 **/
+    List<EquipmentInfoPb> equipmentInfoPbList = new ArrayList<>();
 }

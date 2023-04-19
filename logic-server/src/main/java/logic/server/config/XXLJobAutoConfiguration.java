@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
  * @author mark
  * @date 2023-04-12
  */
-@Configuration
+// 暂时屏蔽xxl-job 业务上还未用到
+// @Configuration
 @Slf4j
 public class XXLJobAutoConfiguration {
     @Autowired

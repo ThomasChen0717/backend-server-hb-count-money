@@ -2,6 +2,7 @@ package logic.server.service;
 
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
 
 import java.util.Map;
@@ -25,4 +26,8 @@ public interface IUserService {
     /** t_user_vehicle **/
     int addUserVehicle(UserVehicleDTO userVehicleDTO);
     Map<Integer,UserVehicleDTO> getUserVehicleMapById(long userId);
+
+    /** t_user_equipment **/
+    int addUserEquipment(UserEquipmentDTO userEquipmentDTO);
+    Map<Integer,UserEquipmentDTO> getUserEquipmentMapById(long userId);
 }

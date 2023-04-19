@@ -19,4 +19,5 @@ public class UserDTO implements DTO{
     private String unionId;
     private String openid;
     private long money;
+    private long moneyHistory;
 }

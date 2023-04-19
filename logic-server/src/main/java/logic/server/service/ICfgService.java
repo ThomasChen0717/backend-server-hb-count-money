@@ -1,6 +1,7 @@
 package logic.server.service;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgVehicleDTO;
 
@@ -10,4 +11,5 @@ public interface ICfgService {
     Map<String, CfgGlobalDTO> getCfgGlobalMap();
     Map<Integer,CfgVehicleDTO> getCfgVehicleMap();
     Map<Integer, CfgAttributeDTO> getCfgAttributeMap();
+    Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap();
 }

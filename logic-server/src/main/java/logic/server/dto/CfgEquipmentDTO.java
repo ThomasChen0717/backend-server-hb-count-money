@@ -5,14 +5,15 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class CfgVehicleDTO implements DTO{
+public class CfgEquipmentDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private int vehicleId;
-    private String vehicleName;
+    private int equipmentId;
+    private String equipmentName;
     private int unlockConditionType;
     private int unlockConditionCount;
-    private int vehicleCapacity;
-    private int extraRewardValue;
+    private int effectAttributeType;
+    private float effectAttributeMultiple;
+    private String effectAttributeRemark;
 }

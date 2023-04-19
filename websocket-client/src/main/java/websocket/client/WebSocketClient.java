@@ -103,8 +103,8 @@ public class WebSocketClient {
         // 登录请求
         LoginReqPb loginReqPb = new LoginReqPb();
         loginReqPb.setLoginPlatform("dy");
-        loginReqPb.setCode("1111");
-        //loginReqPb.setToken("66159956-e35c-4c3f-91f4-4512121252e1");
+        loginReqPb.setCode("1111");// 创建新用户
+        //loginReqPb.setToken("2a6e3af8-a1c1-436b-af57-14e8243e110e");// 登录老用户
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,

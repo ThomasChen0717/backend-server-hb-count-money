@@ -8,10 +8,9 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@TableName("t_user_vehicle")
-public class UserVehiclePO extends BaseEntity{
+@TableName("t_user_equipment")
+public class UserEquipmentPO extends BaseEntity{
     private static final long serialVersionUID = 1L;
-
     /**
      * 主键id
      */
@@ -24,9 +23,9 @@ public class UserVehiclePO extends BaseEntity{
     private long userId;
 
     /**
-     * 载具id
+     * 装备id
      */
-    private int vehicleId;
+    private int equipmentId;
 
     /**
      * 是否使用中：0 未使用 1 使用中

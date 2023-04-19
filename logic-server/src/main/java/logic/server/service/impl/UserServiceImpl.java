@@ -2,8 +2,10 @@ package logic.server.service.impl;
 
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.repository.UserAttributeRepository;
+import logic.server.repository.UserEquipmentRepository;
 import logic.server.repository.UserRepository;
 import logic.server.repository.UserVehicleRepository;
 import logic.server.repository.redis.RedisRepository;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements IUserService {
     private UserAttributeRepository userAttributeRepository;
     @Autowired
     private UserVehicleRepository userVehicleRepository;
+    @Autowired
+    private UserEquipmentRepository userEquipmentRepository;
 
     @Override
     public int addUser(UserDTO userDTO){
@@ -65,5 +69,14 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Map<Integer,UserVehicleDTO> getUserVehicleMapById(long userId){
         return userVehicleRepository.getMap(userId);
+    }
+
+    @Override
+    public int addUserEquipment(UserEquipmentDTO userEquipmentDTO){
+        return userEquipmentRepository.add(userEquipmentDTO);
+    }
+    @Override
+    public Map<Integer,UserEquipmentDTO> getUserEquipmentMapById(long userId){
+        return userEquipmentRepository.getMap(userId);
     }
 }

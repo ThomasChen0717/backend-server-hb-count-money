@@ -1,6 +1,7 @@
 package logic.server.singleton;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgVehicleDTO;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class CfgManagerSingleton {
     private Map<String,CfgGlobalDTO> cfgGlobalDTOMap;
     private Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap;
     private Map<Integer, CfgAttributeDTO> cfgAttributeDTOMap;
+    private Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap;
 
     public static synchronized CfgManagerSingleton getInstance() {
         if (instance == null) {
@@ -29,6 +31,7 @@ public class CfgManagerSingleton {
         cfgGlobalDTOMap = new HashMap<>();
         cfgVehicleDTOMap = new HashMap<>();
         cfgAttributeDTOMap = new HashMap<>();
+        cfgEquipmentDTOMap = new HashMap<>();
     }
 
     public CfgGlobalDTO getCfgGlobalByKeyFromCache(String key){
@@ -39,5 +42,8 @@ public class CfgManagerSingleton {
     }
     public CfgAttributeDTO getCfgAttributeByTypeFromCache(int attributeType){
         return cfgAttributeDTOMap.get(attributeType);
+    }
+    public CfgEquipmentDTO getCfgEquipmentByTypeFromCache(int equipmentId){
+        return cfgEquipmentDTOMap.get(equipmentId);
     }
 }

@@ -5,7 +5,6 @@ import com.iohao.game.bolt.broker.client.BrokerClientApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 单独启动类：游戏逻辑服

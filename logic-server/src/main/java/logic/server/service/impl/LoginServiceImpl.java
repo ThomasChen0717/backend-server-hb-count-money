@@ -6,13 +6,17 @@ import com.iohao.game.bolt.broker.client.kit.ExternalCommunicationKit;
 import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import common.pb.enums.ErrorCodeEnum;
 import common.pb.enums.LoginPlatformEnum;
+import common.pb.pb.EquipmentInfoPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
+import common.pb.pb.VehicleInfoPb;
 import logic.server.config.NacosConfiguration;
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.enums.AttributeEnum;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -24,7 +28,6 @@ import logic.server.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.UUID;
@@ -61,6 +64,8 @@ public class LoginServiceImpl implements ILoginService {
         ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userAttributeDTO);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapById(userId);
         ErrorCodeEnum.addOrGetUserFailed.assertTrue(userVehicleDTOMap.size() > 0);
+        Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapById(userId);
+        ErrorCodeEnum.addOrGetUserFailed.assertTrue(userEquipmentDTOMap.size() > 0);
 
         // 获取用户数据后处理逻辑
         if (!isForcedOffline) {
@@ -82,7 +87,7 @@ public class LoginServiceImpl implements ILoginService {
         ErrorCodeEnum.loginError.assertTrue(success);
 
         // 从数据库获取的用户数据存储到内存中
-        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTOMap);
+        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap);
         ErrorCodeEnum.addUserDataToCacheFailed.assertTrue(isAddSuccess);
 
         // 填充登录报文回复数据
@@ -153,16 +158,28 @@ public class LoginServiceImpl implements ILoginService {
             for(Map.Entry<Integer,CfgVehicleDTO> entry : cfgVehicleDTOMap.entrySet()){
                 UserVehicleDTO newUserVehicleDTO = new UserVehicleDTO();
                 CfgVehicleDTO cfgVehicleDTO = entry.getValue();
-                Byte isInUse = Byte.valueOf("0");
-                Byte isUnlocked = Byte.valueOf("0");
-                if(cfgVehicleDTO.getConditionCount() == 0){
-                    isInUse = defaultUnlockedVehicleCount == 0 ? Byte.valueOf("1") : Byte.valueOf("0");
+                boolean isInUse = false;
+                boolean isUnlocked = false;
+                if(cfgVehicleDTO.getUnlockConditionCount() == 0){
+                    isInUse = defaultUnlockedVehicleCount == 0 ? true : false;
                     defaultUnlockedVehicleCount++;
-                    isUnlocked = Byte.valueOf("1");
+                    isUnlocked = true;
                 }
-                newUserVehicleDTO.setUserId(newUserDTO.getId()).setVehicleId(cfgVehicleDTO.getVehicleId())
-                        .setIsUnlocked(isUnlocked).setIsInUse(isInUse);
+                newUserVehicleDTO.setUserId(newUserDTO.getId()).setVehicleId(cfgVehicleDTO.getVehicleId()).setUnlocked(isUnlocked).setInUse(isInUse);
                 userService.addUserVehicle(newUserVehicleDTO);
+            }
+
+            // t_user_equipment表插入记录
+            Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap = CfgManagerSingleton.getInstance().getCfgEquipmentDTOMap();
+            for(Map.Entry<Integer,CfgEquipmentDTO> entryEquipment : cfgEquipmentDTOMap.entrySet()){
+                UserEquipmentDTO newUserEquipment = new UserEquipmentDTO();
+                boolean isUnlocked = false;
+                CfgEquipmentDTO cfgEquipmentDTO = entryEquipment.getValue();
+                if(cfgEquipmentDTO.getUnlockConditionCount() == 0){
+                    isUnlocked = true;
+                }
+                newUserEquipment.setUserId(newUserDTO.getId()).setEquipmentId(cfgEquipmentDTO.getEquipmentId()).setInUse(false).setUnlocked(isUnlocked);
+                userService.addUserEquipment(newUserEquipment);
             }
 
             log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新用户成功",loginPlatform,unionId,newUserDTO.getId());
@@ -177,21 +194,25 @@ public class LoginServiceImpl implements ILoginService {
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleByIdFromCache(userId);
+        Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentByIdFromCache(userId);
 
         LoginResPb loginResPb = new LoginResPb();
-        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney());
+        /** 用户数据 **/
+        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory());
 
+        /** 全局配置数据 **/
         int energyAddValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyAddValue")).getValueName()).intValue();
         int energyMaxValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyMaxValue")).getValueName()).intValue();
         loginResPb.setEnergyAddValue(energyAddValue).setEnergyMaxValue(energyMaxValue);
 
+        /** 用户属性等级数据 **/
         loginResPb.setStrengthLevel(userAttributeDTO.getStrengthLevel()).setPhysicalLevel(userAttributeDTO.getPhysicalLevel())
                 .setPhysicalRestoreLevel(userAttributeDTO.getPhysicalRestoreLevel()).setEnduranceLevel(userAttributeDTO.getEnduranceLevel())
                 .setPetLevel(userAttributeDTO.getPetLevel()).setIncomeMultiple(userAttributeDTO.getIncomeMultiple());
-
         float incomeMultiple = userAttributeDTO.getIncomeMultiple();
         loginResPb.setIncomeMultiple(incomeMultiple);
 
+        /** 用户属性升级和效果公式 **/
         CfgAttributeDTO cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.strengthLevel.getAttributeType());
         loginResPb.setStrengthLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setStrengthEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
         cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.physicalLevel.getAttributeType());
@@ -203,6 +224,41 @@ public class LoginServiceImpl implements ILoginService {
         cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.petLevel.getAttributeType());
         loginResPb.setPetLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setPetEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
 
+        /** 用户载具数据 **/
+        for(Map.Entry<Integer,UserVehicleDTO> entryVehicle : userVehicleDTOMap.entrySet()){
+            UserVehicleDTO userVehicleDTO = entryVehicle.getValue();
+            VehicleInfoPb vehicleInfoPb = new VehicleInfoPb();
+
+            /** 载具实例数据 **/
+            vehicleInfoPb.setVehicleId(userVehicleDTO.getVehicleId()).setInUse(userVehicleDTO.isInUse()).
+                    setUnlockConditionCurrCount(userVehicleDTO.getUnlockConditionCurrCount()).setUnlocked(userVehicleDTO.isUnlocked());
+            /** 载具配置数据 **/
+            Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleDTOMap();
+            CfgVehicleDTO cfgVehicleDTO = cfgVehicleDTOMap.get(userVehicleDTO.getVehicleId());
+            vehicleInfoPb.setVehicleName(cfgVehicleDTO.getVehicleName()).setUnlockConditionType(cfgVehicleDTO.getUnlockConditionType())
+                    .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionType()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
+                    .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue());
+
+            loginResPb.getVehicleInfoPbList().add(vehicleInfoPb);
+        }
+
+        /** 用户装备数据 **/
+        for(Map.Entry<Integer,UserEquipmentDTO> entryEquipment : userEquipmentDTOMap.entrySet()){
+            UserEquipmentDTO userEquipmentDTO = entryEquipment.getValue();
+            EquipmentInfoPb equipmentInfoPb = new EquipmentInfoPb();
+
+            /** 装备实例数据 **/
+            equipmentInfoPb.setEquipmentId(userEquipmentDTO.getEquipmentId()).setInUse(userEquipmentDTO.isInUse()).
+                    setUnlockConditionCurrCount(userEquipmentDTO.getUnlockConditionCurrCount()).setUnlocked(userEquipmentDTO.isUnlocked());
+            /** 载具配置数据 **/
+            Map<Integer,CfgEquipmentDTO> cfgEquipmentDTOMap = CfgManagerSingleton.getInstance().getCfgEquipmentDTOMap();
+            CfgEquipmentDTO cfgEquipmentDTO = cfgEquipmentDTOMap.get(userEquipmentDTO.getEquipmentId());
+            equipmentInfoPb.setEquipmentName(cfgEquipmentDTO.getEquipmentName()).setUnlockConditionType(cfgEquipmentDTO.getUnlockConditionType())
+                    .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionType()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
+                    .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark());
+
+            loginResPb.getEquipmentInfoPbList().add(equipmentInfoPb);
+        }
         return loginResPb;
     }
 }
