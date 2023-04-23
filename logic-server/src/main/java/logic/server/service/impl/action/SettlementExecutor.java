@@ -33,8 +33,17 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
             moneyIncome = (long)(UserManagerSingleton.getInstance().getUserIncomeMultipleAttributeFromCache(userId) * (cfgVehicleDTO.getVehicleCapacity() + cfgVehicleDTO.getExtraRewardValue()));
         }else if(arg.getSettlementRole() == RoleEnum.pet.getRoleType()){
             // 宠物结算
-            // 最终收益 = 宠物等级对应的收益
-            moneyIncome = userAttributeDTO.getPetLevel() + 1;
+            if(arg.getSettlementType() == 1){
+                // 在线结算，最终收益 = 宠物等级对应的收益
+                moneyIncome = userAttributeDTO.getPetLevel() + 1;
+            }else{
+                // 离线结算，最终收益 = (latestLoginTime - latestLogoutTime)/petFinishJobTime * 宠物等级对应的收益
+                long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
+                int petOfflineIncomeMaxTime = Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petOfflineIncomeMaxTime").getValueName()) * 3600;
+                if(offlineTime >= petOfflineIncomeMaxTime) offlineTime = petOfflineIncomeMaxTime;
+                int finishJobCount = (int)offlineTime / (Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime").getValueName()));
+                moneyIncome = finishJobCount * (userAttributeDTO.getPetLevel() + 1);
+            }
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
         long finalMoneyHistory = userDTO.getMoneyHistory() + moneyIncome;

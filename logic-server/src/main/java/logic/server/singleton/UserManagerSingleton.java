@@ -1,5 +1,6 @@
 package logic.server.singleton;
 
+import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -83,11 +84,27 @@ public class UserManagerSingleton {
     // 获取角色收益倍数属性：通过当前装备和buff加成计算获得
     public float getUserIncomeMultipleAttributeFromCache(long userId){
         float inComeMultiple = 1.0f;
+
+        /** 装备-收益倍数加成 **/
         List<UserEquipmentDTO> userEquipmentDTOList = getUserEquipmentListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
         for(UserEquipmentDTO userEquipmentDTO : userEquipmentDTOList){
             CfgEquipmentDTO cfgEquipmentDTO = CfgManagerSingleton.getInstance().getCfgEquipmentByIdFromCache(userEquipmentDTO.getEquipmentId());
             inComeMultiple *= cfgEquipmentDTO.getEffectAttributeMultiple();
         }
+        /** buffTool-收益倍数加成 **/
+        List<UserBuffToolDTO> userBuffToolDTOList = getUserBuffToolListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
+        for(UserBuffToolDTO userBuffToolDTO : userBuffToolDTOList){
+            CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(userBuffToolDTO.getBuffToolId());
+            float buffToolMultiple = 1.0f;
+            for(int i=0;i<cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().size();i++){
+                if(cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i).getInteger("attributeType") == AttributeEnum.incomeMultiple.getAttributeType()){
+                    buffToolMultiple = cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i).getFloat("multiple");
+                    break;
+                }
+            }
+            inComeMultiple *= buffToolMultiple;
+        }
+
         return inComeMultiple;
     }
     /** UserAttributeDTO end **/
@@ -175,6 +192,22 @@ public class UserManagerSingleton {
     public UserBuffToolDTO getUserBuffToolByIdFromCache(long userId,int buffToolId){
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = getUserBuffToolMapByIdFromCache(userId);
         return userBuffToolDTOMap.get(buffToolId);
+    }
+    public List<UserBuffToolDTO> getUserBuffToolListByAttributeTypeFromCache(long userId, int attributeType){
+        Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = getUserBuffToolMapByIdFromCache(userId);
+        List<UserBuffToolDTO> userBuffToolDTOList = new ArrayList<>();
+        for(Map.Entry<Integer,UserBuffToolDTO> entry : userBuffToolDTOMap.entrySet()){
+            CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(entry.getKey());
+            if(cfgBuffToolDTO != null && entry.getValue().isInUse()){
+                for(int i=0;i<cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().size();i++){
+                    if(cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i).getInteger("attributeType") == attributeType){
+                        userBuffToolDTOList.add(entry.getValue());
+                        break;
+                    }
+                }
+            }
+        }
+        return userBuffToolDTOList;
     }
     /** UserBuffToolDTO end **/
 }

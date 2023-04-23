@@ -38,6 +38,8 @@ public class LoginResPb {
     int energyAddValue;
     /** 能量最大点数 */
     int energyMaxValue;
+    /** 宠物完成一次任务时间，单位秒 */
+    int petFinishJobTime;
 
     /** 力量等级 */
     int strengthLevel;

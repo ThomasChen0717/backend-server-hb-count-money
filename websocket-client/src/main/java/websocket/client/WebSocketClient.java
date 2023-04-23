@@ -119,15 +119,15 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
-        StartOrEndBuffToolReqPb startOrEndBuffToolReqPb = new StartOrEndBuffToolReqPb();
-        startOrEndBuffToolReqPb.setBuffToolId(1);
-        startOrEndBuffToolReqPb.setStart(true);
+        SettlementReqPb settlementReqPb = new SettlementReqPb();
+        settlementReqPb.setSettlementRole(2);
+        settlementReqPb.setSettlementType(2);
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
                 UserCmdModule.cmd,
-                UserCmdModule.startOrEndBuffTool,
-                startOrEndBuffToolReqPb
+                UserCmdModule.settlement,
+                settlementReqPb
         );
 
         ClientCommandKit.createClientCommand(externalMessageHere, SettlementReqPb.class);

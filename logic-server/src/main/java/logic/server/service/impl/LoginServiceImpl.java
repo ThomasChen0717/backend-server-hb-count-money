@@ -124,6 +124,7 @@ public class LoginServiceImpl implements ILoginService {
     private UserDTO dyLogin(LoginReqPb loginReqPb){
         UserDTO userDTO = null;
         boolean isNewUser = false;
+        Date currTime = new Date();
         if(loginReqPb.getCode() != null){
             // 授权登录：通过code获取unionId
             String url = String.format("%s/jscode2session?appid=%s&secret=%s&code=%s",
@@ -132,7 +133,7 @@ public class LoginServiceImpl implements ILoginService {
             String stringRes = HttpUtil.get(url);
             log.info("LoginService::dyLogin:stringRes = {}",stringRes);
             JSONObject jsonRes = JSONObject.parseObject(stringRes);
-            String unionId = String.valueOf((new Date()).getTime());
+            String unionId = String.valueOf(currTime.getTime());
             String openid = "22222222";
             //String unionId = jsonRes.getString("unionid");
             //String openid = jsonRes.getString("openid");
@@ -140,17 +141,19 @@ public class LoginServiceImpl implements ILoginService {
                 userDTO = userService.getUserByUnionIdFromDB(unionId);
                 String newToken = createToken();
                 if(userDTO == null){
-                    userDTO = createUser(LoginPlatformEnum.dy.getName(),unionId,openid,newToken);
+                    userDTO = createUser(LoginPlatformEnum.dy.getName(),unionId,openid,newToken,currTime);
                     isNewUser = true;
                 }else{
                     // 刷新token（非必要）
-                    userDTO.setToken(newToken);
+                    userDTO.setToken(newToken).setLatestLoginTime(currTime);
                     userService.updateUserToDB(userDTO);
                 }
             }
         }else if(loginReqPb.getToken() != null){
             // 通过token获取角色
             userDTO = userService.getUserByTokenFromDB(loginReqPb.getToken());
+            userDTO.setLatestLoginTime(currTime);
+            userService.updateUserToDB(userDTO);
         }
 
         userDTO.setNewUser(isNewUser);
@@ -167,12 +170,12 @@ public class LoginServiceImpl implements ILoginService {
      * @param unionId
      * @param newToken
      */
-    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken){
+    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken,Date currTime){
         try{
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();
             String name = loginPlatform + unionId.substring(unionId.length() - 6);
-            newUserDTO.setName(name).setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid);
+            newUserDTO.setName(name).setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录
@@ -229,7 +232,8 @@ public class LoginServiceImpl implements ILoginService {
         /** 全局配置数据 **/
         int energyAddValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyAddValue")).getValueName()).intValue();
         int energyMaxValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyMaxValue")).getValueName()).intValue();
-        loginResPb.setEnergyAddValue(energyAddValue).setEnergyMaxValue(energyMaxValue);
+        int petFinishJobTime = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime")).getValueName()).intValue();
+        loginResPb.setEnergyAddValue(energyAddValue).setEnergyMaxValue(energyMaxValue).setPetFinishJobTime(petFinishJobTime);
 
         /** 角色属性等级数据 **/
         loginResPb.setStrengthLevel(userAttributeDTO.getStrengthLevel()).setPhysicalLevel(userAttributeDTO.getPhysicalLevel())

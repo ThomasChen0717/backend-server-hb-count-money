@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -122,9 +123,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void saveDataFromCacheToDB(long userId){
         try{
+            Date currTime = new Date();
             /** save t_user **/
             UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
             if(userDTO != null){
+                userDTO.setLatestLogoutTime(currTime);
                 userRepository.update(userDTO);
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
             }

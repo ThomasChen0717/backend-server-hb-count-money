@@ -1,5 +1,6 @@
 package logic.server.dto;
 
+import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,4 +13,8 @@ public class CfgBuffToolDTO implements DTO{
     private int buffToolId;
     private String effectAttributeInfo;
     private int durations;
+
+    public JSONArray getJsonArrayEffectAttributeInfo(){
+        return JSONArray.parseArray(effectAttributeInfo);
+    }
 }

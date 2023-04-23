@@ -3,6 +3,8 @@ package logic.server.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * @author mark
  * @date 2023-04-12
@@ -22,4 +24,6 @@ public class UserDTO implements DTO{
     private String openid;
     private long money;
     private long moneyHistory;
+    private Date latestLoginTime;
+    private Date latestLogoutTime;
 }

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * @author mark
  * @date 2023-04-12
@@ -56,4 +58,14 @@ public class UserPO extends BaseEntity{
      * 历史金钱数量
      */
     private long moneyHistory;
+
+    /**
+     * 最近一次上线时间
+     */
+    private Date latestLoginTime;
+
+    /**
+     * 最近一次下线时间
+     */
+    private Date latestLogoutTime;
 }

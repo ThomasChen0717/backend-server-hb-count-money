@@ -24,4 +24,7 @@ public class SettlementReqPb {
     /** 结算角色：1 主角 2 宠物 */
     @NotNull
     int settlementRole;
+    /** 结算类型：1 在线计算 2 离线结算 （此字段只有结算角色为宠物时才有意义）*/
+    @NotNull
+    int settlementType;
 }
