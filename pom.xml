@@ -18,7 +18,6 @@
     <module>common-pb</module>
     <module>client-command</module>
     <module>websocket-client</module>
-    <module>broker-server</module>
     <module>run-as-one</module>
   </modules>
 
