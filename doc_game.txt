@@ -13,25 +13,30 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:34】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:36】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SettlementReqPb
     方法返回值: common.pb.pb.SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:39】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:41】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AttributeLevelUpReqPb
     方法返回值: common.pb.pb.AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:44】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:46】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChangeVehicleReqPb
     方法返回值: common.pb.pb.ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:49】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:51】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UseEquipmentReqPb
     方法返回值: common.pb.pb.UseEquipmentResPb
+ 
+路由: 2 - 5  --- 【】 --- 【UserAction:56】【startOrEndBuffTool】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.StartOrEndBuffToolReqPb
+    方法返回值: common.pb.pb.StartOrEndBuffToolResPb
  
 
 ==================== 其它广播推送 ====================
@@ -45,12 +50,12 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  -1002 : 路由错误 
  -1001 : 参数验错误 
  -1000 : 系统其它错误 
- 10001 : 用户已经在线上，不允许重复登录 
- 10002 : 创建或者获取用户信息失败 
+ 10001 : 角色已经在线上，不允许重复登录 
+ 10002 : 创建或者获取角色信息失败 
  10003 : 登录异常 
- 10004 : 内存存储用户数据失败 
- 10005 : 用户绑定逻辑服失败 
- 10007 : 用户数据还在缓存中，请稍后登录 
+ 10004 : 内存存储角色数据失败 
+ 10005 : 角色绑定逻辑服失败 
+ 10007 : 角色数据还在缓存中，请稍后登录 
  10008 : 升级属性类型不存在 
  10009 : 目标等级不能低于当前等级 
  10010 : 升级费用错误 
@@ -60,3 +65,4 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  10014 : 载具未解锁 
  10015 : 装备使用中 
  10016 : 装备不存在 
+ 10017 : buffTool不存在 

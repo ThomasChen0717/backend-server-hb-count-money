@@ -23,7 +23,7 @@ public class UserAttributePO extends BaseEntity{
     private long id;
 
     /**
-     * 用户id
+     * 角色id
      */
     private long userId;
 
@@ -51,9 +51,4 @@ public class UserAttributePO extends BaseEntity{
      * 宠物等级
      */
     private int petLevel;
-
-    /**
-     * 收益倍数
-     */
-    private float incomeMultiple;
 }

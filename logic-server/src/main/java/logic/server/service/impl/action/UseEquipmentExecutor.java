@@ -27,7 +27,7 @@ public class UseEquipmentExecutor implements BaseExecutor<UseEquipmentReqPb, Use
         // 检测是否已经使用了同种效果的装备
         UserEquipmentDTO sameAttributeTypeUserEquipmentDTO = null;
         CfgEquipmentDTO targetCfgEquipmentDTO = CfgManagerSingleton.getInstance().getCfgEquipmentByIdFromCache(arg.getTargetEquipmentId());
-        List<UserEquipmentDTO> userEquipmentDTOList = UserManagerSingleton.getInstance().getEquipmentListByAttributeTypeFromCache(userId,targetCfgEquipmentDTO.getEffectAttributeType());
+        List<UserEquipmentDTO> userEquipmentDTOList = UserManagerSingleton.getInstance().getUserEquipmentListByAttributeTypeFromCache(userId,targetCfgEquipmentDTO.getEffectAttributeType());
         for(UserEquipmentDTO userEquipmentDTO : userEquipmentDTOList){
             if(userEquipmentDTO.isInUse() && userEquipmentDTO.getEquipmentId() != targetUserEquipmentDTO.getEquipmentId()){
                 sameAttributeTypeUserEquipmentDTO = userEquipmentDTO;

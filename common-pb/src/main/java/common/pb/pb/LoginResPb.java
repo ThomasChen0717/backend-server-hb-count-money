@@ -27,7 +27,7 @@ import java.util.List;
 public class LoginResPb {
     /** token */
     String token;
-    /** 用户id */
+    /** 角色id */
     long userId;
     /** 金钱数量 */
     long money;
@@ -73,9 +73,12 @@ public class LoginResPb {
     /** 宠物效果公式 */
     String petEffectFormula;
 
-    /** 用户载具列表 **/
+    /** 角色载具列表 **/
     List<VehicleInfoPb> vehicleInfoPbList = new ArrayList<>();
 
-    /** 用户装备列表 **/
+    /** 角色装备列表 **/
     List<EquipmentInfoPb> equipmentInfoPbList = new ArrayList<>();
+
+    /** 角色BuffTool列表 **/
+    List<BuffToolInfoPb> buffToolInfoPbList = new ArrayList<>();
 }

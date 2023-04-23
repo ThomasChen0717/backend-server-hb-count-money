@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 用户载具信息
+ * 角色载具信息
  *
  * @author mark
  * @date 2023-04-19

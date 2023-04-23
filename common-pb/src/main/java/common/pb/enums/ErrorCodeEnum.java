@@ -15,17 +15,17 @@ import lombok.experimental.FieldDefaults;
 public enum ErrorCodeEnum implements MsgExceptionInfo {
     /** 登录模块-错误码 **/
     /** 号已经在线上，不允许重复登录 */
-    accountOnline(10001, "用户已经在线上，不允许重复登录"),
-    /** 创建或者获取用户失败 */
-    addOrGetUserFailed(10002, "创建或者获取用户信息失败"),
+    accountOnline(10001, "角色已经在线上，不允许重复登录"),
+    /** 创建或者获取角色失败 */
+    addOrGetUserFailed(10002, "创建或者获取角色信息失败"),
     /** 登录异常 */
     loginError(10003, "登录异常"),
-    /** 内存存储用户数据失败 */
-    addUserDataToCacheFailed(10004, "内存存储用户数据失败"),
-    /** 用户绑定逻辑服失败 */
-    userBindServerIdFailed(10005, "用户绑定逻辑服失败"),
-    /** 用户数据还在缓存中 */
-    userDataStillInCache(10007, "用户数据还在缓存中，请稍后登录"),
+    /** 内存存储角色数据失败 */
+    addUserDataToCacheFailed(10004, "内存存储角色数据失败"),
+    /** 角色绑定逻辑服失败 */
+    userBindServerIdFailed(10005, "角色绑定逻辑服失败"),
+    /** 角色数据还在缓存中 */
+    userDataStillInCache(10007, "角色数据还在缓存中，请稍后登录"),
     /** 升级属性类型不存在 */
     attributeTypeError(10008, "升级属性类型不存在"),
     /** 目标等级不能低于当前等级 */
@@ -44,6 +44,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     equipmentIsUsing(10015, "装备使用中"),
     /** 装备不存在 */
     equipmentNotExist(10016, "装备不存在"),
+    /** buffTool不存在 */
+    buffToolNotExist(10017, "buffTool不存在"),
     ;
 
     /** 消息码 */

@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 用户装备信息
+ * 角色装备信息
  *
  * @author mark
  * @date 2023-04-19
@@ -43,4 +43,8 @@ public class EquipmentInfoPb {
     float effectAttributeMultiple;
     /** 影响属性说明 **/
     String effectAttributeRemark;
+    /** 显示顺序：值越小展示越靠前 **/
+    int showIndex;
+    /** 前置装备条件：0表示没有开启前置装备条件 **/
+    int preEquipmentId;
 }

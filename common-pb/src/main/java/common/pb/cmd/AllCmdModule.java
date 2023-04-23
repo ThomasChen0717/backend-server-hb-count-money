@@ -9,6 +9,6 @@ package common.pb.cmd;
 public interface AllCmdModule {
     /** 登录模块 */
     int loginCmd = 1;
-    /** 用户模块 */
+    /** 角色模块 */
     int userCmd = 2;
 }

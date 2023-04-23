@@ -17,7 +17,7 @@ public class UserPO extends BaseEntity{
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户id（也是主键id）
+     * 角色id（也是主键id）
      */
     @TableId(value = "id", type = IdType.AUTO)
     private long id;

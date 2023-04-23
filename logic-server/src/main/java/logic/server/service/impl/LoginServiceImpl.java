@@ -1,5 +1,6 @@
 package logic.server.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iohao.game.action.skeleton.core.commumication.ProcessorContext;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
@@ -9,15 +10,19 @@ import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import common.pb.enums.ErrorCodeEnum;
 import common.pb.enums.LoginPlatformEnum;
+import common.pb.pb.BuffToolInfoPb;
+import common.pb.pb.EffectAttributeInfoPb;
 import common.pb.pb.EquipmentInfoPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import common.pb.pb.VehicleInfoPb;
 import logic.server.config.NacosConfiguration;
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
@@ -63,7 +68,7 @@ public class LoginServiceImpl implements ILoginService {
         ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userDTO);
 
         long userId = userDTO.getId();
-        // 获取用户数据后处理逻辑
+        // 获取角色数据后处理逻辑
         if (!isForcedOffline) {
             // 查询用户是否在线
             boolean existUser = ExternalCommunicationKit.existUser(userId);
@@ -76,17 +81,19 @@ public class LoginServiceImpl implements ILoginService {
             ExternalCommunicationKit.forcedOffline(userId);
         }
 
-        /** 检测用户此逻辑服内存中是否存在数据（有多个逻辑服后应检测t_user.server_id是否等于0） **/
+        /** 检测角色此逻辑服内存中是否存在数据（有多个逻辑服后应检测t_user.server_id是否等于0） **/
         boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
         ErrorCodeEnum.userDataStillInCache.assertTrue(!isUserDataStillInCache);
 
-        /** 检测数据库中是否存在用户数据 **/
+        /** 检测数据库中是否存在角色数据 **/
         UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
         ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userAttributeDTO);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapByIdFromDB(userId);
         ErrorCodeEnum.addOrGetUserFailed.assertTrue(userVehicleDTOMap.size() > 0);
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
         ErrorCodeEnum.addOrGetUserFailed.assertTrue(userEquipmentDTOMap.size() > 0);
+        Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
+        ErrorCodeEnum.addOrGetUserFailed.assertTrue(userBuffToolDTOMap.size() > 0);
 
         // channel 中设置用户的真实 userId；
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
@@ -96,14 +103,15 @@ public class LoginServiceImpl implements ILoginService {
         boolean isBindSuccess = userBindServerId(userId);
         ErrorCodeEnum.userBindServerIdFailed.assertTrue(isBindSuccess);
 
-        // 从数据库获取的用户数据存储到内存中
-        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap);
+        // 从数据库获取的角色数据存储到内存中
+        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap);
         ErrorCodeEnum.addUserDataToCacheFailed.assertTrue(isAddSuccess);
 
         // 老用户需要检测载具和装备模版数据，是否有新增
         if(!userDTO.isNewUser()){
             checkCfgVehicleOnOldUserLogin(userDTO.getId());
             checkCfgEquipmentOnOldUserLogin(userDTO.getId());
+            checkCfgBuffToolOnOldUserLogin(userDTO.getId());
         }
 
         // 填充登录报文回复数据
@@ -141,7 +149,7 @@ public class LoginServiceImpl implements ILoginService {
                 }
             }
         }else if(loginReqPb.getToken() != null){
-            // 通过token获取用户
+            // 通过token获取角色
             userDTO = userService.getUserByTokenFromDB(loginReqPb.getToken());
         }
 
@@ -154,7 +162,7 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     /**
-     * 创建新用户并且初始化用户数据
+     * 创建新角色并且初始化角色数据
      * @param loginPlatform
      * @param unionId
      * @param newToken
@@ -192,10 +200,17 @@ public class LoginServiceImpl implements ILoginService {
                 addUserEquipment(newUserDTO.getId(),cfgEquipmentDTO);
             }
 
-            log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新用户成功",loginPlatform,unionId,newUserDTO.getId());
+            // t_user_buff_tool表插入记录
+            Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap = CfgManagerSingleton.getInstance().getCfgBuffToolDTOMap();
+            for(Map.Entry<Integer,CfgBuffToolDTO> entryBuffTool : cfgBuffToolDTOMap.entrySet()){
+                CfgBuffToolDTO cfgBuffToolDTO = entryBuffTool.getValue();
+                addUserBuffTool(newUserDTO.getId(),cfgBuffToolDTO);
+            }
+
+            log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新角色成功",loginPlatform,unionId,newUserDTO.getId());
             return newUserDTO;
         }catch (Exception e){
-            log.error("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},message = {},创建新用户失败",loginPlatform,unionId,e.getMessage());
+            log.error("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},message = {},创建新角色失败",loginPlatform,unionId,e.getMessage());
         }
         return null;
     }
@@ -205,9 +220,10 @@ public class LoginServiceImpl implements ILoginService {
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentMapByIdFromCache(userId);
+        Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
 
         LoginResPb loginResPb = new LoginResPb();
-        /** 用户数据 **/
+        /** 角色数据 **/
         loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory());
 
         /** 全局配置数据 **/
@@ -215,14 +231,14 @@ public class LoginServiceImpl implements ILoginService {
         int energyMaxValue = Integer.valueOf((CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("energyMaxValue")).getValueName()).intValue();
         loginResPb.setEnergyAddValue(energyAddValue).setEnergyMaxValue(energyMaxValue);
 
-        /** 用户属性等级数据 **/
+        /** 角色属性等级数据 **/
         loginResPb.setStrengthLevel(userAttributeDTO.getStrengthLevel()).setPhysicalLevel(userAttributeDTO.getPhysicalLevel())
                 .setPhysicalRestoreLevel(userAttributeDTO.getPhysicalRestoreLevel()).setEnduranceLevel(userAttributeDTO.getEnduranceLevel())
-                .setPetLevel(userAttributeDTO.getPetLevel()).setIncomeMultiple(userAttributeDTO.getIncomeMultiple());
-        float incomeMultiple = userAttributeDTO.getIncomeMultiple();
+                .setPetLevel(userAttributeDTO.getPetLevel());
+        float incomeMultiple = UserManagerSingleton.getInstance().getUserIncomeMultipleAttributeFromCache(userId);
         loginResPb.setIncomeMultiple(incomeMultiple);
 
-        /** 用户属性升级和效果公式 **/
+        /** 角色属性升级和效果公式 **/
         CfgAttributeDTO cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.strengthLevel.getAttributeType());
         loginResPb.setStrengthLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setStrengthEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
         cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.physicalLevel.getAttributeType());
@@ -234,7 +250,7 @@ public class LoginServiceImpl implements ILoginService {
         cfgAttributeDTO = CfgManagerSingleton.getInstance().getCfgAttributeByTypeFromCache(AttributeEnum.petLevel.getAttributeType());
         loginResPb.setPetLevelUpFormula(cfgAttributeDTO.getAttributeLevelUpFormula()).setPetEffectFormula(cfgAttributeDTO.getAttributeEffectFormula());
 
-        /** 用户载具数据 **/
+        /** 角色载具数据 **/
         for(Map.Entry<Integer,UserVehicleDTO> entryVehicle : userVehicleDTOMap.entrySet()){
             UserVehicleDTO userVehicleDTO = entryVehicle.getValue();
             VehicleInfoPb vehicleInfoPb = new VehicleInfoPb();
@@ -252,7 +268,7 @@ public class LoginServiceImpl implements ILoginService {
             loginResPb.getVehicleInfoPbList().add(vehicleInfoPb);
         }
 
-        /** 用户装备数据 **/
+        /** 角色装备数据 **/
         for(Map.Entry<Integer,UserEquipmentDTO> entryEquipment : userEquipmentDTOMap.entrySet()){
             UserEquipmentDTO userEquipmentDTO = entryEquipment.getValue();
             EquipmentInfoPb equipmentInfoPb = new EquipmentInfoPb();
@@ -266,10 +282,34 @@ public class LoginServiceImpl implements ILoginService {
             CfgEquipmentDTO cfgEquipmentDTO = cfgEquipmentDTOMap.get(userEquipmentDTO.getEquipmentId());
             equipmentInfoPb.setEquipmentName(cfgEquipmentDTO.getEquipmentName()).setUnlockConditionType(cfgEquipmentDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionType()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
-                    .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark());
+                    .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark())
+                    .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId());
 
             loginResPb.getEquipmentInfoPbList().add(equipmentInfoPb);
         }
+
+        /** 角色buffTool数据 **/
+        for(Map.Entry<Integer, UserBuffToolDTO> entryBuffTool : userBuffToolDTOMap.entrySet()){
+            UserBuffToolDTO userBuffToolDTO = entryBuffTool.getValue();
+            BuffToolInfoPb buffToolInfoPb = new BuffToolInfoPb();
+
+            /** buffTool配置数据 **/
+            Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap = CfgManagerSingleton.getInstance().getCfgBuffToolDTOMap();
+            CfgBuffToolDTO cfgBuffToolDTO = cfgBuffToolDTOMap.get(userBuffToolDTO.getBuffToolId());
+            buffToolInfoPb.setBuffToolId(cfgBuffToolDTO.getBuffToolId()).setDurations(cfgBuffToolDTO.getDurations());
+            List<EffectAttributeInfoPb> effectAttributeInfoPbList = new ArrayList<>();
+            JSONArray jsonArrayEffectAttributeInfo = JSONArray.parseArray(cfgBuffToolDTO.getEffectAttributeInfo());
+            for(int i = 0;i<jsonArrayEffectAttributeInfo.size();i++){
+                EffectAttributeInfoPb effectAttributeInfoPb = new EffectAttributeInfoPb();
+                effectAttributeInfoPb.setAttributeType(jsonArrayEffectAttributeInfo.getJSONObject(i).getInteger("attributeType"));
+                effectAttributeInfoPb.setMultiple(jsonArrayEffectAttributeInfo.getJSONObject(i).getFloat("multiple"));
+                effectAttributeInfoPbList.add(effectAttributeInfoPb);
+            }
+            buffToolInfoPb.setEffectAttributeInfoPbList(effectAttributeInfoPbList);
+
+            loginResPb.getBuffToolInfoPbList().add(buffToolInfoPb);
+        }
+
         return loginResPb;
     }
 
@@ -294,8 +334,16 @@ public class LoginServiceImpl implements ILoginService {
         UserManagerSingleton.getInstance().addUserEquipmentToCache(userId,newUserEquipmentDTO.getEquipmentId(),newUserEquipmentDTO);
     }
 
+    private void addUserBuffTool(long userId,CfgBuffToolDTO cfgBuffToolDTO){
+        UserBuffToolDTO newUserBuffToolDTO = new UserBuffToolDTO();
+        newUserBuffToolDTO.setUserId(userId).setBuffToolId(cfgBuffToolDTO.getBuffToolId()).setInUse(false);
+        userService.addUserBuffToolToDB(newUserBuffToolDTO);
+        // 缓存存在，则缓存数据中也新增
+        UserManagerSingleton.getInstance().addUserBuffToolToCache(userId,newUserBuffToolDTO.getBuffToolId(),newUserBuffToolDTO);
+    }
+
     /**
-     * 老用户登录检测是否有新的载具模版数据需处理
+     * 老角色登录检测是否有新的载具模版数据需处理
      * @param userId
      */
     private void checkCfgVehicleOnOldUserLogin(long userId){
@@ -307,7 +355,7 @@ public class LoginServiceImpl implements ILoginService {
                 newCfgVehicleDTOList.add(entry.getValue());
             }
         }
-        // 新增的载具模版需要添加到用户载具数据中
+        // 新增的载具模版需要添加到角色载具数据中
         for(CfgVehicleDTO cfgVehicleDTO : newCfgVehicleDTOList){
             addUserVehicle(userId,false,cfgVehicleDTO);
         }
@@ -326,9 +374,28 @@ public class LoginServiceImpl implements ILoginService {
                 newCfgEquipmentDTOList.add(entry.getValue());
             }
         }
-        // 新增的装备模版需要添加到用户装备数据中
+        // 新增的装备模版需要添加到角色装备数据中
         for(CfgEquipmentDTO cfgEquipmentDTO : newCfgEquipmentDTOList){
             addUserEquipment(userId,cfgEquipmentDTO);
+        }
+    }
+
+    /**
+     * 老用户登录检测是否有新的BuffTool模版数据需处理
+     * @param userId
+     */
+    private void checkCfgBuffToolOnOldUserLogin(long userId){
+        List<CfgBuffToolDTO> newCfgBuffToolDTOList = new ArrayList<>();
+        Map<Integer,CfgBuffToolDTO> cfgBuffToolDTOMap = CfgManagerSingleton.getInstance().getCfgBuffToolDTOMap();
+        for(Map.Entry<Integer,CfgBuffToolDTO> entry : cfgBuffToolDTOMap.entrySet()){
+            Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
+            if(userBuffToolDTOMap.get(entry.getKey()) == null){
+                newCfgBuffToolDTOList.add(entry.getValue());
+            }
+        }
+        // 新增的buffTool模版需要添加到角色buffTool数据中
+        for(CfgBuffToolDTO cfgBuffToolDTO : newCfgBuffToolDTOList){
+            addUserBuffTool(userId,cfgBuffToolDTO);
         }
     }
 

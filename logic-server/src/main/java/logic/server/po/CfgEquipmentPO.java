@@ -52,4 +52,14 @@ public class CfgEquipmentPO extends BaseEntity{
      * 影响属性说明
      */
     private String effectAttributeRemark;
+
+    /**
+     * 显示顺序：值越小展示越靠前
+     */
+    private int showIndex;
+
+    /**
+     * 前置装备条件：0表示没有开启前置装备条件
+     */
+    private int preEquipmentId;
 }

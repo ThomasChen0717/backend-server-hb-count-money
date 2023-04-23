@@ -10,6 +10,8 @@ import common.pb.pb.ChangeVehicleReqPb;
 import common.pb.pb.ChangeVehicleResPb;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
+import common.pb.pb.StartOrEndBuffToolReqPb;
+import common.pb.pb.StartOrEndBuffToolResPb;
 import common.pb.pb.UseEquipmentReqPb;
 import common.pb.pb.UseEquipmentResPb;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -48,5 +50,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.useEquipment)
     public UseEquipmentResPb useEquipment(UseEquipmentReqPb useEquipmentReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (UseEquipmentResPb)userService.getExecutor(UserCmdModule.useEquipmentExecutorName).executor(useEquipmentReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.startOrEndBuffTool)
+    public StartOrEndBuffToolResPb startOrEndBuffTool(StartOrEndBuffToolReqPb startOrEndBuffToolReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (StartOrEndBuffToolResPb)userService.getExecutor(UserCmdModule.startOrEndBuffToolToolExecutorName).executor(startOrEndBuffToolReqPb,myFlowContext.getUserId());
     }
 }

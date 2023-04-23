@@ -19,5 +19,4 @@ public class UserAttributeDTO implements DTO{
     private int physicalRestoreLevel = 1;
     private int enduranceLevel = 1;
     private int petLevel = 1;
-    private float incomeMultiple = 1.0f;
 }

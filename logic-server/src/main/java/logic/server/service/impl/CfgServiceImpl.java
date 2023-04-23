@@ -1,10 +1,12 @@
 package logic.server.service.impl;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.repository.CfgAttributeRepository;
+import logic.server.repository.CfgBuffToolRepository;
 import logic.server.repository.CfgEquipmentRepository;
 import logic.server.repository.CfgGlobalRepository;
 import logic.server.repository.CfgVehicleRepository;
@@ -25,6 +27,8 @@ public class CfgServiceImpl implements ICfgService {
     private CfgAttributeRepository cfgAttributeRepository;
     @Autowired
     private CfgEquipmentRepository cfgEquipmentRepository;
+    @Autowired
+    private CfgBuffToolRepository cfgBuffToolRepository;
 
     @Override
     public Map<String, CfgGlobalDTO> getCfgGlobalMap(){
@@ -41,5 +45,9 @@ public class CfgServiceImpl implements ICfgService {
     @Override
     public Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap(){
         return cfgEquipmentRepository.getMap();
+    }
+    @Override
+    public Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap(){
+        return cfgBuffToolRepository.getMap();
     }
 }

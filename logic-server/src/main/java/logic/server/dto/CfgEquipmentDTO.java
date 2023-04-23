@@ -16,4 +16,6 @@ public class CfgEquipmentDTO implements DTO{
     private int effectAttributeType;
     private float effectAttributeMultiple;
     private String effectAttributeRemark;
+    private int showIndex;
+    private int preEquipmentId;
 }

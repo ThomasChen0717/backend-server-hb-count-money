@@ -8,6 +8,8 @@ import common.pb.cmd.UserCmdModule;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
+import common.pb.pb.StartOrEndBuffToolReqPb;
+import common.pb.pb.StartOrEndBuffToolResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -105,7 +107,7 @@ public class WebSocketClient {
         LoginReqPb loginReqPb = new LoginReqPb();
         loginReqPb.setLoginPlatform("dy");
         //loginReqPb.setCode("1111");// 创建新用户
-        loginReqPb.setToken("0efe23d9-f2d8-4674-88f6-29fea4208acb");// 登录老用户
+        loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
@@ -117,14 +119,15 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
-        SettlementReqPb settlementReqPb = new SettlementReqPb();
-        settlementReqPb.setSettlementRole(1);
+        StartOrEndBuffToolReqPb startOrEndBuffToolReqPb = new StartOrEndBuffToolReqPb();
+        startOrEndBuffToolReqPb.setBuffToolId(1);
+        startOrEndBuffToolReqPb.setStart(true);
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
                 UserCmdModule.cmd,
-                UserCmdModule.settlement,
-                settlementReqPb
+                UserCmdModule.startOrEndBuffTool,
+                startOrEndBuffToolReqPb
         );
 
         ClientCommandKit.createClientCommand(externalMessageHere, SettlementReqPb.class);

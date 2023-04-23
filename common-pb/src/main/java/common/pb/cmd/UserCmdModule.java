@@ -15,6 +15,9 @@ public interface UserCmdModule {
     /** 使用装备 */
     int useEquipment = 4;
     String useEquipmentExecutorName = "useEquipment";// 执行器名称
+    /** buffTool开始使用或者结束使用 */
+    int startOrEndBuffTool = 5;
+    String startOrEndBuffToolToolExecutorName = "startOrEndBuffTool";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

@@ -1,6 +1,7 @@
 package logic.server.service;
 
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
@@ -32,7 +33,11 @@ public interface IUserService {
     int addUserEquipmentToDB(UserEquipmentDTO userEquipmentDTO);
     Map<Integer,UserEquipmentDTO> getUserEquipmentMapByIdFromDB(long userId);
 
-    /** 用户下线数据处理 **/
+    /** t_user_buff_tool **/
+    int addUserBuffToolToDB(UserBuffToolDTO userBuffToolDTO);
+    Map<Integer,UserBuffToolDTO> getUserBuffToolMapByIdFromDB(long userId);
+
+    /** 角色下线数据处理 **/
     void saveDataFromCacheToDB(long userId);
 
     /** 获取指定执行器**/

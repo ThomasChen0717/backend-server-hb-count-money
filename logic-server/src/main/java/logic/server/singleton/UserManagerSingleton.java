@@ -2,12 +2,15 @@ package logic.server.singleton;
 
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.enums.AttributeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.management.Attribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,7 @@ public class UserManagerSingleton {
     private Map<Long, UserAttributeDTO> allUserAttributeDTOMap;
     private Map<Long, Map<Integer,UserVehicleDTO> > allUserVehicleDTOMap;
     private Map<Long,Map<Integer, UserEquipmentDTO> > allUserEquipmentDTOMap;
+    private Map<Long,Map<Integer, UserBuffToolDTO> > allUserBuffToolDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -33,17 +37,20 @@ public class UserManagerSingleton {
         allUserAttributeDTOMap = new HashMap<>();
         allUserVehicleDTOMap = new HashMap<>();
         allUserEquipmentDTOMap = new HashMap<>();
+        allUserBuffToolDTOMap = new HashMap<>();
     }
 
+    /** userDTO start **/
     public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,
-                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap,Map<Integer,UserEquipmentDTO> userEquipmentDTOMap){
+                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap,Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
+                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap){
         boolean isSuccess = true;
-
         try{
             addUserToCache(userId,userDTO);
             addUserAttributeToCache(userId,userAttributeDTO);
             addUserVehicleMapToCache(userId,userVehicleDTOMap);
             addUserEquipmentMapToCache(userId,userEquipmentDTOMap);
+            addUserBuffToolMapToCache(userId,userBuffToolDTOMap);
             log.info("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
         }catch (Exception e){
             isSuccess = false;
@@ -52,7 +59,6 @@ public class UserManagerSingleton {
 
         return isSuccess;
     }
-
     public void addUserToCache(long userId,UserDTO userDTO){
         allUserDTOMap.put(userId,userDTO);
     }
@@ -62,7 +68,9 @@ public class UserManagerSingleton {
     public UserDTO getUserByIdFromCache(long userId){
         return allUserDTOMap.get(userId);
     }
+    /** userDTO end **/
 
+    /** UserAttributeDTO start **/
     public void addUserAttributeToCache(long userId,UserAttributeDTO userAttributeDTO){
         allUserAttributeDTOMap.put(userId,userAttributeDTO);
     }
@@ -72,7 +80,19 @@ public class UserManagerSingleton {
     public UserAttributeDTO getUserAttributeFromCache(long userId){
         return allUserAttributeDTOMap.get(userId);
     }
+    // 获取角色收益倍数属性：通过当前装备和buff加成计算获得
+    public float getUserIncomeMultipleAttributeFromCache(long userId){
+        float inComeMultiple = 1.0f;
+        List<UserEquipmentDTO> userEquipmentDTOList = getUserEquipmentListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
+        for(UserEquipmentDTO userEquipmentDTO : userEquipmentDTOList){
+            CfgEquipmentDTO cfgEquipmentDTO = CfgManagerSingleton.getInstance().getCfgEquipmentByIdFromCache(userEquipmentDTO.getEquipmentId());
+            inComeMultiple *= cfgEquipmentDTO.getEffectAttributeMultiple();
+        }
+        return inComeMultiple;
+    }
+    /** UserAttributeDTO end **/
 
+    /** UserVehicleDTO start **/
     public void addUserVehicleMapToCache(long userId, Map<Integer,UserVehicleDTO> userVehicleDTOMap){
         allUserVehicleDTOMap.put(userId,userVehicleDTOMap);
     }
@@ -101,7 +121,9 @@ public class UserManagerSingleton {
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = getUserVehicleMapByIdFromCache(userId);
         return userVehicleDTOMap.get(vehicleId);
     }
+    /** UserVehicleDTO end **/
 
+    /** UserEquipmentDTO start **/
     public void addUserEquipmentMapToCache(long userId, Map<Integer,UserEquipmentDTO> userEquipmentDTOMap){
         allUserEquipmentDTOMap.put(userId,userEquipmentDTOMap);
     }
@@ -121,7 +143,7 @@ public class UserManagerSingleton {
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = getUserEquipmentMapByIdFromCache(userId);
         return userEquipmentDTOMap.get(equipmentId);
     }
-    public List<UserEquipmentDTO> getEquipmentListByAttributeTypeFromCache(long userId, int attributeType){
+    public List<UserEquipmentDTO> getUserEquipmentListByAttributeTypeFromCache(long userId, int attributeType){
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = getUserEquipmentMapByIdFromCache(userId);
         List<UserEquipmentDTO> userEquipmentDTOList = new ArrayList<>();
         for(Map.Entry<Integer,UserEquipmentDTO> entry : userEquipmentDTOMap.entrySet()){
@@ -132,4 +154,27 @@ public class UserManagerSingleton {
         }
         return userEquipmentDTOList;
     }
+    /** UserEquipmentDTO end **/
+
+    /** UserBuffToolDTO start **/
+    public void addUserBuffToolMapToCache(long userId, Map<Integer,UserBuffToolDTO> userBuffToolDTOMap){
+        allUserBuffToolDTOMap.put(userId,userBuffToolDTOMap);
+    }
+    public void addUserBuffToolToCache(long userId,int buffToolId,UserBuffToolDTO userBuffToolDTO){
+        Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = getUserBuffToolMapByIdFromCache(userId);
+        if(userBuffToolDTOMap != null){
+            userBuffToolDTOMap.put(buffToolId,userBuffToolDTO);
+        }
+    }
+    public void removeUserBuffToolMapInCache(long userId){
+        allUserBuffToolDTOMap.remove(userId);
+    }
+    public Map<Integer,UserBuffToolDTO> getUserBuffToolMapByIdFromCache(long userId){
+        return allUserBuffToolDTOMap.get(userId);
+    }
+    public UserBuffToolDTO getUserBuffToolByIdFromCache(long userId,int buffToolId){
+        Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = getUserBuffToolMapByIdFromCache(userId);
+        return userBuffToolDTOMap.get(buffToolId);
+    }
+    /** UserBuffToolDTO end **/
 }
