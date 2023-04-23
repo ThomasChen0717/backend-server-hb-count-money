@@ -9,6 +9,6 @@ import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
  * @date 2023-04-14
  */
 public interface ILoginService {
-    void Test();
     LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext);
+    void Logout(MyFlowContext myFlowContext);
 }

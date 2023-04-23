@@ -8,6 +8,7 @@ import com.iohao.game.bolt.broker.client.external.config.ExternalGlobalConfig;
 import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
+import common.pb.cmd.LoginCmdModule;
 import external.server.hook.ClientIdleHook;
 import external.server.hook.ClientUserHook;
 
@@ -63,6 +64,6 @@ public class ExternalBoot {
          * 忽略的路由可以添加多个。
          */
         // 登录接口（1-1）忽略控制访问验证
-        accessAuthenticationHook.addIgnoreAuthenticationCmd(1, 1);
+        accessAuthenticationHook.addIgnoreAuthenticationCmd(LoginCmdModule.cmd, LoginCmdModule.loginVerify);
     }
 }

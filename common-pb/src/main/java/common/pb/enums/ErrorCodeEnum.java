@@ -22,6 +22,28 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     loginError(10003, "登录异常"),
     /** 内存存储用户数据失败 */
     addUserDataToCacheFailed(10004, "内存存储用户数据失败"),
+    /** 用户绑定逻辑服失败 */
+    userBindServerIdFailed(10005, "用户绑定逻辑服失败"),
+    /** 用户数据还在缓存中 */
+    userDataStillInCache(10007, "用户数据还在缓存中，请稍后登录"),
+    /** 升级属性类型不存在 */
+    attributeTypeError(10008, "升级属性类型不存在"),
+    /** 目标等级不能低于当前等级 */
+    targetLevelError(10009, "目标等级不能低于当前等级"),
+    /** 升级费用错误 */
+    levelUpMoneyCostError(10010, "升级费用错误"),
+    /** 升级费用不足 */
+    levelUpMoneyCostNotEnough(10011, "升级费用不足"),
+    /** 载具使用中 */
+    vehicleIsUsing(10012, "载具使用中"),
+    /** 载具不存在 */
+    vehicleNotExist(10013, "载具不存在"),
+    /** 载具未解锁 */
+    vehicleIsLock(10014, "载具未解锁"),
+    /** 装备使用中 */
+    equipmentIsUsing(10015, "装备使用中"),
+    /** 装备不存在 */
+    equipmentNotExist(10016, "装备不存在"),
     ;
 
     /** 消息码 */

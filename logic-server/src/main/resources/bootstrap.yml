@@ -4,6 +4,9 @@ spring:
     active: dev
   application:
     name: hb-countmoney-logic-server
+    # 逻辑服id，集群部署一定要注意id唯一
+    # id: ${ID}
+    # id: 1
   cloud:
     inetutils:
       preferred-networks: 10.10 # 选择符合前缀的IP作为服务注册IP

@@ -16,7 +16,9 @@ public class UserAttributeRepositoryImpl implements UserAttributeRepository{
     @Override
     public int add(UserAttributeDTO dto) {
         UserAttributePO po = Convertor.convert(UserAttributePO.class, dto);
-        return userAttributeMapper.insert(po);
+        int result = userAttributeMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
     }
 
     @Override

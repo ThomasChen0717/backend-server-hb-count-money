@@ -16,6 +16,7 @@ import java.util.Map;
 @Service
 public class CfgManagerSingleton {
     private static CfgManagerSingleton instance;
+    private String serverId = "1";
     private Map<String,CfgGlobalDTO> cfgGlobalDTOMap;
     private Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap;
     private Map<Integer, CfgAttributeDTO> cfgAttributeDTOMap;
@@ -43,7 +44,7 @@ public class CfgManagerSingleton {
     public CfgAttributeDTO getCfgAttributeByTypeFromCache(int attributeType){
         return cfgAttributeDTOMap.get(attributeType);
     }
-    public CfgEquipmentDTO getCfgEquipmentByTypeFromCache(int equipmentId){
+    public CfgEquipmentDTO getCfgEquipmentByIdFromCache(int equipmentId){
         return cfgEquipmentDTOMap.get(equipmentId);
     }
 }

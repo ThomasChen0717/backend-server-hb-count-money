@@ -12,6 +12,8 @@ import lombok.experimental.Accessors;
 public class UserDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
+    private boolean isNewUser;
+
     private long id;
     private String name;
     private String loginPlatform;

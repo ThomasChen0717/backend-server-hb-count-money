@@ -21,20 +21,24 @@ public class UserVehicleRepositoryImpl implements UserVehicleRepository {
     @Override
     public int add(UserVehicleDTO dto) {
         UserVehiclePO po = Convertor.convert(UserVehiclePO.class, dto);
-        return userVehicleMapper.insert(po);
+        int result = userVehicleMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
     }
 
     @Override
     public int update(UserVehicleDTO dto){
         UserVehiclePO po = Convertor.convert(UserVehiclePO.class, dto);
         return userVehicleMapper.update(po, new QueryWrapper<UserVehiclePO>()
-                .lambda().eq(UserVehiclePO::getUserId, po.getUserId()));
+                .lambda().eq(UserVehiclePO::getId, po.getId()));
     }
 
     @Override
     public Map<Integer,UserVehicleDTO> getMap(long userId){
         List<UserVehiclePO> cfgVehiclePOList = userVehicleMapper.selectList(new QueryWrapper<UserVehiclePO>()
-                .lambda());
+                .lambda()
+                .eq(UserVehiclePO::getUserId,userId)
+        );
         List<UserVehicleDTO> vehicleDTOList = Convertor.convert(cfgVehiclePOList, UserVehicleDTO.class);
         Map<Integer, UserVehicleDTO> cfgVehicleDTOmap = vehicleDTOList.stream().collect(Collectors.toMap(UserVehicleDTO::getVehicleId, UserVehicleDTO -> UserVehicleDTO));
         return cfgVehicleDTOmap;

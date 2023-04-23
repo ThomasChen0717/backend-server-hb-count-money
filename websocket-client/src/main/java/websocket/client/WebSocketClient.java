@@ -4,7 +4,8 @@ import com.baida.countmoney.client.command.ClientCommandKit;
 import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
-import common.pb.pb.TestRequestPb;
+import common.pb.cmd.UserCmdModule;
+import common.pb.pb.SettlementReqPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import lombok.extern.slf4j.Slf4j;
@@ -103,8 +104,8 @@ public class WebSocketClient {
         // 登录请求
         LoginReqPb loginReqPb = new LoginReqPb();
         loginReqPb.setLoginPlatform("dy");
-        loginReqPb.setCode("1111");// 创建新用户
-        //loginReqPb.setToken("2a6e3af8-a1c1-436b-af57-14e8243e110e");// 登录老用户
+        //loginReqPb.setCode("1111");// 创建新用户
+        loginReqPb.setToken("0efe23d9-f2d8-4674-88f6-29fea4208acb");// 登录老用户
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
@@ -112,21 +113,21 @@ public class WebSocketClient {
                 loginReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 3000);
+        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 6000);
     }
 
     private static void initClientCommands() {
-        TestRequestPb testRequestPb = new TestRequestPb();
-        testRequestPb.name = "塔姆";
+        SettlementReqPb settlementReqPb = new SettlementReqPb();
+        settlementReqPb.setSettlementRole(1);
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
-                LoginCmdModule.cmd,
-                LoginCmdModule.test,
-                testRequestPb
+                UserCmdModule.cmd,
+                UserCmdModule.settlement,
+                settlementReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, TestRequestPb.class);
+        ClientCommandKit.createClientCommand(externalMessageHere, SettlementReqPb.class);
 
 
         /**

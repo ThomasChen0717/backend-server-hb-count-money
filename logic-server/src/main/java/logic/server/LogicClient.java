@@ -5,6 +5,7 @@ import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.common.kit.NetworkKit;
 import logic.server.action.LoginAction;
+import logic.server.config.NacosConfiguration;
 import logic.server.parent.logic.core.MyBarSkeletonConfig;
 import com.iohao.game.action.skeleton.core.BarSkeleton;
 import com.iohao.game.action.skeleton.core.BarSkeletonBuilder;
@@ -12,7 +13,9 @@ import com.iohao.game.action.skeleton.core.BarSkeletonBuilderParamConfig;
 import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
+import logic.server.singleton.CfgManagerSingleton;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -49,8 +52,9 @@ public class LogicClient extends AbstractBrokerClientStartup {
 
     @Override
     public BrokerClientBuilder createBrokerClientBuilder() {
+        String logicServerId = CfgManagerSingleton.getInstance().getServerId();
         BrokerClientBuilder builder = BrokerClient.newBuilder();
-        builder.appName("业务游戏逻辑服");
+        builder.appName("业务游戏逻辑服").id(logicServerId);
         return builder;
     }
 

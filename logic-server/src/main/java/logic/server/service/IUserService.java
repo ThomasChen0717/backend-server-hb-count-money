@@ -4,6 +4,7 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.service.impl.action.BaseExecutor;
 
 import java.util.Map;
 
@@ -13,21 +14,27 @@ import java.util.Map;
  */
 public interface IUserService {
     /** t_user **/
-    int addUser(UserDTO userDTO);
-    UserDTO getUserById(long userId);
-    UserDTO getUserByUnionId(String unionId);
-    UserDTO getUserByToken(String token);
-    int updateUser(UserDTO dto);
+    int addUserToDB(UserDTO userDTO);
+    UserDTO getUserByIdFromDB(long userId);
+    UserDTO getUserByUnionIdFromDB(String unionId);
+    UserDTO getUserByTokenFromDB(String token);
+    int updateUserToDB(UserDTO dto);
 
     /** t_user_attribute **/
-    int addUserAttribute(UserAttributeDTO userAttributeDTO);
-    UserAttributeDTO getUserAttributeById(long userId);
+    int addUserAttributeToDB(UserAttributeDTO userAttributeDTO);
+    UserAttributeDTO getUserAttributeByIdFromDB(long userId);
 
     /** t_user_vehicle **/
-    int addUserVehicle(UserVehicleDTO userVehicleDTO);
-    Map<Integer,UserVehicleDTO> getUserVehicleMapById(long userId);
+    int addUserVehicleToDB(UserVehicleDTO userVehicleDTO);
+    Map<Integer,UserVehicleDTO> getUserVehicleMapByIdFromDB(long userId);
 
     /** t_user_equipment **/
-    int addUserEquipment(UserEquipmentDTO userEquipmentDTO);
-    Map<Integer,UserEquipmentDTO> getUserEquipmentMapById(long userId);
+    int addUserEquipmentToDB(UserEquipmentDTO userEquipmentDTO);
+    Map<Integer,UserEquipmentDTO> getUserEquipmentMapByIdFromDB(long userId);
+
+    /** 用户下线数据处理 **/
+    void saveDataFromCacheToDB(long userId);
+
+    /** 获取指定执行器**/
+    BaseExecutor getExecutor(String executorName);
 }

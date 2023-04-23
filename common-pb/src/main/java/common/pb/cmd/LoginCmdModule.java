@@ -6,9 +6,12 @@ public interface LoginCmdModule {
     /** 登录 */
     int loginVerify = 1;
 
+    /** 登出 */
+    int logout = 2;
+
     /** 广播业务数据 */
-    int broadcastData = 2;
+    int broadcastData = 3;
 
     /** 测试 */
-    int test = 3;
+    int test = 4;
 }

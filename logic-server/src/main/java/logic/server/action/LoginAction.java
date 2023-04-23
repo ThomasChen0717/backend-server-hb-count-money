@@ -3,7 +3,6 @@ package logic.server.action;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
-import common.pb.pb.TestRequestPb;
 import logic.server.service.ILoginService;
 import common.pb.cmd.LoginCmdModule;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -26,7 +25,7 @@ public class LoginAction {
     private ILoginService loginService;
 
     /**
-     * 登录检测
+     * 登录
      * @param loginReqPb
      * @param myFlowContext
      * @return
@@ -38,24 +37,13 @@ public class LoginAction {
     }
 
     /**
-     * 请求、响应
-     *
-     * @param testRequestPb logicRequestPb
-     * @return LogicRequestPb
+     * 登出
+     * @param myFlowContext
+     * @return
+     * @throws MsgException
      */
-    @ActionMethod(LoginCmdModule.test)
-    public TestRequestPb here(TestRequestPb testRequestPb, MyFlowContext myFlowContext) {
-        loginService.Test();
-
-        // 相关文档 https://www.yuque.com/iohao/game/nelwuz#UAUE4
-        log.info("LoginAction::here:testRequestPb = {}", testRequestPb);
-
-        log.info("LoginAction::here:myFlowContext = {}", myFlowContext.getClass());
-        myFlowContext.hello();
-
-        TestRequestPb newTestRequestPb = new TestRequestPb();
-        newTestRequestPb.name = testRequestPb.name + ", I'm here ";
-
-        return newTestRequestPb;
+    @ActionMethod(LoginCmdModule.logout)
+    public void logout(MyFlowContext myFlowContext) throws MsgException{
+        loginService.Logout(myFlowContext);
     }
 }
