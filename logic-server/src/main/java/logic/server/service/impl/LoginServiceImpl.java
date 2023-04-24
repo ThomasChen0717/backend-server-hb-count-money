@@ -30,6 +30,7 @@ import logic.server.enums.AttributeEnum;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
 import logic.server.service.ILoginService;
 import logic.server.service.IUserService;
+import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import logic.server.util.HttpUtil;
@@ -54,6 +55,8 @@ public class LoginServiceImpl implements ILoginService {
     private NacosConfiguration nacosConfiguration;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private SettlementExecutor settlementExecutor;
 
     @Override
     public LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException {
@@ -313,6 +316,12 @@ public class LoginServiceImpl implements ILoginService {
 
             loginResPb.getBuffToolInfoPbList().add(buffToolInfoPb);
         }
+
+        /** 宠物离线时间：单位秒 **/
+        loginResPb.setOfflineTime( (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000 );
+        /** 宠物离线收益 **/
+        long petOfflineIncome = settlementExecutor.petOfflineIncome(userDTO,userAttributeDTO,1);
+        loginResPb.setPetOfflineIncome(petOfflineIncome);
 
         return loginResPb;
     }

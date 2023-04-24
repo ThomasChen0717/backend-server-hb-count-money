@@ -37,12 +37,8 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
                 // 在线结算，最终收益 = 宠物等级对应的收益
                 moneyIncome = userAttributeDTO.getPetLevel() + 1;
             }else{
-                // 离线结算，最终收益 = (latestLoginTime - latestLogoutTime)/petFinishJobTime * 宠物等级对应的收益
-                long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
-                int petOfflineIncomeMaxTime = Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petOfflineIncomeMaxTime").getValueName()) * 3600;
-                if(offlineTime >= petOfflineIncomeMaxTime) offlineTime = petOfflineIncomeMaxTime;
-                int finishJobCount = (int)offlineTime / (Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime").getValueName()));
-                moneyIncome = finishJobCount * (userAttributeDTO.getPetLevel() + 1);
+                // 宠物离线收益
+                moneyIncome = petOfflineIncome(userDTO,userAttributeDTO,arg.getMultiple());
             }
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
@@ -56,5 +52,17 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
         SettlementResPb settlementResPb = new SettlementResPb();
         log.info("SettlementExecutor::executor:userId = {},settlementResPb = {},end",userId,settlementResPb);
         return settlementResPb;
+    }
+
+    // 宠物离线收益
+    public long petOfflineIncome(UserDTO userDTO,UserAttributeDTO userAttributeDTO,int multiple){
+        // 离线结算，最终收益 = (latestLoginTime - latestLogoutTime)/petFinishJobTime * 宠物等级对应的收益
+        long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
+        int petOfflineIncomeMaxTime = Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petOfflineIncomeMaxTime").getValueName()) * 3600;
+        if(offlineTime >= petOfflineIncomeMaxTime) offlineTime = petOfflineIncomeMaxTime;
+        int finishJobCount = (int)offlineTime / (Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime").getValueName()));
+        long offlineIncome = multiple * finishJobCount * (userAttributeDTO.getPetLevel() + 1);
+
+        return offlineIncome;
     }
 }
