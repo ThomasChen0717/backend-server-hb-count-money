@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: external-server
+  profiles:
+    active: @activated@

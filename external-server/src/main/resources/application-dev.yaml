@@ -1,0 +1,6 @@
+server:
+  port: 10100
+
+broker-server:
+  url: 127.0.0.1
+  port: 10200

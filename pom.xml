@@ -63,6 +63,28 @@
     <jakarta.el.version>4.0.2</jakarta.el.version>
   </properties>
 
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <activated>dev</activated>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+  </profiles>
+
+  <build>
+    <!--如果不设置resource 会导致application.yml中的@@找不到pom文件中的配置-->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
   <dependencies>
 
     <!-- lombok 简化 java 代码 -->

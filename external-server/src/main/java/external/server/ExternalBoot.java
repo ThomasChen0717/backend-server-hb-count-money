@@ -9,15 +9,22 @@ import com.iohao.game.bolt.broker.client.external.session.UserSessions;
 import com.iohao.game.bolt.broker.core.client.BrokerAddress;
 import com.iohao.game.bolt.broker.core.common.IoGameGlobalConfig;
 import common.pb.cmd.LoginCmdModule;
+import external.server.config.ConfigTemplate;
 import external.server.hook.ClientIdleHook;
 import external.server.hook.ClientUserHook;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * @author mark
  * @date 2023-04-07
  */
+@AllArgsConstructor
 public class ExternalBoot {
-
     public ExternalServer createExternalServer(int externalPort) {
 
         extractedIgnore();
