@@ -18,7 +18,7 @@
     <module>common-pb</module>
     <module>client-command</module>
     <module>websocket-client</module>
-    <module>run-as-one</module>
+    <!-- <module>run-as-one</module> -->
   </modules>
 
   <properties>
