@@ -41,4 +41,6 @@ public class VehicleInfoPb {
     int capacity;
     /** 额外奖励 **/
     int extraRewardValue;
+    /** 资源名称 **/
+    String resourceName;
 }

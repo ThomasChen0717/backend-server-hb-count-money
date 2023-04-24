@@ -13,30 +13,35 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:36】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:38】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SettlementReqPb
     方法返回值: common.pb.pb.SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:41】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:43】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AttributeLevelUpReqPb
     方法返回值: common.pb.pb.AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:46】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:48】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChangeVehicleReqPb
     方法返回值: common.pb.pb.ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:51】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:53】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UseEquipmentReqPb
     方法返回值: common.pb.pb.UseEquipmentResPb
  
-路由: 2 - 5  --- 【】 --- 【UserAction:56】【startOrEndBuffTool】
+路由: 2 - 5  --- 【】 --- 【UserAction:58】【startOrEndBuffTool】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.StartOrEndBuffToolReqPb
     方法返回值: common.pb.pb.StartOrEndBuffToolResPb
+ 
+路由: 2 - 6  --- 【】 --- 【UserAction:63】【getRedPacket】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.GetRedPacketReqPb
+    方法返回值: common.pb.pb.GetRedPacketResPb
  
 
 ==================== 其它广播推送 ====================
@@ -66,3 +71,4 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  10015 : 装备使用中 
  10016 : 装备不存在 
  10017 : buffTool不存在 
+ 10018 : 角色不存在 

@@ -47,4 +47,6 @@ public class EquipmentInfoPb {
     int showIndex;
     /** 前置装备条件：0表示没有开启前置装备条件 **/
     int preEquipmentId;
+    /** 资源名称 **/
+    String resourceName;
 }

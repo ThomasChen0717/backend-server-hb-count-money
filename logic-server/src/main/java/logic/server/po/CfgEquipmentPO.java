@@ -62,4 +62,9 @@ public class CfgEquipmentPO extends BaseEntity{
      * 前置装备条件：0表示没有开启前置装备条件
      */
     private int preEquipmentId;
+
+    /**
+     * 资源名称
+     */
+    private String resourceName;
 }

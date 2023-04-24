@@ -47,4 +47,9 @@ public class CfgVehiclePO extends BaseEntity{
      * 额外奖励数值
      */
     private int extraRewardValue;
+
+    /**
+     * 资源名称
+     */
+    private String resourceName;
 }

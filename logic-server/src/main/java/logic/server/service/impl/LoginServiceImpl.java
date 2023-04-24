@@ -178,7 +178,8 @@ public class LoginServiceImpl implements ILoginService {
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();
             String name = loginPlatform + unionId.substring(unionId.length() - 6);
-            newUserDTO.setName(name).setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime);
+            newUserDTO.setName(name).setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
+                    .setLatestLogoutTime(currTime);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录
@@ -270,7 +271,7 @@ public class LoginServiceImpl implements ILoginService {
             CfgVehicleDTO cfgVehicleDTO = cfgVehicleDTOMap.get(userVehicleDTO.getVehicleId());
             vehicleInfoPb.setVehicleName(cfgVehicleDTO.getVehicleName()).setUnlockConditionType(cfgVehicleDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionType()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
-                    .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue());
+                    .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue()).setResourceName(cfgVehicleDTO.getResourceName());
 
             loginResPb.getVehicleInfoPbList().add(vehicleInfoPb);
         }
@@ -290,7 +291,7 @@ public class LoginServiceImpl implements ILoginService {
             equipmentInfoPb.setEquipmentName(cfgEquipmentDTO.getEquipmentName()).setUnlockConditionType(cfgEquipmentDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionType()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
                     .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark())
-                    .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId());
+                    .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId()).setResourceName(cfgEquipmentDTO.getResourceName());
 
             loginResPb.getEquipmentInfoPbList().add(equipmentInfoPb);
         }
