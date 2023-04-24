@@ -15,6 +15,7 @@ import logic.server.service.IUserService;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
+import logic.server.service.impl.action.GetRedPacketExecutor;
 import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
 import logic.server.service.impl.action.StartOrEndBuffToolExecutor;
@@ -51,6 +52,8 @@ public class UserServiceImpl implements IUserService {
     private UseEquipmentExecutor useEquipmentExecutor;
     @Autowired
     private StartOrEndBuffToolExecutor startOrEndBuffToolExecutor;
+    @Autowired
+    private GetRedPacketExecutor getRedPacketExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -179,6 +182,8 @@ public class UserServiceImpl implements IUserService {
             return useEquipmentExecutor;
         }else if(executorName.compareTo(UserCmdModule.startOrEndBuffToolToolExecutorName) == 0){
             return startOrEndBuffToolExecutor;
+        }else if(executorName.compareTo(UserCmdModule.getRedPacketExecutorName) == 0){
+            return getRedPacketExecutor;
         }
         return null;
     }

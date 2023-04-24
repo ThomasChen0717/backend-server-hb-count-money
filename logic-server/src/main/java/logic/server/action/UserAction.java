@@ -8,6 +8,8 @@ import common.pb.pb.AttributeLevelUpReqPb;
 import common.pb.pb.AttributeLevelUpResPb;
 import common.pb.pb.ChangeVehicleReqPb;
 import common.pb.pb.ChangeVehicleResPb;
+import common.pb.pb.GetRedPacketReqPb;
+import common.pb.pb.GetRedPacketResPb;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import common.pb.pb.StartOrEndBuffToolReqPb;
@@ -55,5 +57,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.startOrEndBuffTool)
     public StartOrEndBuffToolResPb startOrEndBuffTool(StartOrEndBuffToolReqPb startOrEndBuffToolReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (StartOrEndBuffToolResPb)userService.getExecutor(UserCmdModule.startOrEndBuffToolToolExecutorName).executor(startOrEndBuffToolReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.getRedPacket)
+    public GetRedPacketResPb getRedPacket(GetRedPacketReqPb getRedPacketReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (GetRedPacketResPb)userService.getExecutor(UserCmdModule.getRedPacketExecutorName).executor(getRedPacketReqPb,myFlowContext.getUserId());
     }
 }
