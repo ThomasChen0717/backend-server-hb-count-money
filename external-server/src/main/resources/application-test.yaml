@@ -4,5 +4,5 @@ server:
 
 # 网关服连接信息
 brokerServer:
-  url: http://countmoney-broker-server
+  url: countmoney-broker-server
   port: 80
