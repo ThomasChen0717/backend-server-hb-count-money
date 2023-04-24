@@ -73,6 +73,26 @@
         <activeByDefault>true</activeByDefault>
       </activation>
     </profile>
+
+    <profile>
+      <id>test</id>
+      <properties>
+        <activated>test</activated>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>prod</id>
+      <properties>
+        <activated>prod</activated>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
   </profiles>
 
   <build>

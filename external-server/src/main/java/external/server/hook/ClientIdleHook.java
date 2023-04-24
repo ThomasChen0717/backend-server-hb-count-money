@@ -13,9 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 自定义 心跳钩子事件回调 示例
- * <pre>
- *     给逻辑服发送一个请求
- * </pre>
  *
  * @author mark
  * @date 2023-04-15

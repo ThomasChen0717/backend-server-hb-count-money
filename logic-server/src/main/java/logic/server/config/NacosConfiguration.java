@@ -38,4 +38,12 @@ public class NacosConfiguration {
     @Value("${dy.secret}")
     private String dySecret;
     public String getDySecret() { return dySecret; }
+
+    /** brokerServer **/
+    @Value("${brokerServer.url}")
+    private String brokerServerUrl;
+    public String getBrokerServerUrl() { return brokerServerUrl; }
+    @Value("${brokerServer.port}")
+    private int brokerServerPort;
+    public int getBrokerServerPort() { return brokerServerPort; }
 }

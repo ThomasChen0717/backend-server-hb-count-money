@@ -14,8 +14,8 @@ import com.iohao.game.bolt.broker.client.AbstractBrokerClientStartup;
 import com.iohao.game.bolt.broker.core.client.BrokerClient;
 import com.iohao.game.bolt.broker.core.client.BrokerClientBuilder;
 import logic.server.singleton.CfgManagerSingleton;
+import logic.server.util.BeanUtils;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +30,8 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LogicClient extends AbstractBrokerClientStartup {
+    private NacosConfiguration nacosConfiguration = BeanUtils.getBean(NacosConfiguration.class);
+
     @Override
     public BarSkeleton createBarSkeleton() {
         // 业务框架构建器 配置
@@ -64,6 +66,10 @@ public class LogicClient extends AbstractBrokerClientStartup {
         String localIp = NetworkKit.LOCAL_IP;
         // broker （游戏网关）默认端口
         int brokerPort = BrokerGlobalConfig.brokerPort;
+
+        localIp = nacosConfiguration.getBrokerServerUrl();
+        brokerPort = nacosConfiguration.getBrokerServerPort();
+
         return new BrokerAddress(localIp, brokerPort);
     }
 }

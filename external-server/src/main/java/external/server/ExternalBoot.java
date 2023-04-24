@@ -12,6 +12,7 @@ import common.pb.cmd.LoginCmdModule;
 import external.server.config.ConfigTemplate;
 import external.server.hook.ClientIdleHook;
 import external.server.hook.ClientUserHook;
+import external.server.util.BeanUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +24,9 @@ import org.springframework.stereotype.Service;
  * @author mark
  * @date 2023-04-07
  */
-@AllArgsConstructor
 public class ExternalBoot {
+    private ConfigTemplate configTemplate = BeanUtils.getBean(ConfigTemplate.class);
+
     public ExternalServer createExternalServer(int externalPort) {
 
         extractedIgnore();
@@ -40,12 +42,15 @@ public class ExternalBoot {
                 // 设置 自定义心跳钩子事件回调
                 .idleHook(new ClientIdleHook());
 
+        String brokerServerUrl = configTemplate.getBrokerServerUrl();
+        int brokerServerPort = configTemplate.getBrokerServerPort();
+
         // 游戏对外服 - 构建器
         ExternalServerBuilder builder = ExternalServer.newBuilder(externalPort)
                 // websocket 方式连接
                 .externalJoinEnum(ExternalJoinEnum.WEBSOCKET)
                 // Broker （游戏网关）的连接地址；如果不设置，默认也是这个配置
-                .brokerAddress(new BrokerAddress("127.0.0.1", IoGameGlobalConfig.brokerPort))
+                .brokerAddress(new BrokerAddress(brokerServerUrl, brokerServerPort))
                 // 开启心跳
                 .enableIdle(idleProcessSetting)
                 ;

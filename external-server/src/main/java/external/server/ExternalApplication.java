@@ -2,6 +2,8 @@ package external.server;
 
 import com.iohao.game.action.skeleton.ext.spring.ActionFactoryBeanForSpring;
 import com.iohao.game.bolt.broker.client.external.ExternalServer;
+import external.server.config.ConfigTemplate;
+import external.server.util.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +22,9 @@ public class ExternalApplication {
         // 启动 spring boot
         SpringApplication.run(ExternalApplication.class, args);
 
+        ConfigTemplate configTemplate = BeanUtils.getBean(ConfigTemplate.class);
         // 对外开放的端口
-        int externalPort = 10100;
+        int externalPort = configTemplate.getServerPort();
 
         // 构建游戏对外服
         ExternalServer externalServer = new ExternalBoot().createExternalServer(externalPort);
