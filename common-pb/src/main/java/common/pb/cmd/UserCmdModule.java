@@ -18,6 +18,9 @@ public interface UserCmdModule {
     /** buffTool开始使用或者结束使用 */
     int startOrEndBuffTool = 5;
     String startOrEndBuffToolToolExecutorName = "startOrEndBuffTool";// 执行器名称
+    /** 领取天降红包 */
+    int getRedPacket = 6;
+    String getRedPacketExecutorName = "getRedPacket";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;
