@@ -120,6 +120,10 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
+        if(true){
+            return;
+        }
+
         ChallengeMagnateSuccessReqPb challengeMagnateSuccessReqPb = new ChallengeMagnateSuccessReqPb();
         challengeMagnateSuccessReqPb.setMagnateId(3);
         challengeMagnateSuccessReqPb.setMultiple(1);

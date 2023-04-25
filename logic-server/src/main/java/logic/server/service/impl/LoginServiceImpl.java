@@ -10,6 +10,7 @@ import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import common.pb.enums.ErrorCodeEnum;
 import common.pb.enums.LoginPlatformEnum;
+import common.pb.pb.BossInfoPb;
 import common.pb.pb.BuffToolInfoPb;
 import common.pb.pb.EffectAttributeInfoPb;
 import common.pb.pb.EquipmentInfoPb;
@@ -19,11 +20,13 @@ import common.pb.pb.MagnateInfoPb;
 import common.pb.pb.VehicleInfoPb;
 import logic.server.config.NacosConfiguration;
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
@@ -99,6 +102,7 @@ public class LoginServiceImpl implements ILoginService {
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
+        Map<Integer,UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
 
         // channel 中设置用户的真实 userId；
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
@@ -110,7 +114,7 @@ public class LoginServiceImpl implements ILoginService {
 
         // 从数据库获取的角色数据存储到内存中
         boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,
-                userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap);
+                userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap);
         ErrorCodeEnum.addUserDataToCacheFailed.assertTrue(isAddSuccess);
 
         // 老用户需要检测载具,装备,buffTool,富豪挑战模版数据，是否有新增
@@ -119,6 +123,7 @@ public class LoginServiceImpl implements ILoginService {
             checkCfgEquipmentOnOldUserLogin(userDTO.getId());
             checkCfgBuffToolOnOldUserLogin(userDTO.getId());
             checkCfgMagnateOnOldUserLogin(userDTO.getId());
+            checkCfgBossOnOldUserLogin(userDTO.getId());
         }
 
         // 填充登录报文回复数据
@@ -220,11 +225,16 @@ public class LoginServiceImpl implements ILoginService {
 
             // t_user_magnate表插入记录
             Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap = CfgManagerSingleton.getInstance().getCfgMagnateDTOMap();
-            List<CfgMagnateDTO> cfgMagnateDTOList = new ArrayList<>(cfgMagnateDTOMap.values());
-            cfgMagnateDTOList = cfgMagnateDTOList.stream().sorted(Comparator.comparing(CfgMagnateDTO::getMagnateId)).collect(Collectors.toList());
-            for(int i=0;i<cfgMagnateDTOList.size();i++){
-                CfgMagnateDTO cfgMagnateDTO = cfgMagnateDTOList.get(i);
+            for(Map.Entry<Integer,CfgMagnateDTO> entryMagnate : cfgMagnateDTOMap.entrySet()){
+                CfgMagnateDTO cfgMagnateDTO = entryMagnate.getValue();
                 addUserMagnate(newUserDTO.getId(),cfgMagnateDTO.getPreMagnateId() == 0 ? true : false,cfgMagnateDTO);
+            }
+
+            // t_user_boss表插入记录
+            Map<Integer, CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
+            for(Map.Entry<Integer,CfgBossDTO> entryBoss : cfgBossDTOMap.entrySet()){
+                CfgBossDTO cfgBossDTO = entryBoss.getValue();
+                addUserBoss(newUserDTO.getId(),cfgBossDTO.getPreBossId() == 0 ? true : false,cfgBossDTO);
             }
 
             log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新角色成功",loginPlatform,unionId,newUserDTO.getId());
@@ -242,6 +252,7 @@ public class LoginServiceImpl implements ILoginService {
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentMapByIdFromCache(userId);
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
+        Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
 
         LoginResPb loginResPb = new LoginResPb();
         /** 角色数据 **/
@@ -362,6 +373,24 @@ public class LoginServiceImpl implements ILoginService {
             loginResPb.getMagnateInfoPbList().add(magnateInfoPb);
         }
 
+        /** 角色boss挑战数据 **/
+        for(Map.Entry<Integer, UserBossDTO> entryBoss : userBossDTOMap.entrySet()){
+            UserBossDTO userBossDTO = entryBoss.getValue();
+            BossInfoPb bossInfoPb = new BossInfoPb();
+
+            /** boss挑战实例数据 **/
+            bossInfoPb.setBossId(userBossDTO.getBossId()).setUnlocked(userBossDTO.isUnlocked());
+
+            /** boss挑战配置数据 **/
+            Map<Integer, CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
+            CfgBossDTO cfgBossDTO = cfgBossDTOMap.get(userBossDTO.getBossId());
+            bossInfoPb.setBossName(cfgBossDTO.getBossName()).setSpeed(cfgBossDTO.getSpeed()).setTargetMoneyAmount(cfgBossDTO.getTargetMoneyAmount())
+                    .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).
+                    setResourceName(cfgBossDTO.getResourceName());
+
+            loginResPb.getBossInfoPbList().add(bossInfoPb);
+        }
+
         return loginResPb;
     }
 
@@ -400,6 +429,14 @@ public class LoginServiceImpl implements ILoginService {
         userService.addUserMagnateToDB(newUserMagnateDTO);
         // 缓存存在，则缓存数据中也新增
         UserManagerSingleton.getInstance().addUserMagnateToCache(userId,newUserMagnateDTO.getMagnateId(),newUserMagnateDTO);
+    }
+
+    private void addUserBoss(long userId,boolean isUnlocked, CfgBossDTO cfgBossDTO){
+        UserBossDTO newUserBossDTO = new UserBossDTO();
+        newUserBossDTO.setUserId(userId).setBossId(cfgBossDTO.getBossId()).setUnlocked(isUnlocked);
+        userService.addUserBossToDB(newUserBossDTO);
+        // 缓存存在，则缓存数据中也新增
+        UserManagerSingleton.getInstance().addUserBossToCache(userId,newUserBossDTO.getBossId(),newUserBossDTO);
     }
 
     /**
@@ -475,6 +512,25 @@ public class LoginServiceImpl implements ILoginService {
         // 新增的富豪模版需要添加到角色富豪挑战数据中
         for(int i = 0;i<newCfgMagnateDTOList.size();i++){
             addUserMagnate(userId,newCfgMagnateDTOList.get(i).getPreMagnateId() == 0 ? true : false,newCfgMagnateDTOList.get(i));
+        }
+    }
+
+    /**
+     * 老用户登录检测是否有新的boss挑战模版数据需处理
+     * @param userId
+     */
+    private void checkCfgBossOnOldUserLogin(long userId){
+        List<CfgBossDTO> newCfgBossDTOList = new ArrayList<>();
+        Map<Integer,CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
+        for(Map.Entry<Integer,CfgBossDTO> entry : cfgBossDTOMap.entrySet()){
+            Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
+            if(userBossDTOMap.get(entry.getKey()) == null){
+                newCfgBossDTOList.add(entry.getValue());
+            }
+        }
+        // 新增的boss模版需要添加到角色boss挑战数据中
+        for(int i = 0;i<newCfgBossDTOList.size();i++){
+            addUserBoss(userId,newCfgBossDTOList.get(i).getPreBossId() == 0 ? true : false,newCfgBossDTOList.get(i));
         }
     }
 

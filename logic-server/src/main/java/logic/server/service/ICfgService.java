@@ -1,6 +1,7 @@
 package logic.server.service;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
@@ -16,4 +17,5 @@ public interface ICfgService {
     Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap();
     Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap();
     Map<Integer, CfgMagnateDTO> getCfgMagnateMap();
+    Map<Integer, CfgBossDTO> getCfgBossMap();
 }

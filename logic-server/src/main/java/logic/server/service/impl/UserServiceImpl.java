@@ -2,12 +2,14 @@ package logic.server.service.impl;
 
 import common.pb.cmd.UserCmdModule;
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.repository.UserAttributeRepository;
+import logic.server.repository.UserBossRepository;
 import logic.server.repository.UserBuffToolRepository;
 import logic.server.repository.UserEquipmentRepository;
 import logic.server.repository.UserMagnateRepository;
@@ -45,6 +47,8 @@ public class UserServiceImpl implements IUserService {
     private UserBuffToolRepository userBuffToolRepository;
     @Autowired
     private UserMagnateRepository userMagnateRepository;
+    @Autowired
+    private UserBossRepository userBossRepository;
 
     /** 注入执行器-start **/
     @Autowired
@@ -141,6 +145,16 @@ public class UserServiceImpl implements IUserService {
     }
     /** t_user_magnate end **/
 
+    /** t_user_boss start **/
+    @Override
+    public int addUserBossToDB(UserBossDTO userBossDTO){
+        return userBossRepository.add(userBossDTO);
+    }
+    @Override
+    public Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId){
+        return userBossRepository.getMap(userId);
+    }
+
     @Override
     public void saveDataFromCacheToDB(long userId){
         try{
@@ -189,6 +203,14 @@ public class UserServiceImpl implements IUserService {
                     userMagnateRepository.update(entryMagnate.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserMagnateMapInCache(userId);
+            }
+            /** save t_user_boss **/
+            Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
+            if(userBossDTOMap != null){
+                for(Map.Entry<Integer,UserBossDTO> entryBoss : userBossDTOMap.entrySet()){
+                    userBossRepository.update(entryBoss.getValue());
+                }
+                UserManagerSingleton.getInstance().removeUserBossMapInCache(userId);
             }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功",userId);
         }catch (Exception e){

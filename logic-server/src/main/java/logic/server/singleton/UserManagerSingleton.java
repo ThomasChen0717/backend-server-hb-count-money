@@ -3,6 +3,7 @@ package logic.server.singleton;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
@@ -28,6 +29,7 @@ public class UserManagerSingleton {
     private Map<Long,Map<Integer, UserEquipmentDTO> > allUserEquipmentDTOMap;
     private Map<Long,Map<Integer, UserBuffToolDTO> > allUserBuffToolDTOMap;
     private Map<Long,Map<Integer, UserMagnateDTO> > allUserMagnateDTOMap;
+    private Map<Long,Map<Integer, UserBossDTO> > allUserBossDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -42,12 +44,14 @@ public class UserManagerSingleton {
         allUserEquipmentDTOMap = new HashMap<>();
         allUserBuffToolDTOMap = new HashMap<>();
         allUserMagnateDTOMap = new HashMap<>();
+        allUserBossDTOMap = new HashMap<>();
     }
 
     /** userDTO start **/
     public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,
                                       Map<Integer,UserVehicleDTO> userVehicleDTOMap,Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
-                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap,Map<Integer,UserMagnateDTO> userMagnateDTOMap ){
+                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap,Map<Integer,UserMagnateDTO> userMagnateDTOMap,
+                                      Map<Integer,UserBossDTO> userBossDTOMap){
         boolean isSuccess = true;
         try{
             addUserToCache(userId,userDTO);
@@ -56,6 +60,7 @@ public class UserManagerSingleton {
             addUserEquipmentMapToCache(userId,userEquipmentDTOMap);
             addUserBuffToolMapToCache(userId,userBuffToolDTOMap);
             addUserMagnateMapToCache(userId,userMagnateDTOMap);
+            addUserBossMapToCache(userId,userBossDTOMap);
             log.info("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
         }catch (Exception e){
             isSuccess = false;
@@ -238,4 +243,25 @@ public class UserManagerSingleton {
         return userMagnateDTOMap.get(magnateId);
     }
     /** UserMagnateDTO end **/
+
+    /** UserBossDTO start **/
+    public void addUserBossMapToCache(long userId, Map<Integer,UserBossDTO> userBossDTOMap){
+        allUserBossDTOMap.put(userId,userBossDTOMap);
+    }
+    public void addUserBossToCache(long userId, int bossId, UserBossDTO userBossDTO){
+        Map<Integer,UserBossDTO> userBossDTOMap = getUserBossMapByIdFromCache(userId);
+        if(userBossDTOMap != null){
+            userBossDTOMap.put(bossId,userBossDTO);
+        }
+    }
+    public void removeUserBossMapInCache(long userId){
+        allUserBossDTOMap.remove(userId);
+    }
+    public Map<Integer,UserBossDTO> getUserBossMapByIdFromCache(long userId){
+        return allUserBossDTOMap.get(userId);
+    }
+    public UserBossDTO getUserBossByIdFromCache(long userId,int bossId){
+        Map<Integer,UserBossDTO> userBossDTOMap = getUserBossMapByIdFromCache(userId);
+        return userBossDTOMap.get(bossId);
+    }
 }

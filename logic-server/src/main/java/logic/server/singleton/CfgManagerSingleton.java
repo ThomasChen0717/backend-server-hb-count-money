@@ -1,6 +1,7 @@
 package logic.server.singleton;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
@@ -8,6 +9,7 @@ import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.ognl.IntHashMap;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class CfgManagerSingleton {
     private Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap;
     private Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap;
     private Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap;
+    private Map<Integer, CfgBossDTO> cfgBossDTOMap;
 
     public static synchronized CfgManagerSingleton getInstance() {
         if (instance == null) {
@@ -39,6 +42,7 @@ public class CfgManagerSingleton {
         cfgEquipmentDTOMap = new HashMap<>();
         cfgBuffToolDTOMap = new HashMap<>();
         cfgMagnateDTOMap = new HashMap<>();
+        cfgBossDTOMap = new IntHashMap();
     }
 
     /** t_cfg_global **/
@@ -73,6 +77,19 @@ public class CfgManagerSingleton {
     public CfgMagnateDTO getNextCfgMagnateByIdFromCache(int magnateId){
         for(Map.Entry<Integer,CfgMagnateDTO> entry : cfgMagnateDTOMap.entrySet()){
             if(entry.getValue().getPreMagnateId() == magnateId){
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    /** t_cfg_boss **/
+    public CfgBossDTO getCfgBossByIdFromCache(int bossId){
+        return cfgBossDTOMap.get(bossId);
+    }
+    public CfgBossDTO getNextCfgBossByIdFromCache(int bossId){
+        for(Map.Entry<Integer,CfgBossDTO> entry : cfgBossDTOMap.entrySet()){
+            if(entry.getValue().getPreBossId() == bossId){
                 return entry.getValue();
             }
         }

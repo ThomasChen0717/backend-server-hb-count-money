@@ -91,4 +91,7 @@ public class LoginResPb {
 
     /** 角色富豪挑战列表 **/
     List<MagnateInfoPb> magnateInfoPbList = new ArrayList<>();
+
+    /** 角色boss挑战列表 **/
+    List<BossInfoPb> bossInfoPbList = new ArrayList<>();
 }

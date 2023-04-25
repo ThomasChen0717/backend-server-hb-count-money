@@ -1,6 +1,7 @@
 package logic.server.service;
 
 import logic.server.dto.UserAttributeDTO;
+import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
@@ -41,6 +42,10 @@ public interface IUserService {
     /** t_user_magnate **/
     int addUserMagnateToDB(UserMagnateDTO userMagnateDTO);
     Map<Integer,UserMagnateDTO> getUserMagnateMapByIdFromDB(long userId);
+
+    /** t_user_boss **/
+    int addUserBossToDB(UserBossDTO userBossDTO);
+    Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId);
 
     /** 角色下线数据处理 **/
     void saveDataFromCacheToDB(long userId);

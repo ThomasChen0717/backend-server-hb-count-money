@@ -54,6 +54,10 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     magnateNotExist(10020, "富豪不存在"),
     /** 富豪未解锁 */
     magnateIsLock(10021, "富豪未解锁"),
+    /** boss不存在 */
+    bossNotExist(10022, "boss不存在"),
+    /** 富豪未解锁 */
+    bossIsLock(10023, "boss未解锁"),
     ;
 
     /** 消息码 */

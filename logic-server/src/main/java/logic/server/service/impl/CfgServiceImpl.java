@@ -1,12 +1,14 @@
 package logic.server.service.impl;
 
 import logic.server.dto.CfgAttributeDTO;
+import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.repository.CfgAttributeRepository;
+import logic.server.repository.CfgBossRepository;
 import logic.server.repository.CfgBuffToolRepository;
 import logic.server.repository.CfgEquipmentRepository;
 import logic.server.repository.CfgGlobalRepository;
@@ -33,6 +35,8 @@ public class CfgServiceImpl implements ICfgService {
     private CfgBuffToolRepository cfgBuffToolRepository;
     @Autowired
     private CfgMagnateRepository cfgMagnateRepository;
+    @Autowired
+    private CfgBossRepository cfgBossRepository;
 
     @Override
     public Map<String, CfgGlobalDTO> getCfgGlobalMap(){
@@ -57,5 +61,9 @@ public class CfgServiceImpl implements ICfgService {
     @Override
     public Map<Integer, CfgMagnateDTO> getCfgMagnateMap(){
         return cfgMagnateRepository.getMap();
+    }
+    @Override
+    public Map<Integer, CfgBossDTO> getCfgBossMap(){
+        return cfgBossRepository.getMap();
     }
 }

@@ -80,3 +80,5 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  10019 : 装备未解锁 
  10020 : 富豪不存在 
  10021 : 富豪未解锁 
+ 10022 : boss不存在 
+ 10023 : boss未解锁 

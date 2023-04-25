@@ -24,6 +24,9 @@ public interface UserCmdModule {
     /** 富豪挑战成功 */
     int challengeMagnateSuccess = 7;
     String challengeMagnateSuccessExecutorName = "challengeMagnateSuccess";// 执行器名称
+    /** boss挑战成功 */
+    int challengeBossSuccess = 7;
+    String challengeBossSuccessExecutorName = "challengeBossSuccess";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;
