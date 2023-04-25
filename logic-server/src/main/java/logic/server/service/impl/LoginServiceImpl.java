@@ -300,8 +300,9 @@ public class LoginServiceImpl implements ILoginService {
         // 装备根据showIndex排序
         List<EquipmentInfoPb> equipmentInfoPbList = loginResPb.getEquipmentInfoPbList();
         equipmentInfoPbList = equipmentInfoPbList.stream().sorted(
-                Comparator.comparing(EquipmentInfoPb::getShowIndex, Comparator.reverseOrder()).thenComparing(EquipmentInfoPb::getEquipmentId)
+                Comparator.comparing(EquipmentInfoPb::getShowIndex).thenComparing(EquipmentInfoPb::getEquipmentId)
         ).collect(Collectors.toList());
+        loginResPb.setEquipmentInfoPbList(equipmentInfoPbList);
 
         /** 角色buffTool数据 **/
         for(Map.Entry<Integer, UserBuffToolDTO> entryBuffTool : userBuffToolDTOMap.entrySet()){
