@@ -39,10 +39,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author mark
@@ -295,6 +297,11 @@ public class LoginServiceImpl implements ILoginService {
 
             loginResPb.getEquipmentInfoPbList().add(equipmentInfoPb);
         }
+        // 装备根据showIndex排序
+        List<EquipmentInfoPb> equipmentInfoPbList = loginResPb.getEquipmentInfoPbList();
+        equipmentInfoPbList = equipmentInfoPbList.stream().sorted(
+                Comparator.comparing(EquipmentInfoPb::getShowIndex, Comparator.reverseOrder()).thenComparing(EquipmentInfoPb::getEquipmentId)
+        ).collect(Collectors.toList());
 
         /** 角色buffTool数据 **/
         for(Map.Entry<Integer, UserBuffToolDTO> entryBuffTool : userBuffToolDTOMap.entrySet()){

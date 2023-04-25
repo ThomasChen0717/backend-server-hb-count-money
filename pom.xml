@@ -96,6 +96,23 @@
   </profiles>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <!--在打成jar包中spring-boot中依赖包可以打入进去-默认是不打入的-->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${springboot.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
     <!--如果不设置resource 会导致application.yml中的@@找不到pom文件中的配置-->
     <resources>
       <resource>
@@ -103,6 +120,7 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+
   </build>
 
   <dependencies>
