@@ -85,7 +85,7 @@ public class LoginResPb {
     List<BuffToolInfoPb> buffToolInfoPbList = new ArrayList<>();
 
     /** 宠物离线时间：单位秒 **/
-    long offlineTime;
+    int offlineTime;
     /** 宠物离线收益 **/
-    long petOfflineIncome;
+    int petOfflineIncome;
 }

@@ -23,6 +23,7 @@ public class UseEquipmentExecutor implements BaseExecutor<UseEquipmentReqPb, Use
         UserEquipmentDTO targetUserEquipmentDTO = UserManagerSingleton.getInstance().getUserEquipmentByIdFromCache(userId,arg.getTargetEquipmentId());
         ErrorCodeEnum.equipmentNotExist.assertNonNull(targetUserEquipmentDTO);
         ErrorCodeEnum.equipmentIsUsing.assertTrue(!targetUserEquipmentDTO.isInUse());
+        ErrorCodeEnum.equipmentIsLock.assertTrue(!targetUserEquipmentDTO.isUnlocked());
 
         // 检测是否已经使用了同种效果的装备
         UserEquipmentDTO sameAttributeTypeUserEquipmentDTO = null;

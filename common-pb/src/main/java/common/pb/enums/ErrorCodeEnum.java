@@ -48,6 +48,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     buffToolNotExist(10017, "buffTool不存在"),
     /** 角色不存在 */
     userNotExist(10018, "角色不存在"),
+    /** 装备未解锁 */
+    equipmentIsLock(10019, "装备未解锁"),
     ;
 
     /** 消息码 */
