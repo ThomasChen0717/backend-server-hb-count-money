@@ -6,6 +6,8 @@ import com.iohao.game.action.skeleton.core.exception.MsgException;
 import common.pb.cmd.UserCmdModule;
 import common.pb.pb.AttributeLevelUpReqPb;
 import common.pb.pb.AttributeLevelUpResPb;
+import common.pb.pb.ChallengeMagnateSuccessReqPb;
+import common.pb.pb.ChallengeMagnateSuccessResPb;
 import common.pb.pb.ChangeVehicleReqPb;
 import common.pb.pb.ChangeVehicleResPb;
 import common.pb.pb.GetRedPacketReqPb;
@@ -62,5 +64,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.getRedPacket)
     public GetRedPacketResPb getRedPacket(GetRedPacketReqPb getRedPacketReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (GetRedPacketResPb)userService.getExecutor(UserCmdModule.getRedPacketExecutorName).executor(getRedPacketReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.challengeMagnateSuccess)
+    public ChallengeMagnateSuccessResPb challengeMagnateSuccess(ChallengeMagnateSuccessReqPb challengeMagnateSuccessReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (ChallengeMagnateSuccessResPb)userService.getExecutor(UserCmdModule.challengeMagnateSuccessExecutorName).executor(challengeMagnateSuccessReqPb,myFlowContext.getUserId());
     }
 }

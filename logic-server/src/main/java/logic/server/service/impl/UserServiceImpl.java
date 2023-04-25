@@ -5,15 +5,18 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
+import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.repository.UserAttributeRepository;
 import logic.server.repository.UserBuffToolRepository;
 import logic.server.repository.UserEquipmentRepository;
+import logic.server.repository.UserMagnateRepository;
 import logic.server.repository.UserRepository;
 import logic.server.repository.UserVehicleRepository;
 import logic.server.service.IUserService;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
+import logic.server.service.impl.action.ChallengeMagnateSuccessExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
 import logic.server.service.impl.action.GetRedPacketExecutor;
 import logic.server.service.impl.action.SettlementExecutor;
@@ -40,6 +43,8 @@ public class UserServiceImpl implements IUserService {
     private UserEquipmentRepository userEquipmentRepository;
     @Autowired
     private UserBuffToolRepository userBuffToolRepository;
+    @Autowired
+    private UserMagnateRepository userMagnateRepository;
 
     /** 注入执行器-start **/
     @Autowired
@@ -54,6 +59,8 @@ public class UserServiceImpl implements IUserService {
     private StartOrEndBuffToolExecutor startOrEndBuffToolExecutor;
     @Autowired
     private GetRedPacketExecutor getRedPacketExecutor;
+    @Autowired
+    private ChallengeMagnateSuccessExecutor challengeMagnateSuccessExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -123,6 +130,17 @@ public class UserServiceImpl implements IUserService {
     }
     /** t_user_buff_tool end **/
 
+    /** t_user_magnate start **/
+    @Override
+    public int addUserMagnateToDB(UserMagnateDTO userMagnateDTO){
+        return userMagnateRepository.add(userMagnateDTO);
+    }
+    @Override
+    public Map<Integer,UserMagnateDTO> getUserMagnateMapByIdFromDB(long userId){
+        return userMagnateRepository.getMap(userId);
+    }
+    /** t_user_magnate end **/
+
     @Override
     public void saveDataFromCacheToDB(long userId){
         try{
@@ -164,6 +182,14 @@ public class UserServiceImpl implements IUserService {
                 }
                 UserManagerSingleton.getInstance().removeUserBuffToolMapInCache(userId);
             }
+            /** save t_user_magnate **/
+            Map<Integer,UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
+            if(userMagnateDTOMap != null){
+                for(Map.Entry<Integer,UserMagnateDTO> entryMagnate : userMagnateDTOMap.entrySet()){
+                    userMagnateRepository.update(entryMagnate.getValue());
+                }
+                UserManagerSingleton.getInstance().removeUserMagnateMapInCache(userId);
+            }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功",userId);
         }catch (Exception e){
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败",userId,e.getMessage());
@@ -184,6 +210,8 @@ public class UserServiceImpl implements IUserService {
             return startOrEndBuffToolExecutor;
         }else if(executorName.compareTo(UserCmdModule.getRedPacketExecutorName) == 0){
             return getRedPacketExecutor;
+        }else if(executorName.compareTo(UserCmdModule.challengeMagnateSuccessExecutorName) == 0){
+            return challengeMagnateSuccessExecutor;
         }
         return null;
     }

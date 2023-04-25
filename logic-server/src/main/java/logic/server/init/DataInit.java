@@ -19,5 +19,6 @@ public class DataInit implements CommandLineRunner {
         CfgManagerSingleton.getInstance().setCfgAttributeDTOMap(cfgService.getCfgAttributeMap());
         CfgManagerSingleton.getInstance().setCfgEquipmentDTOMap(cfgService.getCfgEquipmentMap());
         CfgManagerSingleton.getInstance().setCfgBuffToolDTOMap(cfgService.getCfgBuffToolMap());
+        CfgManagerSingleton.getInstance().setCfgMagnateDTOMap(cfgService.getCfgMagnateMap());
     }
 }

@@ -50,6 +50,10 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     userNotExist(10018, "角色不存在"),
     /** 装备未解锁 */
     equipmentIsLock(10019, "装备未解锁"),
+    /** 富豪不存在 */
+    magnateNotExist(10020, "富豪不存在"),
+    /** 富豪未解锁 */
+    magnateIsLock(10021, "富豪未解锁"),
     ;
 
     /** 消息码 */

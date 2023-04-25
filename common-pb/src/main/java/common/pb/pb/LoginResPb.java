@@ -34,12 +34,10 @@ public class LoginResPb {
     /** 历史金钱数量 */
     long moneyHistory;
 
-    /** 完成一次数钱操作增加能量点数 */
-    int energyAddValue;
-    /** 能量最大点数 */
-    int energyMaxValue;
-    /** 宠物完成一次任务时间，单位秒 */
-    int petFinishJobTime;
+    /** 宠物离线时间：单位秒 **/
+    int offlineTime;
+    /** 宠物离线收益 **/
+    int petOfflineIncome;
 
     /** 力量等级 */
     int strengthLevel;
@@ -75,6 +73,13 @@ public class LoginResPb {
     /** 宠物效果公式 */
     String petEffectFormula;
 
+    /** 完成一次数钱操作增加能量点数 */
+    int energyAddValue;
+    /** 能量最大点数 */
+    int energyMaxValue;
+    /** 宠物完成一次任务时间，单位秒 */
+    int petFinishJobTime;
+
     /** 角色载具列表 **/
     List<VehicleInfoPb> vehicleInfoPbList = new ArrayList<>();
 
@@ -84,8 +89,6 @@ public class LoginResPb {
     /** 角色BuffTool列表 **/
     List<BuffToolInfoPb> buffToolInfoPbList = new ArrayList<>();
 
-    /** 宠物离线时间：单位秒 **/
-    int offlineTime;
-    /** 宠物离线收益 **/
-    int petOfflineIncome;
+    /** 角色富豪挑战列表 **/
+    List<MagnateInfoPb> magnateInfoPbList = new ArrayList<>();
 }

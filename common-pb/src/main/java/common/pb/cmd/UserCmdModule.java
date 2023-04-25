@@ -21,6 +21,9 @@ public interface UserCmdModule {
     /** 领取天降红包 */
     int getRedPacket = 6;
     String getRedPacketExecutorName = "getRedPacket";// 执行器名称
+    /** 富豪挑战成功 */
+    int challengeMagnateSuccess = 7;
+    String challengeMagnateSuccessExecutorName = "challengeMagnateSuccess";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

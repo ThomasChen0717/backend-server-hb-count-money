@@ -29,12 +29,12 @@ public class CfgEquipmentPO extends BaseEntity{
     private String equipmentName;
 
     /**
-     * 解锁条件类型：0 广告 1 金钱 2 挑战boss
+     * 解锁条件类型：0 广告 1 金钱
      */
     private int unlockConditionType;
 
     /**
-     * 解锁条件数值（如是挑战boss类型，此值为boss id）
+     * 解锁条件数值
      */
     private int unlockConditionCount;
 

@@ -5,6 +5,7 @@ import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
+import common.pb.pb.ChallengeMagnateSuccessReqPb;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
@@ -119,15 +120,15 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
-        SettlementReqPb settlementReqPb = new SettlementReqPb();
-        settlementReqPb.setSettlementRole(2);
-        settlementReqPb.setSettlementType(2);
+        ChallengeMagnateSuccessReqPb challengeMagnateSuccessReqPb = new ChallengeMagnateSuccessReqPb();
+        challengeMagnateSuccessReqPb.setMagnateId(3);
+        challengeMagnateSuccessReqPb.setMultiple(1);
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
                 UserCmdModule.cmd,
-                UserCmdModule.settlement,
-                settlementReqPb
+                UserCmdModule.challengeMagnateSuccess,
+                challengeMagnateSuccessReqPb
         );
 
         ClientCommandKit.createClientCommand(externalMessageHere, SettlementReqPb.class);

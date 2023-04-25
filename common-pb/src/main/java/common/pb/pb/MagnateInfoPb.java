@@ -10,10 +10,10 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 角色载具信息
+ * 角色富豪挑战信息
  *
  * @author mark
- * @date 2023-04-19
+ * @date 2023-04-25
  */
 @Data
 @Accessors(chain = true)
@@ -21,26 +21,26 @@ import lombok.experimental.FieldDefaults;
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
-public class VehicleInfoPb {
-    /** 载具id **/
-    int vehicleId;
-    /** 是否使用中：false 未使用 true 使用中 **/
-    boolean isInUse;
-    /** 当前解锁条件数值 **/
-    int unlockConditionCurrCount;
-    /** 是否已解除锁定：false 未解锁 true 已解锁 **/
+public class MagnateInfoPb {
+    /** 富豪id **/
+    int magnateId;
+    /** 是否已解除锁定：0 未解锁 1 已解锁 **/
     boolean isUnlocked;
 
-    /** 载具名称 **/
-    String vehicleName;
-    /** 解锁条件类型：0 广告 1 金钱 **/
-    int unlockConditionType;
-    /** 解锁条件数值 **/
-    int unlockConditionCount;
-    /** 容量 **/
-    int capacity;
-    /** 额外奖励 **/
-    int extraRewardValue;
+    /** 富豪名称 **/
+    String magnateName;
+    /** 速度值，以每秒计 **/
+    int speed;
+    /** 目标金钱数量 **/
+    int targetMoneyAmount;
+    /** 奖励金钱数量 **/
+    int rewardMoneyAmount;
+    /** 解锁载具id，0 说明不解锁任何载具 **/
+    int unlockVehicleId;
+    /** 冷却时间，单位秒 **/
+    int cdTime;
+    /** 挑战时间，单位秒 **/
+    int challengeTime;
     /** 资源名称 **/
     String resourceName;
 }

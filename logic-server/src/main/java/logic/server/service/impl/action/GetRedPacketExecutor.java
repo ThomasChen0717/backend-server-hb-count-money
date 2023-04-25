@@ -24,9 +24,7 @@ public class GetRedPacketExecutor implements BaseExecutor<GetRedPacketReqPb, Get
 
         long moneyIncome = arg.getMoney() * arg.getMultiple();
         long finalMoney = userDTO.getMoney() + moneyIncome;
-        long finalMoneyHistory = userDTO.getMoneyHistory() + moneyIncome;
         userDTO.setMoney(finalMoney);
-        userDTO.setMoneyHistory(finalMoneyHistory);
 
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);

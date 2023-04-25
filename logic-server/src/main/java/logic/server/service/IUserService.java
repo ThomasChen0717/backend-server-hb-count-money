@@ -4,6 +4,7 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
+import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.service.impl.action.BaseExecutor;
 
@@ -36,6 +37,10 @@ public interface IUserService {
     /** t_user_buff_tool **/
     int addUserBuffToolToDB(UserBuffToolDTO userBuffToolDTO);
     Map<Integer,UserBuffToolDTO> getUserBuffToolMapByIdFromDB(long userId);
+
+    /** t_user_magnate **/
+    int addUserMagnateToDB(UserMagnateDTO userMagnateDTO);
+    Map<Integer,UserMagnateDTO> getUserMagnateMapByIdFromDB(long userId);
 
     /** 角色下线数据处理 **/
     void saveDataFromCacheToDB(long userId);

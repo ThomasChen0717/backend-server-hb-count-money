@@ -6,6 +6,7 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
+import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.enums.AttributeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class UserManagerSingleton {
     private Map<Long, Map<Integer,UserVehicleDTO> > allUserVehicleDTOMap;
     private Map<Long,Map<Integer, UserEquipmentDTO> > allUserEquipmentDTOMap;
     private Map<Long,Map<Integer, UserBuffToolDTO> > allUserBuffToolDTOMap;
+    private Map<Long,Map<Integer, UserMagnateDTO> > allUserMagnateDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -39,12 +41,13 @@ public class UserManagerSingleton {
         allUserVehicleDTOMap = new HashMap<>();
         allUserEquipmentDTOMap = new HashMap<>();
         allUserBuffToolDTOMap = new HashMap<>();
+        allUserMagnateDTOMap = new HashMap<>();
     }
 
     /** userDTO start **/
     public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,
                                       Map<Integer,UserVehicleDTO> userVehicleDTOMap,Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
-                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap){
+                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap,Map<Integer,UserMagnateDTO> userMagnateDTOMap ){
         boolean isSuccess = true;
         try{
             addUserToCache(userId,userDTO);
@@ -52,6 +55,7 @@ public class UserManagerSingleton {
             addUserVehicleMapToCache(userId,userVehicleDTOMap);
             addUserEquipmentMapToCache(userId,userEquipmentDTOMap);
             addUserBuffToolMapToCache(userId,userBuffToolDTOMap);
+            addUserMagnateMapToCache(userId,userMagnateDTOMap);
             log.info("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
         }catch (Exception e){
             isSuccess = false;
@@ -88,12 +92,14 @@ public class UserManagerSingleton {
         /** 装备-收益倍数加成 **/
         List<UserEquipmentDTO> userEquipmentDTOList = getUserEquipmentListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
         for(UserEquipmentDTO userEquipmentDTO : userEquipmentDTOList){
+            if(!userEquipmentDTO.isInUse()) continue;
             CfgEquipmentDTO cfgEquipmentDTO = CfgManagerSingleton.getInstance().getCfgEquipmentByIdFromCache(userEquipmentDTO.getEquipmentId());
             inComeMultiple *= cfgEquipmentDTO.getEffectAttributeMultiple();
         }
         /** buffTool-收益倍数加成 **/
         List<UserBuffToolDTO> userBuffToolDTOList = getUserBuffToolListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
         for(UserBuffToolDTO userBuffToolDTO : userBuffToolDTOList){
+            if(!userBuffToolDTO.isInUse()) continue;
             CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(userBuffToolDTO.getBuffToolId());
             float buffToolMultiple = 1.0f;
             for(int i=0;i<cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().size();i++){
@@ -198,7 +204,7 @@ public class UserManagerSingleton {
         List<UserBuffToolDTO> userBuffToolDTOList = new ArrayList<>();
         for(Map.Entry<Integer,UserBuffToolDTO> entry : userBuffToolDTOMap.entrySet()){
             CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(entry.getKey());
-            if(cfgBuffToolDTO != null && entry.getValue().isInUse()){
+            if(cfgBuffToolDTO != null){
                 for(int i=0;i<cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().size();i++){
                     if(cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i).getInteger("attributeType") == attributeType){
                         userBuffToolDTOList.add(entry.getValue());
@@ -210,4 +216,26 @@ public class UserManagerSingleton {
         return userBuffToolDTOList;
     }
     /** UserBuffToolDTO end **/
+
+    /** UserMagnateDTO start **/
+    public void addUserMagnateMapToCache(long userId, Map<Integer,UserMagnateDTO> userMagnateDTOMap){
+        allUserMagnateDTOMap.put(userId,userMagnateDTOMap);
+    }
+    public void addUserMagnateToCache(long userId, int magnateId, UserMagnateDTO userMagnateDTO){
+        Map<Integer,UserMagnateDTO> userMagnateDTOMap = getUserMagnateMapByIdFromCache(userId);
+        if(userMagnateDTOMap != null){
+            userMagnateDTOMap.put(magnateId,userMagnateDTO);
+        }
+    }
+    public void removeUserMagnateMapInCache(long userId){
+        allUserMagnateDTOMap.remove(userId);
+    }
+    public Map<Integer,UserMagnateDTO> getUserMagnateMapByIdFromCache(long userId){
+        return allUserMagnateDTOMap.get(userId);
+    }
+    public UserMagnateDTO getUserMagnateByIdFromCache(long userId,int magnateId){
+        Map<Integer,UserMagnateDTO> userMagnateDTOMap = getUserMagnateMapByIdFromCache(userId);
+        return userMagnateDTOMap.get(magnateId);
+    }
+    /** UserMagnateDTO end **/
 }
