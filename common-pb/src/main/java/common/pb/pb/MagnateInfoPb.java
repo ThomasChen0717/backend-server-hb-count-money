@@ -41,6 +41,8 @@ public class MagnateInfoPb {
     int cdTime;
     /** 挑战时间，单位秒 **/
     int challengeTime;
+    /** 前置富豪id，0 表示没有前置富豪条件 **/
+    int preMagnateId;
     /** 资源名称 **/
     String resourceName;
 }

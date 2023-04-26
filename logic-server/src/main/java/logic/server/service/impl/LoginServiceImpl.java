@@ -366,9 +366,11 @@ public class LoginServiceImpl implements ILoginService {
             /** 富豪挑战配置数据 **/
             Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap = CfgManagerSingleton.getInstance().getCfgMagnateDTOMap();
             CfgMagnateDTO cfgMagnateDTO = cfgMagnateDTOMap.get(userMagnateDTO.getMagnateId());
-            magnateInfoPb.setMagnateName(cfgMagnateDTO.getMagnateName()).setSpeed(cfgMagnateDTO.getSpeed()).setTargetMoneyAmount(cfgMagnateDTO.getTargetMoneyAmount())
-                            .setRewardMoneyAmount(cfgMagnateDTO.getRewardMoneyAmount()).setUnlockVehicleId(cfgMagnateDTO.getUnlockVehicleId()).
-                    setCdTime(cfgMagnateDTO.getCdTime()).setChallengeTime(cfgMagnateDTO.getChallengeTime()).setResourceName(cfgMagnateDTO.getResourceName());
+            magnateInfoPb.setMagnateName(cfgMagnateDTO.getMagnateName()).setSpeed(cfgMagnateDTO.getSpeed())
+                    .setTargetMoneyAmount(cfgMagnateDTO.getTargetMoneyAmount())
+                            .setRewardMoneyAmount(cfgMagnateDTO.getRewardMoneyAmount()).setUnlockVehicleId(cfgMagnateDTO.getUnlockVehicleId())
+                            .setCdTime(cfgMagnateDTO.getCdTime()).setChallengeTime(cfgMagnateDTO.getChallengeTime())
+                            .setPreMagnateId(cfgMagnateDTO.getPreMagnateId()).setResourceName(cfgMagnateDTO.getResourceName());
 
             loginResPb.getMagnateInfoPbList().add(magnateInfoPb);
         }
