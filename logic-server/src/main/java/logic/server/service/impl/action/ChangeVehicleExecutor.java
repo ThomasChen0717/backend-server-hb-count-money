@@ -13,18 +13,30 @@ import org.springframework.stereotype.Service;
 public class ChangeVehicleExecutor implements BaseExecutor<ChangeVehicleReqPb, ChangeVehicleResPb,Long>{
     @Override
     public ChangeVehicleResPb executor(ChangeVehicleReqPb arg, Long userId){
-        log.info("ChangeVehicleExecutor::executor:userId = {},start",userId);
+        log.info("ChangeVehicleExecutor::executor:userId = {},arg = {},start",userId,arg);
+        ChangeVehicleResPb changeVehicleResPb = new ChangeVehicleResPb();
 
         UserVehicleDTO userVehicleDTO = UserManagerSingleton.getInstance().getUserUsingVehicleByIdFromCache(userId);
-        ErrorCodeEnum.vehicleIsUsing.assertTrue(!(userVehicleDTO.getVehicleId() == arg.getTargetVehicleId()) );
+        if(userVehicleDTO.getVehicleId() == arg.getTargetVehicleId()){
+            changeVehicleResPb.setCode(ErrorCodeEnum.vehicleIsUsing.getCode()).setMessage(ErrorCodeEnum.vehicleIsUsing.getMsg());
+            log.info("ChangeVehicleExecutor::executor:userId = {},changeVehicleResPb = {},end",userId,changeVehicleResPb);
+            return changeVehicleResPb;
+        }
         UserVehicleDTO userTargetVehicleDTO = UserManagerSingleton.getInstance().getUserVehicleByIdFromCache(userId,arg.getTargetVehicleId());
-        ErrorCodeEnum.vehicleNotExist.assertNonNull(userTargetVehicleDTO == null);
-        ErrorCodeEnum.vehicleIsLock.assertTrue(userTargetVehicleDTO.isUnlocked());
+        if(userTargetVehicleDTO == null){
+            changeVehicleResPb.setCode(ErrorCodeEnum.vehicleNotExist.getCode()).setMessage(ErrorCodeEnum.vehicleNotExist.getMsg());
+            log.info("ChangeVehicleExecutor::executor:userId = {},changeVehicleResPb = {},end",userId,changeVehicleResPb);
+            return changeVehicleResPb;
+        }
+        if(!userTargetVehicleDTO.isUnlocked()){
+            changeVehicleResPb.setCode(ErrorCodeEnum.vehicleIsLock.getCode()).setMessage(ErrorCodeEnum.vehicleIsLock.getMsg());
+            log.info("ChangeVehicleExecutor::executor:userId = {},changeVehicleResPb = {},end",userId,changeVehicleResPb);
+            return changeVehicleResPb;
+        }
 
         userVehicleDTO.setInUse(false);
         userTargetVehicleDTO.setInUse(true);
 
-        ChangeVehicleResPb changeVehicleResPb = new ChangeVehicleResPb();
         changeVehicleResPb.setVehicleId(arg.getTargetVehicleId()).setUnloadVehicleId(userVehicleDTO.getVehicleId());
         log.info("ChangeVehicleExecutor::executor:userId = {},changeVehicleResPb = {},end",userId,changeVehicleResPb);
         return changeVehicleResPb;

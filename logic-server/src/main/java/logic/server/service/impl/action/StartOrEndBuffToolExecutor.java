@@ -13,13 +13,18 @@ import org.springframework.stereotype.Service;
 public class StartOrEndBuffToolExecutor implements BaseExecutor<StartOrEndBuffToolReqPb, StartOrEndBuffToolResPb,Long> {
     @Override
     public StartOrEndBuffToolResPb executor(StartOrEndBuffToolReqPb arg, Long userId){
-        log.info("StartOrEndBuffToolExecutor::executor:userId = {},start",userId);
+        log.info("StartOrEndBuffToolExecutor::executor:userId = {},arg = {},start",userId,arg);
+        StartOrEndBuffToolResPb startOrEndBuffToolResPb = new StartOrEndBuffToolResPb();
+
         UserBuffToolDTO userBuffToolDTO = UserManagerSingleton.getInstance().getUserBuffToolByIdFromCache(userId,arg.getBuffToolId());
-        ErrorCodeEnum.buffToolNotExist.assertNonNull(userBuffToolDTO);
+        if(userBuffToolDTO == null){
+            startOrEndBuffToolResPb.setCode(ErrorCodeEnum.buffToolNotExist.getCode()).setMessage(ErrorCodeEnum.buffToolNotExist.getMsg());
+            log.info("StartOrEndBuffToolExecutor::executor:userId = {},startOrEndBuffToolResPb = {},end",userId,startOrEndBuffToolResPb);
+            return startOrEndBuffToolResPb;
+        }
 
         userBuffToolDTO.setInUse(arg.isStart);
 
-        StartOrEndBuffToolResPb startOrEndBuffToolResPb = new StartOrEndBuffToolResPb();
         log.info("StartOrEndBuffToolExecutor::executor:userId = {},startBuffToolResPb = {},end",userId, startOrEndBuffToolResPb);
         return startOrEndBuffToolResPb;
     }

@@ -17,10 +17,15 @@ public class GetRedPacketExecutor implements BaseExecutor<GetRedPacketReqPb, Get
     private IPushPbService pushPbService;
     @Override
     public GetRedPacketResPb executor(GetRedPacketReqPb arg, Long userId){
-        log.info("GetRedPacketExecutor::executor:userId = {},start",userId);
+        log.info("GetRedPacketExecutor::executor:userId = {},arg = {},start",userId,arg);
+        GetRedPacketResPb getRedPacketResPb = new GetRedPacketResPb();
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
-        ErrorCodeEnum.userNotExist.assertNonNull(userDTO);
+        if(userDTO == null){
+            getRedPacketResPb.setCode(ErrorCodeEnum.userNotExist.getCode()).setMessage(ErrorCodeEnum.userNotExist.getMsg());
+            log.info("GetRedPacketExecutor::executor:userId = {},getRedPacketResPb = {},end",userId,getRedPacketResPb);
+            return getRedPacketResPb;
+        }
 
         long moneyIncome = arg.getMoney() * arg.getMultiple();
         long finalMoney = userDTO.getMoney() + moneyIncome;
@@ -29,7 +34,6 @@ public class GetRedPacketExecutor implements BaseExecutor<GetRedPacketReqPb, Get
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        GetRedPacketResPb getRedPacketResPb = new GetRedPacketResPb();
         log.info("GetRedPacketExecutor::executor:userId = {},getRedPacketResPb = {},end",userId,getRedPacketResPb);
         return getRedPacketResPb;
     }

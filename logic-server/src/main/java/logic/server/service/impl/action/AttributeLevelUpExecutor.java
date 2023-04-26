@@ -21,13 +21,22 @@ public class AttributeLevelUpExecutor implements BaseExecutor<AttributeLevelUpRe
 
     @Override
     public AttributeLevelUpResPb executor(AttributeLevelUpReqPb arg, Long userId) throws MsgException {
-        log.info("AttributeLevelUpExecutor::executor:userId = {},start",userId);
+        log.info("AttributeLevelUpExecutor::executor:userId = {},arg = {},start",userId,arg);
+        AttributeLevelUpResPb attributeLevelUpResPb = new AttributeLevelUpResPb();
+
+        if(arg.getMoneyCost() < 0){
+            attributeLevelUpResPb.setCode(ErrorCodeEnum.levelUpMoneyCostError.getCode()).setMessage(ErrorCodeEnum.levelUpMoneyCostError.getMsg());
+            log.info("AttributeLevelUpExecutor::executor:userId = {},attributeLevelUpResPb = {},end",userId,attributeLevelUpResPb);
+            return attributeLevelUpResPb;
+        }
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
-
-        ErrorCodeEnum.levelUpMoneyCostError.assertTrue(arg.getMoneyCost() > 0);
-        ErrorCodeEnum.levelUpMoneyCostNotEnough.assertTrue(userDTO.getMoney() > arg.getMoneyCost());
+        if(userDTO.getMoney() < arg.getMoneyCost()){
+            attributeLevelUpResPb.setCode(ErrorCodeEnum.levelUpMoneyCostNotEnough.getCode()).setMessage(ErrorCodeEnum.levelUpMoneyCostNotEnough.getMsg());
+            log.info("AttributeLevelUpExecutor::executor:userId = {},attributeLevelUpResPb = {},end",userId,attributeLevelUpResPb);
+            return attributeLevelUpResPb;
+        }
 
         int attributeLevel = 0;
         if(arg.getAttributeType() == AttributeEnum.strengthLevel.getAttributeType()){
@@ -70,7 +79,6 @@ public class AttributeLevelUpExecutor implements BaseExecutor<AttributeLevelUpRe
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        AttributeLevelUpResPb attributeLevelUpResPb = new AttributeLevelUpResPb();
         attributeLevelUpResPb.setAttributeType(arg.getAttributeType()).setLevel(arg.getTargetLevel());
         log.info("AttributeLevelUpExecutor::executor:userId = {},attributeLevelUpResPb = {},end",userId,attributeLevelUpResPb);
         return attributeLevelUpResPb;

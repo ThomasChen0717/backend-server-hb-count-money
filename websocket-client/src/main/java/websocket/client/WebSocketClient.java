@@ -6,12 +6,9 @@ import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMess
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
 import common.pb.pb.ChallengeBossSuccessReqPb;
-import common.pb.pb.ChallengeMagnateSuccessReqPb;
-import common.pb.pb.SettlementReqPb;
+import common.pb.pb.ChallengeBossSuccessResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
-import common.pb.pb.StartOrEndBuffToolReqPb;
-import common.pb.pb.StartOrEndBuffToolResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -121,9 +118,9 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
-        //if(true){
-            //return;
-        //}
+        if(true){
+            return;
+        }
 
         ChallengeBossSuccessReqPb challengeBossSuccessReqPb = new ChallengeBossSuccessReqPb();
         challengeBossSuccessReqPb.setBossId(1);
@@ -136,7 +133,7 @@ public class WebSocketClient {
                 challengeBossSuccessReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, SettlementReqPb.class);
+        ClientCommandKit.createClientCommand(externalMessageHere, ChallengeBossSuccessResPb.class);
 
 
         /**

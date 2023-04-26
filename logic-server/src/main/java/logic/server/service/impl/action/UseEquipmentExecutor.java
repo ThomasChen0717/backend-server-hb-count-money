@@ -18,12 +18,25 @@ public class UseEquipmentExecutor implements BaseExecutor<UseEquipmentReqPb, Use
 
     @Override
     public UseEquipmentResPb executor(UseEquipmentReqPb arg, Long userId){
-        log.info("UseEquipmentExecutor::executor:userId = {},start",userId);
+        log.info("UseEquipmentExecutor::executor:userId = {},arg = {},start",userId,arg);
+        UseEquipmentResPb useEquipmentResPb = new UseEquipmentResPb();
 
         UserEquipmentDTO targetUserEquipmentDTO = UserManagerSingleton.getInstance().getUserEquipmentByIdFromCache(userId,arg.getTargetEquipmentId());
-        ErrorCodeEnum.equipmentNotExist.assertNonNull(targetUserEquipmentDTO);
-        ErrorCodeEnum.equipmentIsUsing.assertTrue(!targetUserEquipmentDTO.isInUse());
-        ErrorCodeEnum.equipmentIsLock.assertTrue(!targetUserEquipmentDTO.isUnlocked());
+        if(targetUserEquipmentDTO == null){
+            useEquipmentResPb.setCode(ErrorCodeEnum.equipmentNotExist.getCode()).setMessage(ErrorCodeEnum.equipmentNotExist.getMsg());
+            log.info("UseEquipmentExecutor::executor:userId = {},useEquipmentResPb = {},end",userId,useEquipmentResPb);
+            return useEquipmentResPb;
+        }
+        if(targetUserEquipmentDTO.isInUse()){
+            useEquipmentResPb.setCode(ErrorCodeEnum.equipmentIsUsing.getCode()).setMessage(ErrorCodeEnum.equipmentIsUsing.getMsg());
+            log.info("UseEquipmentExecutor::executor:userId = {},useEquipmentResPb = {},end",userId,useEquipmentResPb);
+            return useEquipmentResPb;
+        }
+        if(!targetUserEquipmentDTO.isUnlocked()){
+            useEquipmentResPb.setCode(ErrorCodeEnum.equipmentIsLock.getCode()).setMessage(ErrorCodeEnum.equipmentIsLock.getMsg());
+            log.info("UseEquipmentExecutor::executor:userId = {},useEquipmentResPb = {},end",userId,useEquipmentResPb);
+            return useEquipmentResPb;
+        }
 
         // 检测是否已经使用了同种效果的装备
         UserEquipmentDTO sameAttributeTypeUserEquipmentDTO = null;
@@ -38,7 +51,6 @@ public class UseEquipmentExecutor implements BaseExecutor<UseEquipmentReqPb, Use
         if(sameAttributeTypeUserEquipmentDTO != null) sameAttributeTypeUserEquipmentDTO.setInUse(false);
         targetUserEquipmentDTO.setInUse(true);
 
-        UseEquipmentResPb useEquipmentResPb = new UseEquipmentResPb();
         useEquipmentResPb.setEquipmentId(arg.getTargetEquipmentId()).setUnloadEquipmentId(sameAttributeTypeUserEquipmentDTO == null ? 0 : sameAttributeTypeUserEquipmentDTO.getEquipmentId());
         log.info("UseEquipmentExecutor::executor:userId = {},useEquipmentResPb = {},end",userId,useEquipmentResPb);
         return useEquipmentResPb;

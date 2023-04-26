@@ -21,15 +21,24 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
     private IPushPbService pushPbService;
     @Override
     public ChallengeMagnateSuccessResPb executor(ChallengeMagnateSuccessReqPb arg, Long userId){
-        log.info("ChallengeMagnateSuccessExecutor::executor:userId = {},start",userId);
+        log.info("ChallengeMagnateSuccessExecutor::executor:userId = {},arg = {},start",userId,arg);
+        ChallengeMagnateSuccessResPb challengeMagnateSuccessResPb = new ChallengeMagnateSuccessResPb();
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
-        ErrorCodeEnum.userNotExist.assertNonNull(userDTO);
         UserMagnateDTO userMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,arg.getMagnateId());
-        ErrorCodeEnum.magnateNotExist.assertNonNull(userMagnateDTO);
-        ErrorCodeEnum.magnateIsLock.assertTrue(userMagnateDTO.isUnlocked());
-        CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(arg.getMagnateId());
 
+        if(userMagnateDTO == null){
+            challengeMagnateSuccessResPb.setCode(ErrorCodeEnum.magnateNotExist.getCode()).setMessage(ErrorCodeEnum.magnateNotExist.getMsg());
+            log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeMagnateSuccessResPb = {},end",userId,challengeMagnateSuccessResPb);
+            return challengeMagnateSuccessResPb;
+        }
+        if(!userMagnateDTO.isUnlocked()){
+            challengeMagnateSuccessResPb.setCode(ErrorCodeEnum.magnateIsLock.getCode()).setMessage(ErrorCodeEnum.magnateIsLock.getMsg());
+            log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeMagnateSuccessResPb = {},end",userId,challengeMagnateSuccessResPb);
+            return challengeMagnateSuccessResPb;
+        }
+
+        CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(arg.getMagnateId());
         long moneyIncome = arg.getMultiple() * cfgMagnateDTO.getRewardMoneyAmount();
         long finalMoney = userDTO.getMoney() + moneyIncome;
         userDTO.setMoney(finalMoney);
@@ -37,7 +46,6 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        ChallengeMagnateSuccessResPb challengeMagnateSuccessResPb = new ChallengeMagnateSuccessResPb();
         // 解锁载具
         if(cfgMagnateDTO.getUnlockVehicleId() > 0){
             // 新载具解锁并且使用

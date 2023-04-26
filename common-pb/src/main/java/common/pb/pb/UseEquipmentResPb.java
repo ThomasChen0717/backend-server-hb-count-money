@@ -23,6 +23,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
 public class UseEquipmentResPb {
+    /** 响应代码：0 表示成功 **/
+    int code = 0;
+    /** 响应文本：默认 success **/
+    String message = "success";
+
     /** 装备id **/
     int equipmentId;
     /** 卸载装备id：使用装备，如有同类型装备，会卸载 **/

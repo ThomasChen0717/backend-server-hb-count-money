@@ -21,7 +21,9 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
 
     @Override
     public SettlementResPb executor(SettlementReqPb arg,Long userId){
-        log.info("SettlementExecutor::executor:userId = {},start",userId);
+        log.info("SettlementExecutor::executor:userId = {},arg = {},start",userId,arg);
+        SettlementResPb settlementResPb = new SettlementResPb();
+
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
         long moneyIncome = 0;
@@ -49,7 +51,6 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        SettlementResPb settlementResPb = new SettlementResPb();
         log.info("SettlementExecutor::executor:userId = {},settlementResPb = {},end",userId,settlementResPb);
         return settlementResPb;
     }

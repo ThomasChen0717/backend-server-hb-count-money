@@ -68,6 +68,7 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException {
+        log.info("LoginServiceImpl::Login:loginReqPb = {},start",loginReqPb);
         // isForcedOffline：true 顶号流程 false 不能重复登录 （默认不能重复登录）
         boolean isForcedOffline = false;
 
@@ -76,7 +77,10 @@ public class LoginServiceImpl implements ILoginService {
         if(loginReqPb.getLoginPlatform().compareTo(LoginPlatformEnum.dy.getName()) == 0){
             userDTO = dyLogin(loginReqPb);
         }
-        ErrorCodeEnum.addOrGetUserFailed.assertNonNull(userDTO);
+        if(userDTO == null){
+            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.addOrGetUserFailed.getCode(),ErrorCodeEnum.addOrGetUserFailed.getMsg());
+            return new LoginResPb().setCode(ErrorCodeEnum.addOrGetUserFailed.getCode()).setMessage(ErrorCodeEnum.addOrGetUserFailed.getMsg());
+        }
 
         long userId = userDTO.getId();
         // 获取角色数据后处理逻辑
@@ -85,7 +89,11 @@ public class LoginServiceImpl implements ILoginService {
             boolean existUser = ExternalCommunicationKit.existUser(userId);
             log.info("LoginService::Login:userId = {},existUser = {}", userId,existUser);
             // 如果账号在线，就抛异常 （断言 + 异常机制）
-            ErrorCodeEnum.accountOnline.assertTrueThrows(existUser);
+            //ErrorCodeEnum.accountOnline.assertTrueThrows(existUser);
+            if(existUser){
+                log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.accountOnline.getCode(),ErrorCodeEnum.accountOnline.getMsg());
+                return new LoginResPb().setCode(ErrorCodeEnum.accountOnline.getCode()).setMessage(ErrorCodeEnum.accountOnline.getMsg());
+            }
         } else {
             log.info("LoginService::Login:userId = {},进入顶号流程", userId);
             // （相当于顶号），强制断开之前的客户端连接，并让本次登录成功。
@@ -94,7 +102,10 @@ public class LoginServiceImpl implements ILoginService {
 
         /** 检测角色此逻辑服内存中是否存在数据（有多个逻辑服后应检测t_user.server_id是否等于0） **/
         boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
-        ErrorCodeEnum.userDataStillInCache.assertTrue(!isUserDataStillInCache);
+        if(isUserDataStillInCache){
+            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.userDataStillInCache.getCode(),ErrorCodeEnum.userDataStillInCache.getMsg());
+            return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
+        }
 
         /** 检测数据库中是否存在角色数据 **/
         UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
@@ -106,16 +117,26 @@ public class LoginServiceImpl implements ILoginService {
 
         // channel 中设置用户的真实 userId；
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
-        ErrorCodeEnum.loginError.assertTrue(success);
+        //ErrorCodeEnum.loginError.assertTrue(success);
+        if(!success){
+            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.loginError.getCode(),ErrorCodeEnum.loginError.getMsg());
+            return new LoginResPb().setCode(ErrorCodeEnum.loginError.getCode()).setMessage(ErrorCodeEnum.loginError.getMsg());
+        }
 
         // 用户绑定逻辑服
         boolean isBindSuccess = userBindServerId(userId);
-        ErrorCodeEnum.userBindServerIdFailed.assertTrue(isBindSuccess);
+        if(!isBindSuccess){
+            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.userBindServerIdFailed.getCode(),ErrorCodeEnum.userBindServerIdFailed.getMsg());
+            return new LoginResPb().setCode(ErrorCodeEnum.userBindServerIdFailed.getCode()).setMessage(ErrorCodeEnum.userBindServerIdFailed.getMsg());
+        }
 
         // 从数据库获取的角色数据存储到内存中
         boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,
                 userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap);
-        ErrorCodeEnum.addUserDataToCacheFailed.assertTrue(isAddSuccess);
+        if(!isAddSuccess){
+            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.addUserDataToCacheFailed.getCode(),ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+            return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+        }
 
         // 老用户需要检测载具,装备,buffTool,富豪挑战模版数据，是否有新增
         if(!userDTO.isNewUser()){

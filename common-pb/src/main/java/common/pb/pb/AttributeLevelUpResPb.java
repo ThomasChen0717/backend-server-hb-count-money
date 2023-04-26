@@ -23,6 +23,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
 public class AttributeLevelUpResPb {
+    /** 响应代码：0 表示成功 **/
+    int code = 0;
+    /** 响应文本：默认 success **/
+    String message = "success";
+
     /** 属性类型：1 力量等级，2 体力等级，3 体力恢复等级 4 耐力等级，5 宠物等级*/
     int attributeType;
     /** 目标等级 */

@@ -20,15 +20,25 @@ public class ChallengeBossSuccessExecutor implements BaseExecutor<ChallengeBossS
     private IPushPbService pushPbService;
     @Override
     public ChallengeBossSuccessResPb executor(ChallengeBossSuccessReqPb arg, Long userId){
-        log.info("ChallengeBossSuccessExecutor::executor:userId = {},start",userId);
+        log.info("ChallengeBossSuccessExecutor::executor:userId = {},arg = {},start",userId,arg);
+        ChallengeBossSuccessResPb challengeBossSuccessResPb = new ChallengeBossSuccessResPb();
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
-        ErrorCodeEnum.userNotExist.assertNonNull(userDTO);
         UserBossDTO userBossDTO = UserManagerSingleton.getInstance().getUserBossByIdFromCache(userId,arg.getBossId());
-        ErrorCodeEnum.bossNotExist.assertNonNull(userBossDTO);
-        ErrorCodeEnum.bossIsLock.assertTrue(userBossDTO.isUnlocked());
-        CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(arg.getBossId());
 
+        if(userBossDTO == null){
+            challengeBossSuccessResPb.setCode(ErrorCodeEnum.bossNotExist.getCode()).setMessage(ErrorCodeEnum.bossNotExist.getMsg());
+            log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeBossSuccessResPb = {},end",userId,challengeBossSuccessResPb);
+            return challengeBossSuccessResPb;
+        }
+        ErrorCodeEnum.bossIsLock.assertTrue(userBossDTO.isUnlocked());
+        if(!userBossDTO.isUnlocked()){
+            challengeBossSuccessResPb.setCode(ErrorCodeEnum.bossIsLock.getCode()).setMessage(ErrorCodeEnum.bossIsLock.getMsg());
+            log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeBossSuccessResPb = {},end",userId,challengeBossSuccessResPb);
+            return challengeBossSuccessResPb;
+        }
+
+        CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(arg.getBossId());
         long moneyIncome = arg.getMultiple() * cfgBossDTO.getRewardMoneyAmount();
         long finalMoney = userDTO.getMoney() + moneyIncome;
         userDTO.setMoney(finalMoney);
@@ -36,7 +46,6 @@ public class ChallengeBossSuccessExecutor implements BaseExecutor<ChallengeBossS
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        ChallengeBossSuccessResPb challengeBossSuccessResPb = new ChallengeBossSuccessResPb();
         // 解锁下一个boss
         CfgBossDTO nextCfgBossDTO = CfgManagerSingleton.getInstance().getNextCfgBossByIdFromCache(arg.getBossId());
         if(nextCfgBossDTO != null){

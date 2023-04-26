@@ -22,4 +22,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
 public class SettlementResPb {
+    /** 响应代码：0 表示成功 **/
+    int code = 0;
+    /** 响应文本：默认 success **/
+    String message = "success";
 }
