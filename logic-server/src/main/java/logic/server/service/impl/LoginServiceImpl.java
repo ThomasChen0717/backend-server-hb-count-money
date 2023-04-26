@@ -395,6 +395,12 @@ public class LoginServiceImpl implements ILoginService {
 
             loginResPb.getMagnateInfoPbList().add(magnateInfoPb);
         }
+        // 富豪根据showIndex排序
+        List<MagnateInfoPb> magnateInfoPbList = loginResPb.getMagnateInfoPbList();
+        magnateInfoPbList = magnateInfoPbList.stream().sorted(
+                Comparator.comparing(MagnateInfoPb::getShowIndex).thenComparing(MagnateInfoPb::getMagnateId)
+        ).collect(Collectors.toList());
+        loginResPb.setMagnateInfoPbList(magnateInfoPbList);
 
         /** 角色boss挑战数据 **/
         for(Map.Entry<Integer, UserBossDTO> entryBoss : userBossDTOMap.entrySet()){
@@ -408,11 +414,17 @@ public class LoginServiceImpl implements ILoginService {
             Map<Integer, CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
             CfgBossDTO cfgBossDTO = cfgBossDTOMap.get(userBossDTO.getBossId());
             bossInfoPb.setBossName(cfgBossDTO.getBossName()).setSpeed(cfgBossDTO.getSpeed()).setTargetMoneyAmount(cfgBossDTO.getTargetMoneyAmount())
-                    .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).
-                    setResourceName(cfgBossDTO.getResourceName());
+                    .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).setPreBossId(cfgBossDTO.getPreBossId())
+                    .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName());
 
             loginResPb.getBossInfoPbList().add(bossInfoPb);
         }
+        // boss根据showIndex排序
+        List<BossInfoPb> bossInfoPbList = loginResPb.getBossInfoPbList();
+        bossInfoPbList = bossInfoPbList.stream().sorted(
+                Comparator.comparing(BossInfoPb::getShowIndex).thenComparing(BossInfoPb::getBossId)
+        ).collect(Collectors.toList());
+        loginResPb.setBossInfoPbList(bossInfoPbList);
 
         return loginResPb;
     }

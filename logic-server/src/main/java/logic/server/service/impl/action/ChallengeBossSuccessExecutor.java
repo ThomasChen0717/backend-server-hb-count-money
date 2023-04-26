@@ -46,12 +46,12 @@ public class ChallengeBossSuccessExecutor implements BaseExecutor<ChallengeBossS
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        // 解锁下一个boss
-        CfgBossDTO nextCfgBossDTO = CfgManagerSingleton.getInstance().getNextCfgBossByIdFromCache(arg.getBossId());
-        if(nextCfgBossDTO != null){
-            UserBossDTO nextUserBossDTO = UserManagerSingleton.getInstance().getUserBossByIdFromCache(userId,nextCfgBossDTO.getBossId());
-            nextUserBossDTO.setUnlocked(true);
-            challengeBossSuccessResPb.setNextBossId(nextCfgBossDTO.getBossId());
+        // 解锁boss
+        CfgBossDTO unclockCfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByPreBossIdFromCache(cfgBossDTO.getBossId());
+        if(unclockCfgBossDTO != null){
+            UserBossDTO unlockedUserBossDTO = UserManagerSingleton.getInstance().getUserBossByIdFromCache(userId,unclockCfgBossDTO.getBossId());
+            unlockedUserBossDTO.setUnlocked(true);
+            challengeBossSuccessResPb.setUnlockedBossId(unlockedUserBossDTO.getBossId());
         }
 
         log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeBossSuccessResPb = {},end",userId,challengeBossSuccessResPb);

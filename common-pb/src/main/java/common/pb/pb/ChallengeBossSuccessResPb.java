@@ -27,6 +27,6 @@ public class ChallengeBossSuccessResPb {
     /** 响应文本：默认 success **/
     String message = "success";
 
-    /** 下一个bossId:0 表示没有下一个boss可以挑战 **/
-    int nextBossId = 0;
+    /** 下一个解锁的bossId:0 表示没有解锁下一个boss **/
+    int unlockedBossId = 0;
 }

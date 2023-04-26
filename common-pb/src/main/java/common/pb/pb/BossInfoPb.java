@@ -37,6 +37,10 @@ public class BossInfoPb {
     int rewardMoneyAmount;
     /** 挑战时间，单位秒 **/
     int challengeTime;
+    /** 前置bossId，0 表示没有前置boss条件 **/
+    int preBossId;
+    /** 显示顺序：值越小展示越靠前 **/
+    int showIndex;
     /** 资源名称 **/
     String resourceName;
 }

@@ -27,8 +27,8 @@ public class ChallengeMagnateSuccessResPb {
     /** 响应文本：默认 success **/
     String message = "success";
 
-    /** 下一个富豪id:0 表示没有下一个富豪可以挑战 **/
-    int nextMagnateId = 0;
+    /** 下一个解锁的富豪id:0 表示没有解锁下一个 **/
+    int unlockedMagnateId = 0;
     /** 解锁的载具id：0 表示没有奖励解锁载具 */
     int unlockedVehicleId = 0;
 }

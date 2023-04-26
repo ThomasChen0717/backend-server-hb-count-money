@@ -74,9 +74,9 @@ public class CfgManagerSingleton {
     public CfgMagnateDTO getCfgMagnateByIdFromCache(int magnateId){
         return cfgMagnateDTOMap.get(magnateId);
     }
-    public CfgMagnateDTO getNextCfgMagnateByIdFromCache(int magnateId){
+    public CfgMagnateDTO getCfgMagnateByPreMagnateIdFromCache(int preMagnateId){
         for(Map.Entry<Integer,CfgMagnateDTO> entry : cfgMagnateDTOMap.entrySet()){
-            if(entry.getValue().getPreMagnateId() == magnateId){
+            if(entry.getValue().getPreMagnateId() == preMagnateId){
                 return entry.getValue();
             }
         }
@@ -87,9 +87,9 @@ public class CfgManagerSingleton {
     public CfgBossDTO getCfgBossByIdFromCache(int bossId){
         return cfgBossDTOMap.get(bossId);
     }
-    public CfgBossDTO getNextCfgBossByIdFromCache(int bossId){
+    public CfgBossDTO getCfgBossByPreBossIdFromCache(int preBossId){
         for(Map.Entry<Integer,CfgBossDTO> entry : cfgBossDTOMap.entrySet()){
-            if(entry.getValue().getPreBossId() == bossId){
+            if(entry.getValue().getPreBossId() == preBossId){
                 return entry.getValue();
             }
         }

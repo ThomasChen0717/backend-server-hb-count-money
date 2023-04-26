@@ -43,6 +43,8 @@ public class MagnateInfoPb {
     int challengeTime;
     /** 前置富豪id，0 表示没有前置富豪条件 **/
     int preMagnateId;
+    /** 展示顺序：越小显示越靠前 **/
+    int showIndex;
     /** 资源名称 **/
     String resourceName;
 }

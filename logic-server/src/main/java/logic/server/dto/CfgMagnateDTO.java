@@ -18,5 +18,6 @@ public class CfgMagnateDTO implements DTO{
     private int cdTime;
     private int challengeTime;
     private int preMagnateId;
+    private int showIndex;
     private String resourceName;
 }

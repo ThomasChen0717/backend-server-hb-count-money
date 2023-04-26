@@ -60,12 +60,12 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
                 userVehicleDTO.setInUse(false);
             }
         }
-        // 解锁下一个富豪
-        CfgMagnateDTO nextCfgMagnateDTO = CfgManagerSingleton.getInstance().getNextCfgMagnateByIdFromCache(arg.getMagnateId());
-        if(nextCfgMagnateDTO != null){
-            UserMagnateDTO nextUserMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,nextCfgMagnateDTO.getMagnateId());
+        // 解锁富豪
+        CfgMagnateDTO unlockCfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByPreMagnateIdFromCache(cfgMagnateDTO.getMagnateId());
+        if(unlockCfgMagnateDTO != null){
+            UserMagnateDTO nextUserMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,unlockCfgMagnateDTO.getMagnateId());
             nextUserMagnateDTO.setUnlocked(true);
-            challengeMagnateSuccessResPb.setNextMagnateId(nextCfgMagnateDTO.getMagnateId());
+            challengeMagnateSuccessResPb.setUnlockedMagnateId(unlockCfgMagnateDTO.getMagnateId());
         }
 
         log.info("ChallengeMagnateSuccessExecutor::executor:userId = {},challengeMagnateSuccessResPb = {},end",userId,challengeMagnateSuccessResPb);

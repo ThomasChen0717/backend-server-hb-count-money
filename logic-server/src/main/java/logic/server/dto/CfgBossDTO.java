@@ -16,5 +16,6 @@ public class CfgBossDTO implements DTO{
     private int rewardMoneyAmount;
     private int challengeTime;
     private int preBossId;
+    private int showIndex;
     private String resourceName;
 }

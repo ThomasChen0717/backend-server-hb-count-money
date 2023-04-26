@@ -54,6 +54,11 @@ public class CfgBossPO extends BaseEntity{
     private int preBossId;
 
     /**
+     * 展示顺序：越小显示越靠前
+     */
+    private int showIndex;
+
+    /**
      * 资源名称
      */
     private String resourceName;
