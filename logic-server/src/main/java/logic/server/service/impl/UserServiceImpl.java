@@ -18,6 +18,7 @@ import logic.server.repository.UserVehicleRepository;
 import logic.server.service.IUserService;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
+import logic.server.service.impl.action.ChallengeBossSuccessExecutor;
 import logic.server.service.impl.action.ChallengeMagnateSuccessExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
 import logic.server.service.impl.action.GetRedPacketExecutor;
@@ -65,6 +66,8 @@ public class UserServiceImpl implements IUserService {
     private GetRedPacketExecutor getRedPacketExecutor;
     @Autowired
     private ChallengeMagnateSuccessExecutor challengeMagnateSuccessExecutor;
+    @Autowired
+    private ChallengeBossSuccessExecutor challengeBossSuccessExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -234,6 +237,8 @@ public class UserServiceImpl implements IUserService {
             return getRedPacketExecutor;
         }else if(executorName.compareTo(UserCmdModule.challengeMagnateSuccessExecutorName) == 0){
             return challengeMagnateSuccessExecutor;
+        }else if(executorName.compareTo(UserCmdModule.challengeBossSuccessExecutorName) == 0){
+            return challengeBossSuccessExecutor;
         }
         return null;
     }
