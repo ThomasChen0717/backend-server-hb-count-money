@@ -46,4 +46,8 @@ public class NacosConfiguration {
     @Value("${brokerServer.port}")
     private int brokerServerPort;
     public int getBrokerServerPort() { return brokerServerPort; }
+
+    @Value("${server.id}")
+    private String serverId;
+    public String getServerId() { return serverId; }
 }

@@ -25,6 +25,8 @@ import java.util.Map;
 @Service
 public class CfgServiceImpl implements ICfgService {
     @Autowired
+    private NacosConfiguration nacosConfiguration;
+    @Autowired
     private CfgGlobalRepository cfgGlobalRepository;
     @Autowired
     private CfgVehicleRepository cfgVehicleRepository;
@@ -41,8 +43,8 @@ public class CfgServiceImpl implements ICfgService {
 
     /** nacos **/
     public String getServerId(){
-        String loginServerId = "";
-        return loginServerId;
+        String serverId = nacosConfiguration.getServerId();
+        return serverId;
     }
 
     /** t_cfg_global **/

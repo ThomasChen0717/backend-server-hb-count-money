@@ -574,17 +574,17 @@ public class LoginServiceImpl implements ILoginService {
      * @param userId
      */
     private boolean userBindServerId(long userId){
+        String serverId = CfgManagerSingleton.getInstance().getServerId();
         try{
             // 添加需要绑定的用户（玩家）
             List<Long> userIdList = new ArrayList<>();
             userIdList.add(userId);
-
             // 绑定消息
             EndPointLogicServerMessage endPointLogicServerMessage = new EndPointLogicServerMessage()
                     // 需要绑定的玩家，示例中只取了当前请求匹配的玩家
                     .setUserList(userIdList)
                     // 需要绑定的逻辑服id
-                    .setLogicServerId(CfgManagerSingleton.getInstance().getServerId())
+                    .setLogicServerId(serverId)
                     // true 为绑定，false 为取消绑定
                     .setBinding(true);
 
@@ -592,12 +592,10 @@ public class LoginServiceImpl implements ILoginService {
             ProcessorContext processorContext = BrokerClientHelper.getProcessorContext();
             processorContext.invokeOneway(endPointLogicServerMessage);
 
-            log.info("LoginServiceImpl::userBindServerId:userId = {},serverId = {}用户绑定逻辑服成功",
-                    userId,CfgManagerSingleton.getInstance().getServerId());
+            log.info("LoginServiceImpl::userBindServerId:userId = {},serverId = {}用户绑定逻辑服成功", userId,serverId);
             return  true;
         }catch (Exception e){
-            log.error("LoginServiceImpl::userBindServerId:userId = {},serverId = {},message = {},用户绑定逻辑服失败",
-                    userId,CfgManagerSingleton.getInstance().getServerId(),e.getMessage());
+            log.error("LoginServiceImpl::userBindServerId:userId = {},serverId = {},message = {},用户绑定逻辑服失败", userId,serverId);
             return false;
         }
     }
