@@ -1,5 +1,6 @@
 package logic.server.service.impl;
 
+import logic.server.config.NacosConfiguration;
 import logic.server.dto.CfgAttributeDTO;
 import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
@@ -38,30 +39,49 @@ public class CfgServiceImpl implements ICfgService {
     @Autowired
     private CfgBossRepository cfgBossRepository;
 
+    /** nacos **/
+    public String getServerId(){
+        String loginServerId = "";
+        return loginServerId;
+    }
+
+    /** t_cfg_global **/
     @Override
     public Map<String, CfgGlobalDTO> getCfgGlobalMap(){
         return cfgGlobalRepository.getMap();
     }
+
+    /** t_cfg_vehicle **/
     @Override
     public Map<Integer,CfgVehicleDTO> getCfgVehicleMap(){
         return cfgVehicleRepository.getMap();
     }
+
+    /** t_cfg_attribute **/
     @Override
     public Map<Integer, CfgAttributeDTO> getCfgAttributeMap(){
         return cfgAttributeRepository.getMap();
     }
+
+    /** t_cfg_equipment **/
     @Override
     public Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap(){
         return cfgEquipmentRepository.getMap();
     }
+
+    /** t_cfg_buff_tool **/
     @Override
     public Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap(){
         return cfgBuffToolRepository.getMap();
     }
+
+    /** t_cfg_magnate **/
     @Override
     public Map<Integer, CfgMagnateDTO> getCfgMagnateMap(){
         return cfgMagnateRepository.getMap();
     }
+
+    /** t_cfg_boss **/
     @Override
     public Map<Integer, CfgBossDTO> getCfgBossMap(){
         return cfgBossRepository.getMap();

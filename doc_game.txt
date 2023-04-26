@@ -55,7 +55,7 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== 其它广播推送 ====================
-路由: 1 - 3  --- 广播推送: common.pb.BroadcastMessagePb
+路由: 2 - 100  --- 广播推送: common.pb.pb.MoneySyncPushPb
 ==================== 错误码 ====================
  -1007 : 强制玩家下线 
  -1006 : 数据不存在 
