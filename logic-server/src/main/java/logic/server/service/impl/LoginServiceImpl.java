@@ -332,8 +332,7 @@ public class LoginServiceImpl implements ILoginService {
             vehicleInfoPb.setVehicleId(userVehicleDTO.getVehicleId()).setInUse(userVehicleDTO.isInUse()).
                     setUnlockConditionCurrCount(userVehicleDTO.getUnlockConditionCurrCount()).setUnlocked(userVehicleDTO.isUnlocked());
             /** 载具配置数据 **/
-            Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleDTOMap();
-            CfgVehicleDTO cfgVehicleDTO = cfgVehicleDTOMap.get(userVehicleDTO.getVehicleId());
+            CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
             vehicleInfoPb.setVehicleName(cfgVehicleDTO.getVehicleName()).setUnlockConditionType(cfgVehicleDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionType()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
                     .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue()).setResourceName(cfgVehicleDTO.getResourceName());
@@ -351,10 +350,9 @@ public class LoginServiceImpl implements ILoginService {
                     .setUnlockConditionCurrCount(userEquipmentDTO.getUnlockConditionCurrCount()).setUnlocked(userEquipmentDTO.isUnlocked());
 
             /** 装备配置数据 **/
-            Map<Integer,CfgEquipmentDTO> cfgEquipmentDTOMap = CfgManagerSingleton.getInstance().getCfgEquipmentDTOMap();
-            CfgEquipmentDTO cfgEquipmentDTO = cfgEquipmentDTOMap.get(userEquipmentDTO.getEquipmentId());
+            CfgEquipmentDTO cfgEquipmentDTO = CfgManagerSingleton.getInstance().getCfgEquipmentByIdFromCache(userEquipmentDTO.getEquipmentId());
             equipmentInfoPb.setEquipmentName(cfgEquipmentDTO.getEquipmentName()).setUnlockConditionType(cfgEquipmentDTO.getUnlockConditionType())
-                    .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionType()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
+                    .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionCount()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
                     .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark())
                     .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId()).setResourceName(cfgEquipmentDTO.getResourceName());
 
@@ -373,8 +371,7 @@ public class LoginServiceImpl implements ILoginService {
             BuffToolInfoPb buffToolInfoPb = new BuffToolInfoPb();
 
             /** buffTool配置数据 **/
-            Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap = CfgManagerSingleton.getInstance().getCfgBuffToolDTOMap();
-            CfgBuffToolDTO cfgBuffToolDTO = cfgBuffToolDTOMap.get(userBuffToolDTO.getBuffToolId());
+            CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(userBuffToolDTO.getBuffToolId());
             buffToolInfoPb.setBuffToolId(cfgBuffToolDTO.getBuffToolId()).setDurations(cfgBuffToolDTO.getDurations());
             List<EffectAttributeInfoPb> effectAttributeInfoPbList = new ArrayList<>();
             JSONArray jsonArrayEffectAttributeInfo = JSONArray.parseArray(cfgBuffToolDTO.getEffectAttributeInfo());
@@ -398,8 +395,7 @@ public class LoginServiceImpl implements ILoginService {
             magnateInfoPb.setMagnateId(userMagnateDTO.getMagnateId()).setUnlocked(userMagnateDTO.isUnlocked());
 
             /** 富豪挑战配置数据 **/
-            Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap = CfgManagerSingleton.getInstance().getCfgMagnateDTOMap();
-            CfgMagnateDTO cfgMagnateDTO = cfgMagnateDTOMap.get(userMagnateDTO.getMagnateId());
+            CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(userMagnateDTO.getMagnateId());
             magnateInfoPb.setMagnateName(cfgMagnateDTO.getMagnateName()).setSpeed(cfgMagnateDTO.getSpeed())
                     .setTargetMoneyAmount(cfgMagnateDTO.getTargetMoneyAmount())
                             .setRewardMoneyAmount(cfgMagnateDTO.getRewardMoneyAmount()).setUnlockVehicleId(cfgMagnateDTO.getUnlockVehicleId())
@@ -424,8 +420,7 @@ public class LoginServiceImpl implements ILoginService {
             bossInfoPb.setBossId(userBossDTO.getBossId()).setUnlocked(userBossDTO.isUnlocked());
 
             /** boss挑战配置数据 **/
-            Map<Integer, CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
-            CfgBossDTO cfgBossDTO = cfgBossDTOMap.get(userBossDTO.getBossId());
+            CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(userBossDTO.getBossId());
             bossInfoPb.setBossName(cfgBossDTO.getBossName()).setSpeed(cfgBossDTO.getSpeed()).setTargetMoneyAmount(cfgBossDTO.getTargetMoneyAmount())
                     .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).setPreBossId(cfgBossDTO.getPreBossId())
                     .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName());

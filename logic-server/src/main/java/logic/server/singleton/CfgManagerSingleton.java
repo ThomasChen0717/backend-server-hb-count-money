@@ -56,7 +56,7 @@ public class CfgManagerSingleton {
     }
 
     /** t_cfg_vehicle **/
-    public CfgVehicleDTO getCfgVehicleByTypeFromCache(int vehicleType){
+    public CfgVehicleDTO getCfgVehicleByIdFromCache(int vehicleType){
         return cfgVehicleDTOMap.get(vehicleType);
     }
 

@@ -33,7 +33,7 @@ public class AttributeLevelUpExecutor implements BaseExecutor<AttributeLevelUpRe
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
         if(userDTO.getMoney() < arg.getMoneyCost()){
-            attributeLevelUpResPb.setCode(ErrorCodeEnum.levelUpMoneyCostNotEnough.getCode()).setMessage(ErrorCodeEnum.levelUpMoneyCostNotEnough.getMsg());
+            attributeLevelUpResPb.setCode(ErrorCodeEnum.moneyCostNotEnough.getCode()).setMessage(ErrorCodeEnum.moneyCostNotEnough.getMsg());
             log.info("AttributeLevelUpExecutor::executor:userId = {},attributeLevelUpResPb = {},end",userId,attributeLevelUpResPb);
             return attributeLevelUpResPb;
         }

@@ -32,8 +32,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     targetLevelError(10009, "目标等级不能低于当前等级"),
     /** 升级费用错误 */
     levelUpMoneyCostError(10010, "升级费用错误"),
-    /** 升级费用不足 */
-    levelUpMoneyCostNotEnough(10011, "升级费用不足"),
+    /** 费用不足 */
+    moneyCostNotEnough(10011, "费用不足"),
     /** 载具使用中 */
     vehicleIsUsing(10012, "载具使用中"),
     /** 载具不存在 */
@@ -59,7 +59,9 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     /** 富豪未解锁 */
     bossIsLock(10023, "boss未解锁"),
     /** 角色标记还在线上，请稍后登录 */
-    userStillOnline(10007, "角色标记还在线上，请稍后登录"),
+    userStillOnline(10024, "角色标记还在线上，请稍后登录"),
+    /** 解锁类型不存在 */
+    unlockTypeError(10025, "解锁类型不存在"),
     ;
 
     /** 消息码 */

@@ -23,6 +23,7 @@ import logic.server.service.impl.action.ChallengeMagnateSuccessExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
 import logic.server.service.impl.action.GetRedPacketExecutor;
 import logic.server.service.impl.action.SettlementExecutor;
+import logic.server.service.impl.action.UnlockVehicleOrEquipmentExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
 import logic.server.service.impl.action.StartOrEndBuffToolExecutor;
 import logic.server.singleton.UserManagerSingleton;
@@ -69,6 +70,8 @@ public class UserServiceImpl implements IUserService {
     private ChallengeMagnateSuccessExecutor challengeMagnateSuccessExecutor;
     @Autowired
     private ChallengeBossSuccessExecutor challengeBossSuccessExecutor;
+    @Autowired
+    private UnlockVehicleOrEquipmentExecutor unlockVehicleOrEquipmentExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -249,6 +252,8 @@ public class UserServiceImpl implements IUserService {
             return challengeMagnateSuccessExecutor;
         }else if(executorName.compareTo(UserCmdModule.challengeBossSuccessExecutorName) == 0){
             return challengeBossSuccessExecutor;
+        }else if(executorName.compareTo(UserCmdModule.unlockVehicleOrEquipmentExecutorName) == 0){
+            return unlockVehicleOrEquipmentExecutor;
         }
         return null;
     }

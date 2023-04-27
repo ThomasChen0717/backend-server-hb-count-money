@@ -27,6 +27,9 @@ public interface UserCmdModule {
     /** boss挑战成功 */
     int challengeBossSuccess = 8;
     String challengeBossSuccessExecutorName = "challengeBossSuccess";// 执行器名称
+    /** 解锁载具或装备 */
+    int unlockVehicleOrEquipment = 9;
+    String unlockVehicleOrEquipmentExecutorName = "unlockVehicleOrEquipment";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

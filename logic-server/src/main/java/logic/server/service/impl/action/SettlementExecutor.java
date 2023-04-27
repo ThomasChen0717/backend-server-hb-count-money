@@ -31,7 +31,7 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
             // 主角结算-载具容量满
             // 最终收益 = 角色收益倍数属性 * （载具容量 + 载具额外奖励数值）
             UserVehicleDTO userVehicleDTO = UserManagerSingleton.getInstance().getUserUsingVehicleByIdFromCache(userId);
-            CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByTypeFromCache(userVehicleDTO.getVehicleId());
+            CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
             moneyIncome = (long)(UserManagerSingleton.getInstance().getUserIncomeMultipleAttributeFromCache(userId) * (cfgVehicleDTO.getVehicleCapacity() + cfgVehicleDTO.getExtraRewardValue()));
         }else if(arg.getSettlementRole() == RoleEnum.pet.getRoleType()){
             // 宠物结算

@@ -18,6 +18,8 @@ import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import common.pb.pb.StartOrEndBuffToolReqPb;
 import common.pb.pb.StartOrEndBuffToolResPb;
+import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
+import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import common.pb.pb.UseEquipmentReqPb;
 import common.pb.pb.UseEquipmentResPb;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -76,5 +78,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.challengeBossSuccess)
     public ChallengeBossSuccessResPb challengeBossSuccess(ChallengeBossSuccessReqPb challengeBossSuccessReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (ChallengeBossSuccessResPb)userService.getExecutor(UserCmdModule.challengeBossSuccessExecutorName).executor(challengeBossSuccessReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.unlockVehicleOrEquipment)
+    public UnlockVehicleOrEquipmentResPb unlockVehicleOrEquipment(UnlockVehicleOrEquipmentReqPb unlockVehicleOrEquipmentReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (UnlockVehicleOrEquipmentResPb)userService.getExecutor(UserCmdModule.unlockVehicleOrEquipmentExecutorName).executor(unlockVehicleOrEquipmentReqPb,myFlowContext.getUserId());
     }
 }
