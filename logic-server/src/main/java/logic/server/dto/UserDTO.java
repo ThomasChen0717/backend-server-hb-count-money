@@ -22,6 +22,7 @@ public class UserDTO implements DTO{
     private String token;
     private String unionId;
     private String openid;
+    private int onlineServerId;
     private long money;
     private long moneyHistory;
     private Date latestLoginTime;

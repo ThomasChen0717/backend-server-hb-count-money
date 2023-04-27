@@ -167,6 +167,7 @@ public class UserServiceImpl implements IUserService {
             UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
             if(userDTO != null){
                 userDTO.setLatestLogoutTime(currTime);
+                userDTO.setOnlineServerId(0);
                 userRepository.update(userDTO);
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
             }

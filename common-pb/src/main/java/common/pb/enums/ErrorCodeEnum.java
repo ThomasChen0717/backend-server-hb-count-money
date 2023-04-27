@@ -58,6 +58,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     bossNotExist(10022, "boss不存在"),
     /** 富豪未解锁 */
     bossIsLock(10023, "boss未解锁"),
+    /** 角色标记还在线上，请稍后登录 */
+    userStillOnline(10007, "角色标记还在线上，请稍后登录"),
     ;
 
     /** 消息码 */

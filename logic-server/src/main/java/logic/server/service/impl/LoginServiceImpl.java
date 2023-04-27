@@ -91,7 +91,7 @@ public class LoginServiceImpl implements ILoginService {
             // 如果账号在线，就抛异常 （断言 + 异常机制）
             //ErrorCodeEnum.accountOnline.assertTrueThrows(existUser);
             if(existUser){
-                log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.accountOnline.getCode(),ErrorCodeEnum.accountOnline.getMsg());
+                log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.accountOnline.getCode(),ErrorCodeEnum.accountOnline.getMsg());
                 return new LoginResPb().setCode(ErrorCodeEnum.accountOnline.getCode()).setMessage(ErrorCodeEnum.accountOnline.getMsg());
             }
         } else {
@@ -100,11 +100,20 @@ public class LoginServiceImpl implements ILoginService {
             ExternalCommunicationKit.forcedOffline(userId);
         }
 
-        /** 检测角色此逻辑服内存中是否存在数据（有多个逻辑服后应检测t_user.server_id是否等于0） **/
+        /** 检测角色此逻辑服内存中是否存在数据 **/
         boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
         if(isUserDataStillInCache){
-            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.userDataStillInCache.getCode(),ErrorCodeEnum.userDataStillInCache.getMsg());
+            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.userDataStillInCache.getCode(),ErrorCodeEnum.userDataStillInCache.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
+        }
+        /** 有多个逻辑服后应检测t_user.online_server_id是否等于0 **/
+        if(false){
+            // 暂时不开启，等待服务器关闭会自动调用优雅关闭流程后
+            if(userDTO.getOnlineServerId() > 0){
+                log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},onlineServerId = {},end",userId,ErrorCodeEnum.userStillOnline.getCode(),
+                        ErrorCodeEnum.userStillOnline.getMsg(),userDTO.getOnlineServerId());
+                return new LoginResPb().setCode(ErrorCodeEnum.userStillOnline.getCode()).setMessage(ErrorCodeEnum.userStillOnline.getMsg());
+            }
         }
 
         /** 检测数据库中是否存在角色数据 **/
@@ -119,22 +128,26 @@ public class LoginServiceImpl implements ILoginService {
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
         //ErrorCodeEnum.loginError.assertTrue(success);
         if(!success){
-            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.loginError.getCode(),ErrorCodeEnum.loginError.getMsg());
+            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.loginError.getCode(),ErrorCodeEnum.loginError.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.loginError.getCode()).setMessage(ErrorCodeEnum.loginError.getMsg());
         }
 
         // 用户绑定逻辑服
         boolean isBindSuccess = userBindServerId(userId);
         if(!isBindSuccess){
-            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.userBindServerIdFailed.getCode(),ErrorCodeEnum.userBindServerIdFailed.getMsg());
+            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.userBindServerIdFailed.getCode(),ErrorCodeEnum.userBindServerIdFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.userBindServerIdFailed.getCode()).setMessage(ErrorCodeEnum.userBindServerIdFailed.getMsg());
+        }else{
+            // 绑定成功，设置并且保存t_user.online_server_id,表示角色在线
+            userDTO.setOnlineServerId(CfgManagerSingleton.getInstance().getServerId());
+            userService.updateUserToDB(userDTO);
         }
 
         // 从数据库获取的角色数据存储到内存中
         boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,
                 userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap);
         if(!isAddSuccess){
-            log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.addUserDataToCacheFailed.getCode(),ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.addUserDataToCacheFailed.getCode(),ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
         }
 

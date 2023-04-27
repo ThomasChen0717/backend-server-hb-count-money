@@ -50,6 +50,11 @@ public class UserPO extends BaseEntity{
     private String openid;
 
     /**
+     * 当前所在逻辑服id:0 表示当前不在线
+     */
+    private int onlineServerId;
+
+    /**
      * 金钱数量
      */
     private long money;
