@@ -229,8 +229,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void saveDataFromCacheToDB(){
         Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
+        log.info("UserServiceImpl::saveDataFromCacheToDB:优雅关闭需保存数据角色数量 = {}",userDTOMap.size());
         for(Map.Entry<Long,UserDTO> entry : userDTOMap.entrySet()){
+            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据开始",entry.getKey());
             saveDataFromCacheToDB(entry.getKey());
+            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据结束",entry.getKey());
         }
     }
 
