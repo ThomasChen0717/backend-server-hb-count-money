@@ -48,7 +48,8 @@ public interface IUserService {
     Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId);
 
     /** 角色下线数据处理 **/
-    void saveDataFromCacheToDB(long userId);
+    void saveDataFromCacheToDB(long userId);// 保存指定角色数据
+    void saveDataFromCacheToDB();// 保存所有角色数据
 
     /** 获取指定执行器**/
     BaseExecutor getExecutor(String executorName);

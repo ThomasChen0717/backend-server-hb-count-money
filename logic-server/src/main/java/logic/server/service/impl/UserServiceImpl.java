@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 @Slf4j
@@ -218,6 +219,14 @@ public class UserServiceImpl implements IUserService {
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功",userId);
         }catch (Exception e){
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败",userId,e.getMessage());
+        }
+    }
+
+    @Override
+    public void saveDataFromCacheToDB(){
+        Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
+        for(Map.Entry<Long,UserDTO> entry : userDTOMap.entrySet()){
+            saveDataFromCacheToDB(entry.getKey());
         }
     }
 

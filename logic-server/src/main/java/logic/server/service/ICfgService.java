@@ -11,7 +11,7 @@ import logic.server.dto.CfgVehicleDTO;
 import java.util.Map;
 
 public interface ICfgService {
-    String getServerId();
+    int getServerId();
     Map<String, CfgGlobalDTO> getCfgGlobalMap();
     Map<Integer,CfgVehicleDTO> getCfgVehicleMap();
     Map<Integer, CfgAttributeDTO> getCfgAttributeMap();

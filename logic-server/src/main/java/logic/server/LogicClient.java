@@ -54,9 +54,9 @@ public class LogicClient extends AbstractBrokerClientStartup {
 
     @Override
     public BrokerClientBuilder createBrokerClientBuilder() {
-        String logicServerId = CfgManagerSingleton.getInstance().getServerId();
+        int logicServerId = CfgManagerSingleton.getInstance().getServerId();
         BrokerClientBuilder builder = BrokerClient.newBuilder();
-        builder.appName("业务游戏逻辑服").id(logicServerId);
+        builder.appName("业务游戏逻辑服").id(String.valueOf(logicServerId));
         return builder;
     }
 

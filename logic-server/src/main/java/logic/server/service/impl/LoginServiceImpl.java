@@ -574,7 +574,7 @@ public class LoginServiceImpl implements ILoginService {
      * @param userId
      */
     private boolean userBindServerId(long userId){
-        String serverId = CfgManagerSingleton.getInstance().getServerId();
+        int serverId = CfgManagerSingleton.getInstance().getServerId();
         try{
             // 添加需要绑定的用户（玩家）
             List<Long> userIdList = new ArrayList<>();
@@ -584,7 +584,7 @@ public class LoginServiceImpl implements ILoginService {
                     // 需要绑定的玩家，示例中只取了当前请求匹配的玩家
                     .setUserList(userIdList)
                     // 需要绑定的逻辑服id
-                    .setLogicServerId(serverId)
+                    .setLogicServerId(String.valueOf(serverId))
                     // true 为绑定，false 为取消绑定
                     .setBinding(true);
 

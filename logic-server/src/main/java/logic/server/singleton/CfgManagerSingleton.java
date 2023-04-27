@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class CfgManagerSingleton {
     private static CfgManagerSingleton instance;
-    private String serverId = null;
+    private int serverId = 0;
     private Map<String,CfgGlobalDTO> cfgGlobalDTOMap;
     private Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap;
     private Map<Integer, CfgAttributeDTO> cfgAttributeDTOMap;
@@ -45,7 +45,7 @@ public class CfgManagerSingleton {
         cfgBossDTOMap = new IntHashMap();
     }
 
-    public void setServerId(String serverIdFromNacos){
+    public void setServerId(int serverIdFromNacos){
         serverId = serverIdFromNacos;
         log.info("CfgManagerSingleton::setServerId:serverIdFromNacos = {}",serverIdFromNacos);
     }

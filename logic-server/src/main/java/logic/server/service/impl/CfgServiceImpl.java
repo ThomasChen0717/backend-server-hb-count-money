@@ -42,8 +42,13 @@ public class CfgServiceImpl implements ICfgService {
     private CfgBossRepository cfgBossRepository;
 
     /** nacos **/
-    public String getServerId(){
-        String serverId = nacosConfiguration.getServerId();
+    public int getServerId(){
+        String serverIdFromNacos = nacosConfiguration.getServerId();
+        if(serverIdFromNacos == null || serverIdFromNacos.isEmpty()){
+            log.error("CfgServiceImpl::getServerId:serverIdFromNacos = {},非法！",serverIdFromNacos);
+            return 0;
+        }
+        int serverId = Integer.parseInt(serverIdFromNacos);
         return serverId;
     }
 

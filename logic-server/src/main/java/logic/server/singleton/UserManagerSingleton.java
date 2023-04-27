@@ -78,6 +78,7 @@ public class UserManagerSingleton {
     public UserDTO getUserByIdFromCache(long userId){
         return allUserDTOMap.get(userId);
     }
+    public Map<Long, UserDTO> getAllUserDTOMapFromCache(){return allUserDTOMap;}
     /** userDTO end **/
 
     /** UserAttributeDTO start **/
@@ -264,4 +265,5 @@ public class UserManagerSingleton {
         Map<Integer,UserBossDTO> userBossDTOMap = getUserBossMapByIdFromCache(userId);
         return userBossDTOMap.get(bossId);
     }
+    /** UserBossDTO end **/
 }
