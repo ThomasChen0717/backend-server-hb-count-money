@@ -30,6 +30,9 @@ public interface UserCmdModule {
     /** 解锁载具或装备 */
     int unlockVehicleOrEquipment = 9;
     String unlockVehicleOrEquipmentExecutorName = "unlockVehicleOrEquipment";// 执行器名称
+    /** 逻辑心跳报文 */
+    int logicHeartbeat = 10;
+    String logicHeartbeatExecutorName = "logicHeartbeat";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;
