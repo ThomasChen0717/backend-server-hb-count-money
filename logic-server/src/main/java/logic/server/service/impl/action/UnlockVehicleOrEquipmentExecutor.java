@@ -25,6 +25,7 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
     public UnlockVehicleOrEquipmentResPb executor(UnlockVehicleOrEquipmentReqPb arg, Long userId){
         log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},arg = {},start",userId,arg);
         UnlockVehicleOrEquipmentResPb unlockVehicleOrEquipmentResPb = new UnlockVehicleOrEquipmentResPb();
+        unlockVehicleOrEquipmentResPb.setType(arg.getType()).setItemId(arg.getItemId());
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         // 解锁载具
@@ -58,9 +59,14 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
                 }
             }
             userVehicleDTO.setUnlocked(isUnlocked);
-            userVehicleDTO.setInUse(true);
-            UserVehicleDTO usingUserVehicleDTO = UserManagerSingleton.getInstance().getUserUsingVehicleByIdFromCache(userId);
-            if(usingUserVehicleDTO != null) usingUserVehicleDTO.setInUse(false);
+            if(isUnlocked){
+                userVehicleDTO.setInUse(true);
+                UserVehicleDTO usingUserVehicleDTO = UserManagerSingleton.getInstance().getUserUsingVehicleByIdFromCache(userId);
+                if(usingUserVehicleDTO != null) usingUserVehicleDTO.setInUse(false);
+            }
+            unlockVehicleOrEquipmentResPb.setInUse(userVehicleDTO.isInUse());
+            unlockVehicleOrEquipmentResPb.setUnlocked(userVehicleDTO.isUnlocked());
+            unlockVehicleOrEquipmentResPb.setUnlockConditionCurrCount(userVehicleDTO.getUnlockConditionCurrCount());
         }else if(arg.getType() == 2){
             // 解锁装备
             UserEquipmentDTO userEquipmentDTO = UserManagerSingleton.getInstance().getUserEquipmentByIdFromCache(userId,arg.getItemId());
@@ -90,11 +96,15 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
                     return unlockVehicleOrEquipmentResPb;
                 }
             }
+            unlockVehicleOrEquipmentResPb.setInUse(userEquipmentDTO.isInUse());
+            unlockVehicleOrEquipmentResPb.setUnlocked(userEquipmentDTO.isUnlocked());
+            unlockVehicleOrEquipmentResPb.setUnlockConditionCurrCount(userEquipmentDTO.getUnlockConditionCurrCount());
         }else{
             unlockVehicleOrEquipmentResPb.setCode(ErrorCodeEnum.unlockTypeError.getCode()).setMessage(ErrorCodeEnum.unlockTypeError.getMsg());
             log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId,unlockVehicleOrEquipmentResPb);
             return unlockVehicleOrEquipmentResPb;
         }
+
 
         log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId, unlockVehicleOrEquipmentResPb);
         return unlockVehicleOrEquipmentResPb;

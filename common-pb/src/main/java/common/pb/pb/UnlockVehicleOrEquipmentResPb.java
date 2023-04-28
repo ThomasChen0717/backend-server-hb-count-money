@@ -3,6 +3,7 @@ package common.pb.pb;
 import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 import com.iohao.game.widget.light.protobuf.ProtoFileMerge;
 import common.pb.ProtoFile;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.ToString;
@@ -26,4 +27,12 @@ public class UnlockVehicleOrEquipmentResPb {
     int code = 0;
     /** 响应文本：默认 success **/
     String message = "success";
+
+    /** 1 载具 2 装备 **/
+    int type;
+    /** 载具或者装备id **/
+    int itemId;
+    boolean isUnlocked;
+    boolean isInUse;
+    int unlockConditionCurrCount;
 }
