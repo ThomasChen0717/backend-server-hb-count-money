@@ -18,6 +18,7 @@ public class UserDTO implements DTO{
 
     private long id;
     private String name;
+    private String title;
     private String loginPlatform;
     private String token;
     private String unionId;

@@ -31,4 +31,9 @@ public class UserMagnatePO extends BaseEntity{
      * 是否已解除锁定：0 未解锁 1 已解锁
      */
     private boolean isUnlocked;
+
+    /**
+     * 是否已击败：0 未击败 1 已击败
+     */
+    private boolean isBeat;
 }

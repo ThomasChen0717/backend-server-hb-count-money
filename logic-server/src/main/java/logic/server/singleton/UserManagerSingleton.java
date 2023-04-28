@@ -2,6 +2,7 @@ package logic.server.singleton;
 
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
+import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -242,6 +243,24 @@ public class UserManagerSingleton {
     public UserMagnateDTO getUserMagnateByIdFromCache(long userId,int magnateId){
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = getUserMagnateMapByIdFromCache(userId);
         return userMagnateDTOMap.get(magnateId);
+    }
+    // 已击败的显示最考后的magnate
+    public UserMagnateDTO getUserLatestBeatMagnateFromCache(long userId){
+        UserMagnateDTO latestUserMagnateDTO = null;
+
+        Map<Integer,UserMagnateDTO> userMagnateDTOMap = getUserMagnateMapByIdFromCache(userId);
+        int showIndex = 0;
+        for(Map.Entry<Integer,UserMagnateDTO> entry : userMagnateDTOMap.entrySet()){
+            if(entry.getValue().isBeat()){
+                CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(entry.getKey());
+                if(cfgMagnateDTO.getShowIndex() >= showIndex){
+                    latestUserMagnateDTO = entry.getValue();
+                    showIndex = cfgMagnateDTO.getShowIndex();
+                }
+            }
+        }
+
+        return latestUserMagnateDTO;
     }
     /** UserMagnateDTO end **/
 

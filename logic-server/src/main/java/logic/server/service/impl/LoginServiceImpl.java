@@ -221,7 +221,8 @@ public class LoginServiceImpl implements ILoginService {
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();
             String name = loginPlatform + unionId.substring(unionId.length() - 6);
-            newUserDTO.setName(name).setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
+            newUserDTO.setName(name).setTitle(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("firstTitle").getValueName())
+                    .setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
                     .setLatestLogoutTime(currTime);
             userService.addUserToDB(newUserDTO);
 
@@ -290,7 +291,7 @@ public class LoginServiceImpl implements ILoginService {
 
         LoginResPb loginResPb = new LoginResPb();
         /** 角色数据 **/
-        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory());
+        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory()).setTitle(userDTO.getTitle());
 
         /** 宠物离线时间：单位秒 **/
         loginResPb.setOfflineTime( (int)((userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000) );

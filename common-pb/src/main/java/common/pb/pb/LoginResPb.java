@@ -38,6 +38,8 @@ public class LoginResPb{
     long money;
     /** 历史金钱数量 */
     long moneyHistory;
+    /** 称号 **/
+    String title;
 
     /** 宠物离线时间：单位秒 **/
     int offlineTime;

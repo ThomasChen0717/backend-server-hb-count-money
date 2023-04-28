@@ -46,6 +46,12 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
+        userMagnateDTO.setBeat(true);
+        UserMagnateDTO latestUserMagnateDTO = UserManagerSingleton.getInstance().getUserLatestBeatMagnateFromCache(userId);
+        userDTO.setTitle(CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(latestUserMagnateDTO.getMagnateId()).getMagnateName());
+        /** 同步称号数量（推送）**/
+        pushPbService.titleSync(userId);
+
         // 解锁载具
         if(cfgMagnateDTO.getUnlockVehicleId() > 0){
             // 新载具解锁并且使用

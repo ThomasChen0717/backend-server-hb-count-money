@@ -30,6 +30,11 @@ public class UserPO extends BaseEntity{
     private String name;
 
     /**
+     * 称号
+     */
+    private String title;
+
+    /**
      * 登录平台类型
      */
     private String loginPlatform;

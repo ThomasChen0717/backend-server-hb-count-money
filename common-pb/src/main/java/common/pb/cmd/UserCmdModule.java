@@ -36,4 +36,6 @@ public interface UserCmdModule {
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;
+    /** 同步称号（推送） */
+    int titleSyncPush = 101;
 }

@@ -12,4 +12,5 @@ public class UserMagnateDTO implements DTO{
     private long userId;
     private int magnateId;
     private boolean isUnlocked;
+    private boolean isBeat;
 }
