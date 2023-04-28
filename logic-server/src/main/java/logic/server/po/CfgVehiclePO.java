@@ -49,6 +49,11 @@ public class CfgVehiclePO extends BaseEntity{
     private int extraRewardValue;
 
     /**
+     * 显示顺序：值越小展示越靠前
+     */
+    private int showIndex;
+
+    /**
      * 资源名称
      */
     private String resourceName;

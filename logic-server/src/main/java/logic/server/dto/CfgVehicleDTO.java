@@ -15,5 +15,6 @@ public class CfgVehicleDTO implements DTO{
     private int unlockConditionCount;
     private int vehicleCapacity;
     private int extraRewardValue;
+    private int showIndex;
     private String resourceName;
 }

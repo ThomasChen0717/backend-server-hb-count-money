@@ -41,6 +41,8 @@ public class VehicleInfoPb {
     int capacity;
     /** 额外奖励 **/
     int extraRewardValue;
+    /** 显示顺序：值越小展示越靠前 **/
+    int showIndex;
     /** 资源名称 **/
     String resourceName;
 }

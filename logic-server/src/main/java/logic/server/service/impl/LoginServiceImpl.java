@@ -334,11 +334,17 @@ public class LoginServiceImpl implements ILoginService {
             /** 载具配置数据 **/
             CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
             vehicleInfoPb.setVehicleName(cfgVehicleDTO.getVehicleName()).setUnlockConditionType(cfgVehicleDTO.getUnlockConditionType())
-                    .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionType()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
+                    .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionCount()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
                     .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue()).setResourceName(cfgVehicleDTO.getResourceName());
 
             loginResPb.getVehicleInfoPbList().add(vehicleInfoPb);
         }
+        // 载具根据showIndex排序
+        List<VehicleInfoPb> vehicleInfoPbList = loginResPb.getVehicleInfoPbList();
+        vehicleInfoPbList = vehicleInfoPbList.stream().sorted(
+                Comparator.comparing(VehicleInfoPb::getShowIndex).thenComparing(VehicleInfoPb::getVehicleId)
+        ).collect(Collectors.toList());
+        loginResPb.setVehicleInfoPbList(vehicleInfoPbList);
 
         /** 角色装备数据 **/
         for(Map.Entry<Integer,UserEquipmentDTO> entryEquipment : userEquipmentDTOMap.entrySet()){
