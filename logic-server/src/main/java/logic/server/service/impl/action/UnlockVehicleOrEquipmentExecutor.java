@@ -35,18 +35,19 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
                 log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId,unlockVehicleOrEquipmentResPb);
                 return unlockVehicleOrEquipmentResPb;
             }
+            boolean isUnlocked = false;
             CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
             if(cfgVehicleDTO.getUnlockConditionType() == ConditionEnum.ad.getConditionType()){
                 // 解锁条件是广告类型
                 userVehicleDTO.setUnlockConditionCurrCount(userVehicleDTO.getUnlockConditionCurrCount() + 1);
                 if(userVehicleDTO.getUnlockConditionCurrCount() >= cfgVehicleDTO.getUnlockConditionCount()){
-                    userVehicleDTO.setUnlocked(true);
+                    isUnlocked = true;
                 }
             }else if(cfgVehicleDTO.getUnlockConditionType() == ConditionEnum.money.getConditionType()){
                 // 解锁条件是金钱类型
                 long leftMoney = userDTO.getMoney() - cfgVehicleDTO.getUnlockConditionCount();
                 if(leftMoney > 0){
-                    userVehicleDTO.setUnlocked(true);
+                    isUnlocked = true;
                     userDTO.setMoney(leftMoney);
                     /** 同步金钱数量（推送）**/
                     pushPbService.moneySync(userId);
@@ -56,6 +57,10 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
                     return unlockVehicleOrEquipmentResPb;
                 }
             }
+            userVehicleDTO.setUnlocked(isUnlocked);
+            userVehicleDTO.setInUse(true);
+            UserVehicleDTO usingUserVehicleDTO = UserManagerSingleton.getInstance().getUserUsingVehicleByIdFromCache(userId);
+            if(usingUserVehicleDTO != null) usingUserVehicleDTO.setInUse(false);
         }else if(arg.getType() == 2){
             // 解锁装备
             UserEquipmentDTO userEquipmentDTO = UserManagerSingleton.getInstance().getUserEquipmentByIdFromCache(userId,arg.getItemId());
