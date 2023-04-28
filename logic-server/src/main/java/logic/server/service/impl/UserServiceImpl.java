@@ -31,8 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -229,11 +231,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void saveDataFromCacheToDB(){
         Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
+        List<Long> userIdList = new ArrayList<>(userDTOMap.keySet());
         log.info("UserServiceImpl::saveDataFromCacheToDB:优雅关闭需保存数据角色数量 = {}",userDTOMap.size());
-        for(Map.Entry<Long,UserDTO> entry : userDTOMap.entrySet()){
-            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据开始",entry.getKey());
-            saveDataFromCacheToDB(entry.getKey());
-            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据结束",entry.getKey());
+        for(int i = 0;i<userIdList.size();i++){
+            long userId = userIdList.get(i);
+            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据开始",userId);
+            saveDataFromCacheToDB(userId);
+            log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据结束",userId);
         }
     }
 
