@@ -233,12 +233,23 @@ public class UserServiceImpl implements IUserService {
         Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
         List<Long> userIdList = new ArrayList<>(userDTOMap.keySet());
         log.info("UserServiceImpl::saveDataFromCacheToDB:优雅关闭需保存数据角色数量 = {}",userDTOMap.size());
+
+        int saveSuccessCount = 0;
         for(int i = 0;i<userIdList.size();i++){
             long userId = userIdList.get(i);
+
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据开始",userId);
-            saveDataFromCacheToDB(userId);
+            try{
+                saveDataFromCacheToDB(userId);
+            }catch (Exception e){
+                log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据异常",userId);
+                continue;
+            }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据结束",userId);
+            saveSuccessCount++;
         }
+
+        log.info("UserServiceImpl::saveDataFromCacheToDB:优雅关闭已保存数据角色数量 = {}",saveSuccessCount);
     }
 
     @Override
