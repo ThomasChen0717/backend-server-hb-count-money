@@ -22,6 +22,7 @@ import logic.server.service.impl.action.ChallengeBossSuccessExecutor;
 import logic.server.service.impl.action.ChallengeMagnateSuccessExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
 import logic.server.service.impl.action.GetRedPacketExecutor;
+import logic.server.service.impl.action.LogicHeartbeatExecutor;
 import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.service.impl.action.UnlockVehicleOrEquipmentExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
@@ -74,6 +75,8 @@ public class UserServiceImpl implements IUserService {
     private ChallengeBossSuccessExecutor challengeBossSuccessExecutor;
     @Autowired
     private UnlockVehicleOrEquipmentExecutor unlockVehicleOrEquipmentExecutor;
+    @Autowired
+    private LogicHeartbeatExecutor logicHeartbeatExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -272,6 +275,8 @@ public class UserServiceImpl implements IUserService {
             return challengeBossSuccessExecutor;
         }else if(executorName.compareTo(UserCmdModule.unlockVehicleOrEquipmentExecutorName) == 0){
             return unlockVehicleOrEquipmentExecutor;
+        }else if(executorName.compareTo(UserCmdModule.logicHeartbeatExecutorName) == 0){
+            return logicHeartbeatExecutor;
         }
         return null;
     }

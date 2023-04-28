@@ -105,7 +105,6 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
             return unlockVehicleOrEquipmentResPb;
         }
 
-
         log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId, unlockVehicleOrEquipmentResPb);
         return unlockVehicleOrEquipmentResPb;
     }

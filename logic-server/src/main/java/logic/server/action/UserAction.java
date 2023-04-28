@@ -14,6 +14,8 @@ import common.pb.pb.ChangeVehicleReqPb;
 import common.pb.pb.ChangeVehicleResPb;
 import common.pb.pb.GetRedPacketReqPb;
 import common.pb.pb.GetRedPacketResPb;
+import common.pb.pb.LogicHeartbeatReqPb;
+import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import common.pb.pb.StartOrEndBuffToolReqPb;
@@ -83,5 +85,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.unlockVehicleOrEquipment)
     public UnlockVehicleOrEquipmentResPb unlockVehicleOrEquipment(UnlockVehicleOrEquipmentReqPb unlockVehicleOrEquipmentReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (UnlockVehicleOrEquipmentResPb)userService.getExecutor(UserCmdModule.unlockVehicleOrEquipmentExecutorName).executor(unlockVehicleOrEquipmentReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.logicHeartbeat)
+    public LogicHeartbeatResPb logicHeartbeat(LogicHeartbeatReqPb logicHeartbeatReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (LogicHeartbeatResPb)userService.getExecutor(UserCmdModule.logicHeartbeatExecutorName).executor(logicHeartbeatReqPb,myFlowContext.getUserId());
     }
 }
