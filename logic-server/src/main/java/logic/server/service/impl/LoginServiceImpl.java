@@ -335,7 +335,8 @@ public class LoginServiceImpl implements ILoginService {
             CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
             vehicleInfoPb.setVehicleName(cfgVehicleDTO.getVehicleName()).setUnlockConditionType(cfgVehicleDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgVehicleDTO.getUnlockConditionCount()).setCapacity(cfgVehicleDTO.getVehicleCapacity())
-                    .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue()).setResourceName(cfgVehicleDTO.getResourceName());
+                    .setExtraRewardValue(cfgVehicleDTO.getExtraRewardValue()).setShowIndex(cfgVehicleDTO.getShowIndex())
+                    .setResourceName(cfgVehicleDTO.getResourceName());
 
             loginResPb.getVehicleInfoPbList().add(vehicleInfoPb);
         }
