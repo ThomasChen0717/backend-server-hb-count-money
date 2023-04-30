@@ -10,8 +10,13 @@ import logic.server.dto.CfgVehicleDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.ognl.IntHashMap;
+import org.redisson.Redisson;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +33,16 @@ public class CfgManagerSingleton {
     private Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap;
     private Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap;
     private Map<Integer, CfgBossDTO> cfgBossDTOMap;
+
+    /** 模版数据是否使用redisson再议
+    @Autowired
+    private RedissonClient redissonClient;
+    @PostConstruct
+    public void init(){
+        instance = this;
+        instance.redissonClient = this.redissonClient;
+    }
+    **/
 
     public static synchronized CfgManagerSingleton getInstance() {
         if (instance == null) {
@@ -56,8 +71,8 @@ public class CfgManagerSingleton {
     }
 
     /** t_cfg_vehicle **/
-    public CfgVehicleDTO getCfgVehicleByIdFromCache(int vehicleType){
-        return cfgVehicleDTOMap.get(vehicleType);
+    public CfgVehicleDTO getCfgVehicleByIdFromCache(int vehicleId){
+        return cfgVehicleDTOMap.get(vehicleId);
     }
 
     /** t_cfg_attribute **/

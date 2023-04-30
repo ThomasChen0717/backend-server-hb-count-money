@@ -1,4 +1,4 @@
-package logic.server.util.redisson;
+package logic.server.repository.redisson;
 
 /**
  * 带返回值的执行接口
@@ -8,7 +8,6 @@ package logic.server.util.redisson;
  *
  * @author mark
  * @date 2024-04-17
- * @Slogan 慢慢变好，是给自己最好的礼物
  */
 public interface IReturnHandle<T> {
     T execute();

@@ -1,4 +1,4 @@
-package logic.server.util.redisson;
+package logic.server.repository.redisson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
  *
  * @author mark
  * @date 2023-04-17
- * @Slogan 慢慢变好，是给自己最好的礼物
  */
 public interface IDistributedLock {
     /**
