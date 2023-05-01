@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author mark
  * @date 2023-04-12
  */
-//@Configuration
+@Configuration
 @Slf4j
 public class XXLJobAutoConfiguration {
     @Autowired
