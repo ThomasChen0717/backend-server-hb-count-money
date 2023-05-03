@@ -1,9 +1,18 @@
 package broker.server;
 
+import broker.server.service.NacisDiscoveryService;
+import broker.server.util.BeanUtils;
+import com.alibaba.fastjson2.JSONObject;
+import com.iohao.game.action.skeleton.ext.spring.ActionFactoryBeanForSpring;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.simple.cluster.ClusterSimpleHelper;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,16 +21,31 @@ import java.util.List;
  * @author mark
  * @date 2023-04-10
  */
+@SpringBootApplication
+@EnableDiscoveryClient
 public class BrokerApplication {
     public static void main(String[] args) {
 
+        // 启动 spring boot
+        SpringApplication.run(BrokerApplication.class, args);
+
         /** 单个网关服 **/
-        // broker （游戏网关）
-        //BrokerServer brokerServer = new BrokerBoot().createBrokerServer();
-        // 启动游戏网关
-        //brokerServer.startup();
+        //singleModeStart();
 
         /** 集群方式网关服 **/
+        clusterModeStart();
+    }
+
+    /** 单个网关服 **/
+    private static void singleModeStart(){
+        // broker （游戏网关）
+        BrokerServer brokerServer = new BrokerBoot().createBrokerServer();
+        // 启动游戏网关
+        brokerServer.startup();
+    }
+
+    /** 集群方式网关服 **/
+    private static void clusterModeStart(){
         /*
          * 种子节点地址
          * <pre>
@@ -44,15 +68,22 @@ public class BrokerApplication {
          *     127.0.0.1:30058
          * </pre>
          */
-        List<String> seedAddress = List.of(
-                "127.0.0.1:30056"
-        );
+        NacisDiscoveryService nacisDiscoveryService = BeanUtils.getBean(NacisDiscoveryService.class);
+        List<JSONObject> serverList = nacisDiscoveryService.getServerList();
+        int clusterPort = 30056;
+        List<String> seedAddress = new ArrayList<>();
+        for(JSONObject jsonServer : serverList){
+            String hostAndPort = jsonServer.getString("host") + ":" + clusterPort;
+            seedAddress.add(hostAndPort);
+        }
+        //String hostAndPort = "127.0.0.1" + ":" + clusterPort;
+        //seedAddress.add(hostAndPort);
 
         /*
          * 第 1 台集群 游戏网关: 【集群端口 - 30056】、【游戏网关端口 - 10200】
          * 因为是在同一台机器上测试游戏网关集群，同一台机器启动多个 broker 来实现集群就要使用不同的端口，因为《端口被占用，不能相同》
          */
-        int[] gossipPortAndBrokerPort = new int[]{30056, BrokerGlobalConfig.brokerPort};
+        int[] gossipPortAndBrokerPort = new int[]{clusterPort, BrokerGlobalConfig.brokerPort};
 
         // Gossip listen port 监听端口
         int gossipListenPort = gossipPortAndBrokerPort[0];
@@ -62,5 +93,11 @@ public class BrokerApplication {
         BrokerServer brokerServer = ClusterSimpleHelper.createBrokerServer(seedAddress, gossipListenPort, port);
         // 启动游戏网关
         brokerServer.startup();
+    }
+
+    @Bean
+    public ActionFactoryBeanForSpring actionFactoryBean() {
+        // 将业务框架交给 spring 管理
+        return ActionFactoryBeanForSpring.me();
     }
 }
