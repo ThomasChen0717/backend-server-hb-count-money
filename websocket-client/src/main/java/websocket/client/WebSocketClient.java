@@ -104,9 +104,9 @@ public class WebSocketClient {
 
         // 登录请求
         LoginReqPb loginReqPb = new LoginReqPb();
-        loginReqPb.setLoginPlatform("dy");
-        //loginReqPb.setCode("1111");// 创建新用户
-        loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
+        loginReqPb.setLoginPlatform("hb");
+        loginReqPb.setCode("LKBkYy3y0LDlmM9sC0720005fad8b71e9ad1");// 创建新用户
+        //loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,

@@ -44,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -73,10 +74,7 @@ public class LoginServiceImpl implements ILoginService {
         boolean isForcedOffline = false;
 
         // 不同平台登录处理
-        UserDTO userDTO = null;
-        if(loginReqPb.getLoginPlatform().compareTo(LoginPlatformEnum.dy.getName()) == 0){
-            userDTO = dyLogin(loginReqPb);
-        }
+        UserDTO userDTO = userDTO = dyLogin(loginReqPb);
         if(userDTO == null){
             log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.addOrGetUserFailed.getCode(),ErrorCodeEnum.addOrGetUserFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.addOrGetUserFailed.getCode()).setMessage(ErrorCodeEnum.addOrGetUserFailed.getMsg());
@@ -173,21 +171,14 @@ public class LoginServiceImpl implements ILoginService {
         Date currTime = new Date();
         if(loginReqPb.getCode() != null){
             // 授权登录：通过code获取unionId
-            String url = String.format("%s/jscode2session?appid=%s&secret=%s&code=%s",
-                    nacosConfiguration.getDyUrl(), nacosConfiguration.getDyAppId(), nacosConfiguration.getDySecret(), loginReqPb.getCode());
-            log.info("LoginService::dyLogin:url = {}",url);
-            String stringRes = HttpUtil.get(url);
-            log.info("LoginService::dyLogin:stringRes = {}",stringRes);
-            JSONObject jsonRes = JSONObject.parseObject(stringRes);
-            String unionId = String.valueOf(currTime.getTime());
-            String openid = "22222222";
-            //String unionId = jsonRes.getString("unionid");
-            //String openid = jsonRes.getString("openid");
-            if (jsonRes != null && unionId != null) {
+            JSONObject jsonResult = getPlatformUserInfo(loginReqPb.getLoginPlatform(),loginReqPb.getCode());
+            String unionId = jsonResult.getString("unionId");
+            String openid = jsonResult.getString("openid");
+            if (unionId != null) {
                 userDTO = userService.getUserByUnionIdFromDB(unionId);
                 String newToken = createToken();
                 if(userDTO == null){
-                    userDTO = createUser(LoginPlatformEnum.dy.getName(),unionId,openid,newToken,currTime);
+                    userDTO = createUser(loginReqPb.getLoginPlatform(),unionId,openid,newToken,currTime);
                     isNewUser = true;
                 }else{
                     // 刷新token（非必要）
@@ -204,6 +195,73 @@ public class LoginServiceImpl implements ILoginService {
 
         userDTO.setNewUser(isNewUser);
         return userDTO;
+    }
+
+    private JSONObject getPlatformUserInfo(String platform,String code){
+        JSONObject jsonPlatformUserInfo = new JSONObject();
+        Date currTime = new Date();
+
+        if(platform.compareTo("dy") == 0){
+            String url = String.format("%s/jscode2session?appid=%s&secret=%s&code=%s",
+                    nacosConfiguration.getDyUrl(), nacosConfiguration.getDyAppId(), nacosConfiguration.getDySecret(), code);
+            log.info("LoginService::getPlatformUserInfo:url = {},platform = {}",url,platform);
+            String stringRes = HttpUtil.get(url);
+            log.info("LoginService::getPlatformUserInfo:stringRes = {}",stringRes);
+            JSONObject jsonRes = JSONObject.parseObject(stringRes);
+            String unionId = jsonRes.getString("unionid");
+            String openid = jsonRes.getString("openid");
+            jsonPlatformUserInfo.put("unionId",unionId);
+            jsonPlatformUserInfo.put("openid",openid);
+        }else if(platform.compareTo("ty") == 0){
+            String url = String.format("%s/plat/v1/account/token-info", nacosConfiguration.getTyUrl());
+            log.info("LoginService::getPlatformUserInfo:url = {},platform = {}",url,platform);
+
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("game_id",nacosConfiguration.getTyAppId());
+            jsonParam.put("user_token",code);
+            int timestamp = (int)(currTime.getTime()/1000L);
+            String nonce = createToken();
+            jsonParam.put("timestamp",timestamp);
+            jsonParam.put("nonce",nonce);
+            // 签名
+            String signParam = String.format("nonce=%s&secret=%s&timestamp=%d",nonce,nacosConfiguration.getTySecret(),timestamp);
+            String sign = "";
+            try{
+                MessageDigest digest = MessageDigest.getInstance("SHA-1");
+                byte[] hash = digest.digest(signParam.getBytes());
+                StringBuffer hexString = new StringBuffer();
+                for (int i = 0; i < hash.length; i++) {
+                    String hex = Integer.toHexString(0xff & hash[i]);
+                    if (hex.length() == 1) hexString.append('0');
+                    hexString.append(hex);
+                }
+                sign = hexString.toString();
+            }catch (Exception e){
+                log.error("LoginService::getPlatformUserInfo:message = {},签名失败",e.getMessage());
+            }
+            jsonParam.put("signature",sign);
+            log.info("LoginService::getPlatformUserInfo:url = {},jsonParam = {},sign = {},signParam = {}",url,jsonParam,sign,signParam);
+            String stringRes = HttpUtil.post(url,jsonParam,"json");
+            log.info("LoginService::getPlatformUserInfo:stringRes = {}",stringRes);
+            JSONObject jsonRes = JSONObject.parseObject(stringRes);
+            JSONObject jsonData = jsonRes.getJSONObject("data");
+            if(jsonData != null){
+                jsonPlatformUserInfo.put("unionId",jsonData.getString("union_id"));
+                jsonPlatformUserInfo.put("openid",jsonData.getString("open_id"));
+            }
+        }else{
+            if( !(nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0) ){
+                // 不是正式服，处理hb平台参数
+                if(platform.compareTo("hb") == 0){
+                    String unionId = String.valueOf(currTime.getTime());
+                    String openid = "22222222";
+                    jsonPlatformUserInfo.put("unionId",unionId);
+                    jsonPlatformUserInfo.put("openid",openid);
+                }
+            }
+        }
+
+        return jsonPlatformUserInfo;
     }
 
     private String createToken() {

@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class NacosConfiguration {
+    /** active **/
+    @Value("${spring.profiles.active}")
+    private String springProfilesActive;
+    public String getSpringProfilesActive() { return springProfilesActive; }
+
     /** xxljob **/
     @Value("${xxl.job.admin.addresses}")
     private String xxlJobAdminAddresses;
@@ -38,6 +43,17 @@ public class NacosConfiguration {
     @Value("${dy.secret}")
     private String dySecret;
     public String getDySecret() { return dySecret; }
+
+    /** tySDK **/
+    @Value("${ty.url}")
+    private String tyUrl;
+    public String getTyUrl() { return tyUrl; }
+    @Value("${ty.appId}")
+    private String tyAppId;
+    public String getTyAppId() { return tyAppId; }
+    @Value("${ty.secret}")
+    private String tySecret;
+    public String getTySecret() { return tySecret; }
 
     /** brokerServer **/
     @Value("${brokerServer.url}")

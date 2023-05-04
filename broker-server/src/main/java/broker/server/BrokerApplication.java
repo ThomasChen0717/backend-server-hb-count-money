@@ -7,6 +7,7 @@ import com.iohao.game.action.skeleton.ext.spring.ActionFactoryBeanForSpring;
 import com.iohao.game.bolt.broker.core.common.BrokerGlobalConfig;
 import com.iohao.game.bolt.broker.server.BrokerServer;
 import com.iohao.game.simple.cluster.ClusterSimpleHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
+@Slf4j
 public class BrokerApplication {
     public static void main(String[] args) {
 
@@ -90,6 +92,7 @@ public class BrokerApplication {
         // broker 端口（游戏网关端口）
         int port = gossipPortAndBrokerPort[1];
         // ---- 第1台 broker ----
+        log.info("BrokerApplication::clusterModeStart:serverList = {},seedAddress = {},gossipListenPort = {},port = {}",serverList,seedAddress,gossipListenPort,port);
         BrokerServer brokerServer = ClusterSimpleHelper.createBrokerServer(seedAddress, gossipListenPort, port);
         // 启动游戏网关
         brokerServer.startup();
