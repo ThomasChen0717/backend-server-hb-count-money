@@ -24,7 +24,7 @@ public class ExternalApplication {
 
         ConfigTemplate configTemplate = BeanUtils.getBean(ConfigTemplate.class);
         // 对外开放的端口
-        int externalPort = configTemplate.getServerPort();
+        int externalPort = 10100;//configTemplate.getServerPort();
 
         // 构建游戏对外服
         ExternalServer externalServer = new ExternalBoot().createExternalServer(externalPort);

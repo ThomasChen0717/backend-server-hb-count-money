@@ -31,6 +31,7 @@ public class NacisDiscoveryService {
             jsonServerList.add(jsonService);
         }
 
+        log.info("NacisDiscoveryService::getServerList:jsonServerList = {}",jsonServerList);
         return jsonServerList;
     }
 }
