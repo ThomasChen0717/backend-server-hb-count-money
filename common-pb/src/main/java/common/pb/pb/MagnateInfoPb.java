@@ -47,4 +47,6 @@ public class MagnateInfoPb {
     int showIndex;
     /** 资源名称 **/
     String resourceName;
+    /** 话语文本 **/
+    String bossWord;
 }

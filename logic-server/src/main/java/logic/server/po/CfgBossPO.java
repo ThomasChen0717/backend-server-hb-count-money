@@ -62,4 +62,9 @@ public class CfgBossPO extends BaseEntity{
      * 资源名称
      */
     private String resourceName;
+
+    /**
+     * 话语文本
+     */
+    private String bossWord;
 }

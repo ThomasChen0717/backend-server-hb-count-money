@@ -18,4 +18,5 @@ public class CfgBossDTO implements DTO{
     private int preBossId;
     private int showIndex;
     private String resourceName;
+    private String bossWord;
 }

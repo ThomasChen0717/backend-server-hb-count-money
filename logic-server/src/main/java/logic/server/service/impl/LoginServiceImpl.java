@@ -466,7 +466,7 @@ public class LoginServiceImpl implements ILoginService {
                     .setTargetMoneyAmount(cfgMagnateDTO.getTargetMoneyAmount())
                             .setRewardMoneyAmount(cfgMagnateDTO.getRewardMoneyAmount()).setUnlockVehicleId(cfgMagnateDTO.getUnlockVehicleId())
                             .setCdTime(cfgMagnateDTO.getCdTime()).setChallengeTime(cfgMagnateDTO.getChallengeTime())
-                            .setPreMagnateId(cfgMagnateDTO.getPreMagnateId()).setResourceName(cfgMagnateDTO.getResourceName());
+                            .setPreMagnateId(cfgMagnateDTO.getPreMagnateId()).setResourceName(cfgMagnateDTO.getResourceName()).setBossWord(cfgMagnateDTO.getBossWord());
 
             loginResPb.getMagnateInfoPbList().add(magnateInfoPb);
         }
@@ -489,7 +489,7 @@ public class LoginServiceImpl implements ILoginService {
             CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(userBossDTO.getBossId());
             bossInfoPb.setBossName(cfgBossDTO.getBossName()).setSpeed(cfgBossDTO.getSpeed()).setTargetMoneyAmount(cfgBossDTO.getTargetMoneyAmount())
                     .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).setPreBossId(cfgBossDTO.getPreBossId())
-                    .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName());
+                    .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName()).setBossWord(cfgBossDTO.getBossWord());
 
             loginResPb.getBossInfoPbList().add(bossInfoPb);
         }
