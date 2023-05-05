@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
  * @author mark
  * @date 2023-04-12
  */
-@Configuration
+// 暂时屏蔽xxl-job，还未使用到
+//@Configuration
 @Slf4j
 public class XXLJobAutoConfiguration {
     @Autowired
@@ -29,7 +30,7 @@ public class XXLJobAutoConfiguration {
         xxlJobSpringExecutor.setLogPath(nacosConfiguration.getXxlJobExecutorLogPath());
         xxlJobSpringExecutor.setLogRetentionDays(nacosConfiguration.getXxlJobExecutorLogRetentionDays());
         xxlJobSpringExecutor.setAppname(applicationName);
-        log.info("adminAddress = {},port = {},accessToken = {},appName = {}",
+        log.info("XXLJobAutoConfiguration::xxlJobExecutor:adminAddress = {},port = {},accessToken = {},appName = {}",
                 nacosConfiguration.getXxlJobAdminAddresses(),nacosConfiguration.getXxlJobExecutorPort(),
                 nacosConfiguration.getXxlJobAccessToken(),applicationName);
         return xxlJobSpringExecutor;
