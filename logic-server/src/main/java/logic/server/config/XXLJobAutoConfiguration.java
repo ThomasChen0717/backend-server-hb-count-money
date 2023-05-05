@@ -29,6 +29,9 @@ public class XXLJobAutoConfiguration {
         xxlJobSpringExecutor.setLogPath(nacosConfiguration.getXxlJobExecutorLogPath());
         xxlJobSpringExecutor.setLogRetentionDays(nacosConfiguration.getXxlJobExecutorLogRetentionDays());
         xxlJobSpringExecutor.setAppname(applicationName);
+        log.info("adminAddress = {},port = {},accessToken = {},appName = {}",
+                nacosConfiguration.getXxlJobAdminAddresses(),nacosConfiguration.getXxlJobExecutorPort(),
+                nacosConfiguration.getXxlJobAccessToken(),applicationName);
         return xxlJobSpringExecutor;
     }
 }
