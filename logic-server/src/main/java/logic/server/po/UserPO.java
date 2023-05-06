@@ -78,4 +78,9 @@ public class UserPO extends BaseEntity{
      * 最近一次下线时间
      */
     private Date latestLogoutTime;
+
+    /**
+     * 权限等级：0 普通 1 GM
+     */
+    private int privilegeLevel;
 }

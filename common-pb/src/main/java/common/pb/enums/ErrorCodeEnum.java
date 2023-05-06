@@ -62,6 +62,10 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     userStillOnline(10024, "角色标记还在线上，请稍后登录"),
     /** 解锁类型不存在 */
     unlockTypeError(10025, "解锁类型不存在"),
+    /** 权限不足 */
+    permissionDenied(10026, "权限不足"),
+    /** 参数非法 */
+    paramError(10027, "参数非法"),
     ;
 
     /** 消息码 */

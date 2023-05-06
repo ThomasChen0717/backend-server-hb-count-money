@@ -40,6 +40,8 @@ public class LoginResPb{
     long moneyHistory;
     /** 称号 **/
     String title;
+    /** 权限等级：0 普通 1 GM **/
+     int privilegeLevel;
 
     /** 宠物离线时间：单位秒 **/
     int offlineTime;

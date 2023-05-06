@@ -14,6 +14,8 @@ import common.pb.pb.ChangeVehicleReqPb;
 import common.pb.pb.ChangeVehicleResPb;
 import common.pb.pb.GetRedPacketReqPb;
 import common.pb.pb.GetRedPacketResPb;
+import common.pb.pb.GmCommandReqPb;
+import common.pb.pb.GmCommandResPb;
 import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.SettlementReqPb;
@@ -90,5 +92,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.logicHeartbeat)
     public LogicHeartbeatResPb logicHeartbeat(LogicHeartbeatReqPb logicHeartbeatReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (LogicHeartbeatResPb)userService.getExecutor(UserCmdModule.logicHeartbeatExecutorName).executor(logicHeartbeatReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.gmCommand)
+    public GmCommandResPb gmCommand(GmCommandReqPb gmCommandReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (GmCommandResPb)userService.getExecutor(UserCmdModule.gmCommandExecutorName).executor(gmCommandReqPb,myFlowContext.getUserId());
     }
 }

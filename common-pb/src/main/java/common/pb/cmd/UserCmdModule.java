@@ -33,6 +33,9 @@ public interface UserCmdModule {
     /** 逻辑心跳报文 */
     int logicHeartbeat = 10;
     String logicHeartbeatExecutorName = "logicHeartbeat";// 执行器名称
+    /** GM命令报文 */
+    int gmCommand = 11;
+    String gmCommandExecutorName = "gmCommand";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

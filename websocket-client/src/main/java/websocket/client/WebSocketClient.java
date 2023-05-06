@@ -1,5 +1,6 @@
 package websocket.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baida.countmoney.client.command.ClientCommandKit;
 import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
@@ -7,6 +8,7 @@ import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
 import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
+import common.pb.pb.GmCommandReqPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import lombok.extern.slf4j.Slf4j;
@@ -105,8 +107,8 @@ public class WebSocketClient {
         // 登录请求
         LoginReqPb loginReqPb = new LoginReqPb();
         loginReqPb.setLoginPlatform("hb");
-        loginReqPb.setCode("LKBkYy3y0LDlmM9sC0720005fad8b71e9ad1");// 创建新用户
-        //loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
+        //loginReqPb.setCode("LKBkYy3y0LDlmM9sC0720005fad8b71e9ad1");// 创建新用户
+        loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
 
         ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
@@ -118,22 +120,24 @@ public class WebSocketClient {
     }
 
     private static void initClientCommands() {
-        if(true){
-            return;
-        }
+        //if(true){
+            //return;
+        //}
 
-        ChallengeBossSuccessReqPb challengeBossSuccessReqPb = new ChallengeBossSuccessReqPb();
-        challengeBossSuccessReqPb.setBossId(1);
-        challengeBossSuccessReqPb.setMultiple(1);
+        GmCommandReqPb gmCommandReqPb = new GmCommandReqPb();
+        gmCommandReqPb.setGmCommandId(1);
+        JSONObject jsonGmCommandInfo = new JSONObject();
+        jsonGmCommandInfo.put("money",10);
+        gmCommandReqPb.setJsonGmCommandInfo(jsonGmCommandInfo.toJSONString());
 
         // 请求、响应
         ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
                 UserCmdModule.cmd,
-                UserCmdModule.challengeBossSuccess,
-                challengeBossSuccessReqPb
+                UserCmdModule.gmCommand,
+                gmCommandReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, ChallengeBossSuccessResPb.class);
+        ClientCommandKit.createClientCommand(externalMessageHere, GmCommandReqPb.class);
 
 
         /**

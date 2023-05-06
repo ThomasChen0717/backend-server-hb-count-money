@@ -74,7 +74,7 @@ public class LoginServiceImpl implements ILoginService {
         boolean isForcedOffline = false;
 
         // 不同平台登录处理
-        UserDTO userDTO = userDTO = dyLogin(loginReqPb);
+        UserDTO userDTO = dyLogin(loginReqPb);
         if(userDTO == null){
             log.info("LoginServiceImpl::Login:code = {},message = {},end",ErrorCodeEnum.addOrGetUserFailed.getCode(),ErrorCodeEnum.addOrGetUserFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.addOrGetUserFailed.getCode()).setMessage(ErrorCodeEnum.addOrGetUserFailed.getMsg());
