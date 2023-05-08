@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import common.pb.enums.ErrorCodeEnum;
 import common.pb.pb.GmCommandReqPb;
 import common.pb.pb.GmCommandResPb;
+import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserDTO;
@@ -14,6 +15,7 @@ import logic.server.dto.UserVehicleDTO;
 import logic.server.enums.AttributeEnum;
 import logic.server.enums.GmCommandEnum;
 import logic.server.service.IPushPbService;
+import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +77,19 @@ public class GmCommandExecutor implements BaseExecutor<GmCommandReqPb, GmCommand
              * {}
              **/
             Map<Integer, UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
+            int maxShowIndex = 0;
+            UserVehicleDTO latestUserVehicleDTO = null;
             for(Map.Entry<Integer,UserVehicleDTO> entry : userVehicleDTOMap.entrySet()){
-                entry.getValue().setUnlocked(true);
+                UserVehicleDTO userVehicleDTO = entry.getValue();
+                userVehicleDTO.setUnlocked(true);
+                userVehicleDTO.setInUse(false);
+                CfgVehicleDTO cfgVehicleDTO = CfgManagerSingleton.getInstance().getCfgVehicleByIdFromCache(userVehicleDTO.getVehicleId());
+                if(cfgVehicleDTO.getShowIndex() >= maxShowIndex){
+                    maxShowIndex = cfgVehicleDTO.getShowIndex();
+                    latestUserVehicleDTO = userVehicleDTO;
+                }
             }
+            latestUserVehicleDTO.setInUse(true);
         }else if(arg.getGmCommandId() == GmCommandEnum.unlockMagnate.getGmCommandId()){
             /** 富豪全解锁命令:
              * {}
