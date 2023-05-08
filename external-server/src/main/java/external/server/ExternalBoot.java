@@ -36,9 +36,9 @@ public class ExternalBoot {
 
         // 心跳相关设置
         IdleProcessSetting idleProcessSetting = new IdleProcessSetting()
-                .readerIdleTime(15L)
-                .writerIdleTime(15L)
-                .allIdleTime(30L)
+                .readerIdleTime(40L)
+                .writerIdleTime(40L)
+                .allIdleTime(40L)
                 // 设置 自定义心跳钩子事件回调
                 .idleHook(new ClientIdleHook());
 
