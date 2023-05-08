@@ -137,6 +137,11 @@ public class GmCommandExecutor implements BaseExecutor<GmCommandReqPb, GmCommand
                 // 宠物等级
                 userAttributeDTO.setPetLevel(targetLevel);
             }
+        }else if(arg.getGmCommandId() == GmCommandEnum.userDataReset.getGmCommandId()){
+            // 设置token,union_id,2个字段追加 "-reset",目的是让用户下次登录创建新的角色
+            String reset = "-reset";
+            if(!userDTO.getToken().contains(reset)) userDTO.setToken(userDTO.getToken() + reset);
+            if(!userDTO.getUnionId().contains(reset)) userDTO.setUnionId(userDTO.getUnionId() + reset);
         }
 
         log.info("GmCommandExecutor::executor:userId = {},gmCommandResPb = {},end",userId,gmCommandResPb);

@@ -10,6 +10,7 @@ public enum GmCommandEnum {
     unlockMagnate(4, "富豪全解锁"),
     unlockBoss(5, "boss全解锁"),
     attributeLevelUp(6, "属性升级"),
+    userDataReset(7, "角色数据重置"),
     ;
 
     private final int gmCommandId;
