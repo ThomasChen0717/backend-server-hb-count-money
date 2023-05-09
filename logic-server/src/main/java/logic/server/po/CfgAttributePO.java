@@ -16,7 +16,7 @@ public class CfgAttributePO extends BaseEntity{
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * 属性名称

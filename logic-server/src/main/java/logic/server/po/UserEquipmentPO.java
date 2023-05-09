@@ -15,7 +15,7 @@ public class UserEquipmentPO extends BaseEntity{
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * 角色id

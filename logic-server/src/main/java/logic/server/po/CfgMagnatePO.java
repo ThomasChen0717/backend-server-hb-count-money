@@ -16,7 +16,7 @@ public class CfgMagnatePO extends BaseEntity{
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * magnateId

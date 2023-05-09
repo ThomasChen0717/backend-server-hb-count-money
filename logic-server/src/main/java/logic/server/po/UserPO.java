@@ -22,7 +22,7 @@ public class UserPO extends BaseEntity{
      * 角色id（也是主键id）
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * 名字

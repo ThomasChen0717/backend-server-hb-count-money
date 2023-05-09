@@ -16,7 +16,7 @@ public class CfgBossPO extends BaseEntity{
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private long id;
+    private Long id;
 
     /**
      * bossId
