@@ -349,7 +349,8 @@ public class LoginServiceImpl implements ILoginService {
 
         LoginResPb loginResPb = new LoginResPb();
         /** 角色数据 **/
-        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory()).setTitle(userDTO.getTitle());
+        loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory()).
+                setTitle(userDTO.getTitle()).setPrivilegeLevel(userDTO.getPrivilegeLevel());
 
         /** 宠物离线时间：单位秒 **/
         loginResPb.setOfflineTime( (int)((userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000) );
