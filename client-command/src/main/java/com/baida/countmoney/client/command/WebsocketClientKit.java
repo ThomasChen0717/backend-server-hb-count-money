@@ -24,40 +24,15 @@ import java.util.concurrent.TimeUnit;
 public class WebsocketClientKit {
     public WebSocketClient runClient() throws Exception {
         // 连接游戏服务器的地址
-        String wsUrl = "ws://127.0.0.1:10100/websocket";
-        //String wsUrl = "wss://hb-games-external-test.leyonb.com:443/websocket";
+        //String wsUrl = "ws://127.0.0.1:10100/websocket";
+        String wsUrl = "wss://hb-games-external-test.leyonb.com:443/websocket";
         //String wsUrl = "ws://192.168.20.4:10100/websocket";
 
         WebSocketClient webSocketClient = new WebSocketClient(new URI(wsUrl), new Draft_6455()) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-
-                sendMessage();
-
                 // 连续多次发送请求命令到游戏服务器
-                /**
-                ClientCommandKit.listClientCommand().forEach(clientCommand -> {
-                    ExternalMessage externalMessage = clientCommand.getExternalMessage();
-                    int cmdMerge = externalMessage.getCmdMerge();
-                    int cmd = CmdKit.getCmd(cmdMerge);
-                    int subCmd = CmdKit.getSubCmd(cmdMerge);
-
-                    byte[] bytes = DataCodecKit.encode(externalMessage);
-                    this.send(bytes);
-
-                    log.info("WebSocketClient::onOpen:发送请求 {}-{}", cmd, subCmd);
-
-                    long sleepMilliseconds = clientCommand.sleepMilliseconds;
-                    // 执行完请求后，进行睡眠的时间
-                    if (sleepMilliseconds > 0) {
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(sleepMilliseconds);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-                 **/
+                sendMessage();
             }
 
             @Override
@@ -79,11 +54,8 @@ public class WebsocketClientKit {
             }
 
             public void sendMessage(){
-                Iterator<Map.Entry<Integer,ClientCommand>> it = ClientCommandKit.clientCommandMap.entrySet().iterator();
-                while(it.hasNext()){
-                    Map.Entry<Integer,ClientCommand> entry = it.next();
-
-                    ExternalMessage externalMessage = entry.getValue().getExternalMessage();
+                ClientCommandKit.listClientCommand().forEach(clientCommand -> {
+                    ExternalMessage externalMessage = clientCommand.getExternalMessage();
                     int cmdMerge = externalMessage.getCmdMerge();
                     int cmd = CmdKit.getCmd(cmdMerge);
                     int subCmd = CmdKit.getSubCmd(cmdMerge);
@@ -92,8 +64,7 @@ public class WebsocketClientKit {
                     this.send(bytes);
 
                     log.info("WebSocketClient::sendMessage:发送请求 {}-{}", cmd, subCmd);
-
-                    long sleepMilliseconds = entry.getValue().sleepMilliseconds;
+                    long sleepMilliseconds = clientCommand.sleepMilliseconds;
                     // 执行完请求后，进行睡眠的时间
                     if (sleepMilliseconds > 0) {
                         try {
@@ -102,9 +73,7 @@ public class WebsocketClientKit {
                             throw new RuntimeException(e);
                         }
                     }
-
-                    it.remove();
-                }
+                 });
             }
         };
 

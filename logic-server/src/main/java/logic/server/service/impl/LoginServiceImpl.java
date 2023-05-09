@@ -279,9 +279,10 @@ public class LoginServiceImpl implements ILoginService {
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();
             String name = loginPlatform + unionId.substring(unionId.length() - 6);
+            int privilegeLevel = nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0 ? 0 : 1;
             newUserDTO.setName(name).setTitle(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("firstTitle").getValueName())
                     .setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
-                    .setLatestLogoutTime(currTime);
+                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录

@@ -87,6 +87,8 @@ public class ClientCommandKit {
         } else {
             printError(externalMessage);
         }
+
+        if(clientCommandMap.get(cmdMerge) != null) clientCommandMap.remove(cmdMerge);
     }
 
     private void printError(ExternalMessage message) {
@@ -98,16 +100,18 @@ public class ClientCommandKit {
 
     private void printNormal(ExternalMessage message) {
         int cmdMerge = message.getCmdMerge();
+        int cmd = CmdKit.getCmd(cmdMerge);
+        int subCmd = CmdKit.getSubCmd(cmdMerge);
 
         ClientCommand clientCommand = clientCommandMap.get(cmdMerge);
 
         if (clientCommand == null) {
-            log.info("ClientCommandKit::printOnMessage:没有对应的处理类");
+            log.info("ClientCommandKit::printOnMessage:cmdMerge = {},cmd = {},subCmd = {},没有对应的处理类",cmdMerge,cmd,subCmd);
             return;
         }
 
         if (clientCommand.resultClass == null) {
-            log.info("ClientCommandKit::printOnMessage:没有对应的处理类来反序列化结果, resultClass is null");
+            log.info("ClientCommandKit::printOnMessage:cmdMerge = {},cmd = {},subCmd = {},没有对应的处理类来反序列化结果, resultClass is null",cmdMerge,cmd,subCmd);
             return;
         }
 

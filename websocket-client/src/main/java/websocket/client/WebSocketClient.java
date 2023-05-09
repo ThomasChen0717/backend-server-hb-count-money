@@ -9,6 +9,7 @@ import common.pb.cmd.UserCmdModule;
 import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
 import common.pb.pb.GmCommandReqPb;
+import common.pb.pb.GmCommandResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import lombok.extern.slf4j.Slf4j;
@@ -137,7 +138,7 @@ public class WebSocketClient {
                 gmCommandReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, GmCommandReqPb.class);
+        ClientCommandKit.createClientCommand(externalMessageHere, GmCommandResPb.class);
 
 
         /**
