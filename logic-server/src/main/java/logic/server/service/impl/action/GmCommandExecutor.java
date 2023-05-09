@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -139,7 +140,7 @@ public class GmCommandExecutor implements BaseExecutor<GmCommandReqPb, GmCommand
             }
         }else if(arg.getGmCommandId() == GmCommandEnum.userDataReset.getGmCommandId()){
             // 设置token,union_id,2个字段追加 "-reset",目的是让用户下次登录创建新的角色
-            String reset = "-reset";
+            String reset = "-reset_" + new Date().getTime();
             if(!userDTO.getToken().contains(reset)) userDTO.setToken(userDTO.getToken() + reset);
             if(!userDTO.getUnionId().contains(reset)) userDTO.setUnionId(userDTO.getUnionId() + reset);
         }
