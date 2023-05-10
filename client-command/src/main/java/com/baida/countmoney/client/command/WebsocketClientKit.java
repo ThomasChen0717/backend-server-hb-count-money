@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit;
  * @date 2023-04-09
  */
 @Slf4j
-@UtilityClass
+//@UtilityClass
 public class WebsocketClientKit {
-    public WebSocketClient runClient() throws Exception {
+    public WebSocketClient runClient(ClientCommandKit clientCommandKit) throws Exception {
         // 连接游戏服务器的地址
         //String wsUrl = "ws://127.0.0.1:10100/websocket";
         String wsUrl = "wss://hb-games-external-test.leyonb.com:443/websocket";
@@ -50,11 +50,14 @@ public class WebsocketClientKit {
             @Override
             public void onMessage(ByteBuffer byteBuffer) {
                 // 接收服务器返回的消息
-                ClientCommandKit.printOnMessage(byteBuffer);
+                clientCommandKit.printOnMessage(byteBuffer);
+
+                // 继续发送
+                sendMessage();
             }
 
             public void sendMessage(){
-                ClientCommandKit.listClientCommand().forEach(clientCommand -> {
+                clientCommandKit.listClientCommand().forEach(clientCommand -> {
                     ExternalMessage externalMessage = clientCommand.getExternalMessage();
                     int cmdMerge = externalMessage.getCmdMerge();
                     int cmd = CmdKit.getCmd(cmdMerge);

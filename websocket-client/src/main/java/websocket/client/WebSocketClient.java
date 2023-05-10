@@ -10,10 +10,14 @@ import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
 import common.pb.pb.GmCommandReqPb;
 import common.pb.pb.GmCommandResPb;
+import common.pb.pb.LogicHeartbeatReqPb;
+import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,9 +30,21 @@ import java.util.concurrent.TimeUnit;
 public class WebSocketClient {
 
     public static void main(String[] args) throws Exception {
+        // 启动客户端测试
+        List<String> tokenList = new ArrayList<>();
+        tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
+        tokenList.add("19a78629-6884-486e-9cb4-6fbb3ee96df3");
+        for(String token : tokenList){
+            startWebsocketClient(token);
+        }
+    }
+
+    private static void startWebsocketClient(String token) throws Exception{
+        ClientCommandKit clientCommandKit = new ClientCommandKit();
+        WebsocketClientKit websocketClientKit = new WebsocketClientKit();
 
         // 请求构建 - 登录相关
-        initLoginCommand();
+        initLoginCommand(token,clientCommandKit);
 
         // 元信息相关
         attachmentCommands();
@@ -36,7 +52,7 @@ public class WebSocketClient {
         TimeUnit.MILLISECONDS.sleep(5);
 
         // 请求构建
-        initClientCommands();
+        initClientCommands(clientCommandKit);
 //
 //        // 逻辑服间的相互通信
 //        communicationClientCommands();
@@ -45,7 +61,7 @@ public class WebSocketClient {
 //        otherCommand();
 
         // 启动客户端
-        WebsocketClientKit.runClient();
+        websocketClientKit.runClient(clientCommandKit);
     }
 
     private static void attachmentCommands() {
@@ -89,7 +105,7 @@ public class WebSocketClient {
          **/
     }
 
-    private static void initLoginCommand() {
+    private static void initLoginCommand(String token,ClientCommandKit clientCommandKit) {
         /*
          *       注意，这个业务码放这里只是为了方便测试多种情况
          *       交由测试请求端来控制
@@ -108,37 +124,39 @@ public class WebSocketClient {
         // 登录请求
         LoginReqPb loginReqPb = new LoginReqPb();
         loginReqPb.setLoginPlatform("hb");
-        //loginReqPb.setCode("LKBkYy3y0LDlmM9sC0720005fad8b71e9ad1");// 创建新用户
-        loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");// 登录老用户
+        if(token == null || token.isEmpty()){
+            // 创建新用户
+            loginReqPb.setCode("LKBkYy3y0LDlmM9sC0720005fad8b71e9ad1");
+        }else {
+            // 登录老用户
+            //loginReqPb.setToken("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
+            loginReqPb.setToken(token);
+        }
 
-        ExternalMessage externalMessageLogin = ClientCommandKit.createExternalMessage(
+        ExternalMessage externalMessageLogin = clientCommandKit.createExternalMessage(
                 LoginCmdModule.cmd,
                 LoginCmdModule.loginVerify,
                 loginReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 6000);
+        clientCommandKit.createClientCommand(externalMessageLogin, LoginResPb.class, 6000);
     }
 
-    private static void initClientCommands() {
+    private static void initClientCommands(ClientCommandKit clientCommandKit) {
         //if(true){
             //return;
         //}
 
-        GmCommandReqPb gmCommandReqPb = new GmCommandReqPb();
-        gmCommandReqPb.setGmCommandId(1);
-        JSONObject jsonGmCommandInfo = new JSONObject();
-        jsonGmCommandInfo.put("money",10);
-        gmCommandReqPb.setJsonGmCommandInfo(jsonGmCommandInfo.toJSONString());
+        LogicHeartbeatReqPb logicHeartbeatReqPb = new LogicHeartbeatReqPb();
 
         // 请求、响应
-        ExternalMessage externalMessageHere = ClientCommandKit.createExternalMessage(
+        ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                 UserCmdModule.cmd,
-                UserCmdModule.gmCommand,
-                gmCommandReqPb
+                UserCmdModule.logicHeartbeat,
+                logicHeartbeatReqPb
         );
 
-        ClientCommandKit.createClientCommand(externalMessageHere, GmCommandResPb.class);
+        clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
 
 
         /**

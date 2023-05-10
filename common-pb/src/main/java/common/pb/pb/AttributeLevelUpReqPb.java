@@ -29,5 +29,5 @@ public class AttributeLevelUpReqPb {
     int targetLevel;
     /** 升级费用 */
     @NotNull
-    int moneyCost;
+    long moneyCost;
 }
