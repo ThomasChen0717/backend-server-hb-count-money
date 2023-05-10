@@ -34,5 +34,12 @@
             <version>${ioGame.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.76</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>

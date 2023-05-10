@@ -1,12 +1,10 @@
 package com.baida.countmoney.client.command;
 
-import com.alipay.remoting.rpc.HeartbeatCommand;
+import com.alibaba.fastjson.JSONObject;
 import com.iohao.game.action.skeleton.core.CmdKit;
 import com.iohao.game.action.skeleton.core.DataCodecKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
-import lombok.Data;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
@@ -25,6 +23,7 @@ public class ClientCommandKit {
 
     Map<Integer, ClientCommand> clientCommandMap = new LinkedHashMap<>();
     Map<Integer, ClientCommand> clientCommandMapForRobot = new LinkedHashMap<>();
+    Long userId = 0L;
 
     public List<ClientCommand> listClientCommand() {
         return clientCommandMap
@@ -111,8 +110,8 @@ public class ClientCommandKit {
         int cmd = CmdKit.getCmd(cmdMerge);
         int subCmd = CmdKit.getSubCmd(cmdMerge);
 
-        log.info("ClientCommandKit::printOnMessage:ExternalMessage = {},cmdMerge = [{}-{}],收到消息",
-                externalMessage, cmd, subCmd);
+        log.info("ClientCommandKit::printOnMessage:userId = {},ExternalMessage = {},cmdMerge = [{}-{}],收到消息",
+                userId,externalMessage, cmd, subCmd);
 
         if (externalMessage.getResponseStatus() == 0) {
             printNormal(externalMessage);
@@ -154,7 +153,11 @@ public class ClientCommandKit {
 
         byte[] data = message.getData();
         Object o = DataCodecKit.decode(data, clientCommand.resultClass);
+        if(cmd == 1){
+            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(o);
+            userId = jsonObject.getLongValue("userId");
+        }
 
-        log.info("ClientCommandKit::printOnMessage:o = {}", o);
+        log.info("ClientCommandKit::printOnMessage:userId = {},o = {}",userId, o);
     }
 }
