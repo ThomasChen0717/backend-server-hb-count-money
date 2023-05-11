@@ -24,6 +24,11 @@ public class ClientCommandKit {
     Map<Integer, ClientCommand> clientCommandMap = new LinkedHashMap<>();
     Map<Integer, ClientCommand> clientCommandMapForRobot = new LinkedHashMap<>();
     Long userId = 0L;
+    int robotIndex = 0;
+
+    public void setIndex(int index){
+        robotIndex = index;
+    }
 
     public List<ClientCommand> listClientCommand() {
         return clientCommandMap
@@ -110,8 +115,8 @@ public class ClientCommandKit {
         int cmd = CmdKit.getCmd(cmdMerge);
         int subCmd = CmdKit.getSubCmd(cmdMerge);
 
-        log.info("ClientCommandKit::printOnMessage:userId = {},ExternalMessage = {},cmdMerge = [{}-{}],收到消息",
-                userId,externalMessage, cmd, subCmd);
+        log.info("ClientCommandKit::printOnMessage:robotIndex = {},userId = {},ExternalMessage = {},cmdMerge = [{}-{}],收到消息",
+                robotIndex,userId,externalMessage, cmd, subCmd);
 
         if (externalMessage.getResponseStatus() == 0) {
             printNormal(externalMessage);
@@ -158,6 +163,6 @@ public class ClientCommandKit {
             userId = jsonObject.getLongValue("userId");
         }
 
-        log.info("ClientCommandKit::printOnMessage:userId = {},o = {}",userId, o);
+        log.info("ClientCommandKit::printOnMessage:robotIndex = {},userId = {},o = {}",robotIndex,userId, o);
     }
 }

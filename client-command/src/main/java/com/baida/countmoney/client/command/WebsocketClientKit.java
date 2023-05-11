@@ -66,7 +66,7 @@ public class WebsocketClientKit {
                     byte[] bytes = DataCodecKit.encode(externalMessage);
                     this.send(bytes);
 
-                    log.info("WebSocketClient::sendMessage:userId = {},发送请求 {}-{}",clientCommandKit.userId, cmd, subCmd);
+                    log.info("WebSocketClient::sendMessage:robotIndex = {},userId = {},发送请求 {}-{}",clientCommandKit.robotIndex,clientCommandKit.userId, cmd, subCmd);
                     long sleepMilliseconds = clientCommand.sleepMilliseconds;
                     // 执行完请求后，进行睡眠的时间
                     if (sleepMilliseconds > 0) {

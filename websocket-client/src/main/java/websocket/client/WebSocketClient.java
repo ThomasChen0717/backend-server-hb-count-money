@@ -32,19 +32,20 @@ public class WebSocketClient {
     public static void main(String[] args) throws Exception {
         // 启动客户端测试
         List<String> tokenList = new ArrayList<>();
-        tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
+        //tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
         //tokenList.add("19a78629-6884-486e-9cb4-6fbb3ee96df3");
-        int createRobotCount = 0;
+        int createRobotCount = 10;
         for(int i=0;i<createRobotCount;i++){
             tokenList.add("");
         }
-        for(String token : tokenList){
-            startWebsocketClient(token);
+        for(int i=0;i<tokenList.size();i++){
+            startWebsocketClient(tokenList.get(i),i+1);
         }
     }
 
-    private static void startWebsocketClient(String token) throws Exception{
+    private static void startWebsocketClient(String token,int index) throws Exception{
         ClientCommandKit clientCommandKit = new ClientCommandKit();
+        clientCommandKit.setIndex(index);
         WebsocketClientKit websocketClientKit = new WebsocketClientKit();
 
         // 请求构建 - 登录相关
@@ -53,7 +54,7 @@ public class WebSocketClient {
         // 元信息相关
         attachmentCommands();
 
-        TimeUnit.MILLISECONDS.sleep(5);
+        TimeUnit.MILLISECONDS.sleep(1000);
 
         // 请求构建
         initClientCommands(clientCommandKit);

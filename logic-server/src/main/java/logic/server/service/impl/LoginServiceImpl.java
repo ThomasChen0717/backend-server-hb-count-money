@@ -105,8 +105,7 @@ public class LoginServiceImpl implements ILoginService {
             return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
         }
         /** 有多个逻辑服后应检测t_user.online_server_id是否等于0 **/
-        if(false){
-            // 暂时不开启，等待服务器关闭会自动调用优雅关闭流程后
+        if(true){
             if(userDTO.getOnlineServerId() > 0){
                 log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},onlineServerId = {},end",userId,ErrorCodeEnum.userStillOnline.getCode(),
                         ErrorCodeEnum.userStillOnline.getMsg(),userDTO.getOnlineServerId());
