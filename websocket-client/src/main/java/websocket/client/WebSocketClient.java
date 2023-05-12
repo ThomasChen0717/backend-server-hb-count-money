@@ -34,7 +34,7 @@ public class WebSocketClient {
         List<String> tokenList = new ArrayList<>();
         //tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
         //tokenList.add("19a78629-6884-486e-9cb4-6fbb3ee96df3");
-        int createRobotCount = 10;
+        int createRobotCount = 1;
         for(int i=0;i<createRobotCount;i++){
             tokenList.add("");
         }

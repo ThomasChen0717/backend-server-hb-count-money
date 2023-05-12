@@ -249,7 +249,7 @@ public class LoginServiceImpl implements ILoginService {
                 jsonPlatformUserInfo.put("openid",jsonData.getString("open_id"));
             }
         }else{
-            if( !(nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0) ){
+            if(false && !(nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0) ){
                 // 不是正式服，处理hb平台参数
                 if(platform.compareTo("hb") == 0){
                     String unionId = String.valueOf(currTime.getTime());
