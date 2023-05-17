@@ -1,11 +1,15 @@
 package logic.server.service.impl.action;
 
+import com.alibaba.fastjson.JSONObject;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVipDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVipDTO;
+import logic.server.enums.AttributeEnum;
 import logic.server.enums.RoleEnum;
 import logic.server.service.IPushPbService;
 import logic.server.singleton.CfgManagerSingleton;
@@ -43,6 +47,20 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
                 moneyIncome = petOfflineIncome(userDTO,userAttributeDTO,arg.getMultiple());
             }
             // vip等级效果中是否有宠物搬运金额加成
+            UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
+            if(userVipDTO != null){
+                CfgVipDTO cfgVipDTO = CfgManagerSingleton.getInstance().getCfgVipByVipLevelFromCache(userVipDTO.getVipLevel());
+                if(cfgVipDTO != null){
+                    for(int i=0;i<cfgVipDTO.getJsonArrayEffectAttributeInfo().size();i++){
+                        JSONObject jsonEffectAttributeInfo = cfgVipDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i);
+                        int attributeType = jsonEffectAttributeInfo.getIntValue("attributeType");
+                        if(attributeType == AttributeEnum.petSettlementMoney.getAttributeType()){
+                            float multiple = jsonEffectAttributeInfo.getFloatValue("multiple");
+                            moneyIncome *= multiple;
+                        }
+                    }
+                }
+            }
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
         long finalMoneyHistory = userDTO.getMoneyHistory() + moneyIncome;
