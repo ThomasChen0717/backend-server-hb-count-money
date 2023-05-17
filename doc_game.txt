@@ -13,65 +13,71 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:48】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:50】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SettlementReqPb
     方法返回值: common.pb.pb.SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:53】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:55】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AttributeLevelUpReqPb
     方法返回值: common.pb.pb.AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:58】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:60】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChangeVehicleReqPb
     方法返回值: common.pb.pb.ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:63】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:65】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UseEquipmentReqPb
     方法返回值: common.pb.pb.UseEquipmentResPb
  
-路由: 2 - 5  --- 【】 --- 【UserAction:68】【startOrEndBuffTool】
+路由: 2 - 5  --- 【】 --- 【UserAction:70】【startOrEndBuffTool】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.StartOrEndBuffToolReqPb
     方法返回值: common.pb.pb.StartOrEndBuffToolResPb
  
-路由: 2 - 6  --- 【】 --- 【UserAction:73】【getRedPacket】
+路由: 2 - 6  --- 【】 --- 【UserAction:75】【getRedPacket】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GetRedPacketReqPb
     方法返回值: common.pb.pb.GetRedPacketResPb
  
-路由: 2 - 7  --- 【】 --- 【UserAction:78】【challengeMagnateSuccess】
+路由: 2 - 7  --- 【】 --- 【UserAction:80】【challengeMagnateSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeMagnateSuccessReqPb
     方法返回值: common.pb.pb.ChallengeMagnateSuccessResPb
  
-路由: 2 - 8  --- 【】 --- 【UserAction:83】【challengeBossSuccess】
+路由: 2 - 8  --- 【】 --- 【UserAction:85】【challengeBossSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeBossSuccessReqPb
     方法返回值: common.pb.pb.ChallengeBossSuccessResPb
  
-路由: 2 - 9  --- 【】 --- 【UserAction:88】【unlockVehicleOrEquipment】
+路由: 2 - 9  --- 【】 --- 【UserAction:90】【unlockVehicleOrEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UnlockVehicleOrEquipmentReqPb
     方法返回值: common.pb.pb.UnlockVehicleOrEquipmentResPb
  
-路由: 2 - 10  --- 【】 --- 【UserAction:93】【logicHeartbeat】
+路由: 2 - 10  --- 【】 --- 【UserAction:95】【logicHeartbeat】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.LogicHeartbeatReqPb
     方法返回值: common.pb.pb.LogicHeartbeatResPb
  
-路由: 2 - 11  --- 【】 --- 【UserAction:98】【gmCommand】
+路由: 2 - 11  --- 【】 --- 【UserAction:100】【gmCommand】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GmCommandReqPb
     方法返回值: common.pb.pb.GmCommandResPb
+ 
+路由: 2 - 12  --- 【】 --- 【UserAction:105】【watchedAd】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.WatchedAdReqPb
+    方法返回值: common.pb.pb.WatchedAdResPb
  
 
 ==================== 其它广播推送 ====================
 路由: 2 - 100  --- 广播推送: common.pb.pb.MoneySyncPushPb
 路由: 2 - 101  --- 广播推送: common.pb.pb.TitleSyncPushPb
+路由: 2 - 102  --- 广播推送: common.pb.pb.TitleSyncPushPb
 ==================== 错误码 ====================
  -1007 : 强制玩家下线 
  -1006 : 数据不存在 

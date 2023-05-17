@@ -42,6 +42,7 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
                 // 宠物离线收益
                 moneyIncome = petOfflineIncome(userDTO,userAttributeDTO,arg.getMultiple());
             }
+            // vip等级效果中是否有宠物搬运金额加成
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
         long finalMoneyHistory = userDTO.getMoneyHistory() + moneyIncome;

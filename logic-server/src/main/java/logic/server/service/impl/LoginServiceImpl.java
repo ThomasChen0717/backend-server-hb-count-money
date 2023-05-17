@@ -18,6 +18,7 @@ import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import common.pb.pb.MagnateInfoPb;
 import common.pb.pb.VehicleInfoPb;
+import common.pb.pb.VipInfoPb;
 import logic.server.config.NacosConfiguration;
 import logic.server.dto.CfgAttributeDTO;
 import logic.server.dto.CfgBossDTO;
@@ -25,6 +26,7 @@ import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVipDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -32,6 +34,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
 import logic.server.service.ILoginService;
@@ -120,6 +123,7 @@ public class LoginServiceImpl implements ILoginService {
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
         Map<Integer,UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
+        UserVipDTO userVipDTO = userService.getUserVipByIdFromDB(userId);
 
         // channel 中设置用户的真实 userId；
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
@@ -142,7 +146,7 @@ public class LoginServiceImpl implements ILoginService {
 
         // 从数据库获取的角色数据存储到内存中
         boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,
-                userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap);
+                userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap,userVipDTO);
         if(!isAddSuccess){
             log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.addUserDataToCacheFailed.getCode(),ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
@@ -155,6 +159,7 @@ public class LoginServiceImpl implements ILoginService {
             checkCfgBuffToolOnOldUserLogin(userDTO.getId());
             checkCfgMagnateOnOldUserLogin(userDTO.getId());
             checkCfgBossOnOldUserLogin(userDTO.getId());
+            checkCfgVipOnOldUserLogin(userDTO.getId());
         }
 
         // 填充登录报文回复数据
@@ -330,6 +335,11 @@ public class LoginServiceImpl implements ILoginService {
                 addUserBoss(newUserDTO.getId(),cfgBossDTO.getPreBossId() == 0 ? true : false,cfgBossDTO);
             }
 
+            // t_user_vip表插入记录
+            UserVipDTO newUserVipDTO = new UserVipDTO();
+            newUserVipDTO.setUserId(newUserDTO.getId());
+            userService.addUserVipToDB(newUserVipDTO);
+
             log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新角色成功",loginPlatform,unionId,newUserDTO.getId());
             return newUserDTO;
         }catch (Exception e){
@@ -346,6 +356,7 @@ public class LoginServiceImpl implements ILoginService {
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
         Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
+        UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
 
         LoginResPb loginResPb = new LoginResPb();
         /** 角色数据 **/
@@ -501,6 +512,27 @@ public class LoginServiceImpl implements ILoginService {
         ).collect(Collectors.toList());
         loginResPb.setBossInfoPbList(bossInfoPbList);
 
+        /** 角色vip等级数据 **/
+        /** 角色vip等级实例数据 **/
+        loginResPb.setVipLevel(userVipDTO.getVipLevel()).setVipCurrConditionCount(userVipDTO.getVipCurrConditionCount());
+        /** 角色vip等级模版数据 **/
+        Map<Integer,CfgVipDTO> cfgVipDTOMap = CfgManagerSingleton.getInstance().getCfgVipDTOMap();
+        for(Map.Entry<Integer,CfgVipDTO> entry : cfgVipDTOMap.entrySet()){
+            CfgVipDTO cfgVipDTO = entry.getValue();
+            VipInfoPb vipInfoPb = new VipInfoPb();
+            vipInfoPb.setVipLevel(cfgVipDTO.getVipLevel()).setConditionCount(cfgVipDTO.getConditionCount());
+            List<EffectAttributeInfoPb> effectAttributeInfoPbList = new ArrayList<>();
+            JSONArray jsonArrayEffectAttributeInfo = JSONArray.parseArray(cfgVipDTO.getEffectAttributeInfo());
+            for(int i = 0;i<jsonArrayEffectAttributeInfo.size();i++){
+                EffectAttributeInfoPb effectAttributeInfoPb = new EffectAttributeInfoPb();
+                effectAttributeInfoPb.setAttributeType(jsonArrayEffectAttributeInfo.getJSONObject(i).getInteger("attributeType"));
+                effectAttributeInfoPb.setMultiple(jsonArrayEffectAttributeInfo.getJSONObject(i).getFloat("multiple"));
+                effectAttributeInfoPbList.add(effectAttributeInfoPb);
+            }
+            vipInfoPb.setEffectAttributeInfoPbList(effectAttributeInfoPbList);
+            loginResPb.getVipInfoPbList().add(vipInfoPb);
+        }
+
         return loginResPb;
     }
 
@@ -641,6 +673,21 @@ public class LoginServiceImpl implements ILoginService {
         // 新增的boss模版需要添加到角色boss挑战数据中
         for(int i = 0;i<newCfgBossDTOList.size();i++){
             addUserBoss(userId,newCfgBossDTOList.get(i).getPreBossId() == 0 ? true : false,newCfgBossDTOList.get(i));
+        }
+    }
+
+    /**
+     * 老用户登录检测是否有vip等级信息
+     * @param userId
+     */
+    private void checkCfgVipOnOldUserLogin(long userId){
+        UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
+        if(userVipDTO == null){
+            userVipDTO = new UserVipDTO();
+            userVipDTO.setVipLevel(0).setUserId(userId).setVipCurrConditionCount(0);
+            userService.addUserVipToDB(userVipDTO);
+            // 缓存存在，则缓存数据中也新增
+            UserManagerSingleton.getInstance().addUserVipToCache(userId,userVipDTO);
         }
     }
 

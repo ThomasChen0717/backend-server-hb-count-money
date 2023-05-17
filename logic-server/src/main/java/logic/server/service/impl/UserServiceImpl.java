@@ -8,6 +8,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVipDTO;
 import logic.server.repository.UserAttributeRepository;
 import logic.server.repository.UserBossRepository;
 import logic.server.repository.UserBuffToolRepository;
@@ -15,6 +16,7 @@ import logic.server.repository.UserEquipmentRepository;
 import logic.server.repository.UserMagnateRepository;
 import logic.server.repository.UserRepository;
 import logic.server.repository.UserVehicleRepository;
+import logic.server.repository.UserVipRepository;
 import logic.server.service.IUserService;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
@@ -28,6 +30,7 @@ import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.service.impl.action.UnlockVehicleOrEquipmentExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
 import logic.server.service.impl.action.StartOrEndBuffToolExecutor;
+import logic.server.service.impl.action.WatchedAdExecutor;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,8 @@ public class UserServiceImpl implements IUserService {
     private UserMagnateRepository userMagnateRepository;
     @Autowired
     private UserBossRepository userBossRepository;
+    @Autowired
+    private UserVipRepository userVipRepository;
 
     /** 注入执行器-start **/
     @Autowired
@@ -80,6 +85,8 @@ public class UserServiceImpl implements IUserService {
     private LogicHeartbeatExecutor logicHeartbeatExecutor;
     @Autowired
     private GmCommandExecutor gmCommandExecutor;
+    @Autowired
+    private WatchedAdExecutor watchedAdExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -169,6 +176,18 @@ public class UserServiceImpl implements IUserService {
     public Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId){
         return userBossRepository.getMap(userId);
     }
+    /** t_user_boss end **/
+
+    /** t_user_vip start **/
+    @Override
+    public int addUserVipToDB(UserVipDTO userVipDTO){
+        return userVipRepository.add(userVipDTO);
+    }
+    @Override
+    public UserVipDTO getUserVipByIdFromDB(long userId){
+        return userVipRepository.get(userId);
+    }
+    /** t_user_vip end **/
 
     @Override
     public void saveDataFromCacheToDB(long userId){
@@ -228,6 +247,12 @@ public class UserServiceImpl implements IUserService {
                 }
                 UserManagerSingleton.getInstance().removeUserBossMapInCache(userId);
             }
+            /** save t_user_vip **/
+            UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
+            if(userVipDTO != null){
+                userVipRepository.update(userVipDTO);
+                UserManagerSingleton.getInstance().removeUserVipInCache(userId);
+            }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功",userId);
         }catch (Exception e){
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败",userId,e.getMessage());
@@ -282,6 +307,8 @@ public class UserServiceImpl implements IUserService {
             return logicHeartbeatExecutor;
         }else if(executorName.compareTo(UserCmdModule.gmCommandExecutorName) == 0){
             return gmCommandExecutor;
+        }else if(executorName.compareTo(UserCmdModule.watchedAdExecutorName) == 0){
+            return watchedAdExecutor;
         }
 
         return null;

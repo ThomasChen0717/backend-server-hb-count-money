@@ -10,6 +10,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class UserManagerSingleton {
     private Map<Long,Map<Integer, UserBuffToolDTO> > allUserBuffToolDTOMap;
     private Map<Long,Map<Integer, UserMagnateDTO> > allUserMagnateDTOMap;
     private Map<Long,Map<Integer, UserBossDTO> > allUserBossDTOMap;
+    private Map<Long, UserVipDTO> allUserVipDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -46,13 +48,14 @@ public class UserManagerSingleton {
         allUserBuffToolDTOMap = new HashMap<>();
         allUserMagnateDTOMap = new HashMap<>();
         allUserBossDTOMap = new HashMap<>();
+        allUserVipDTOMap = new HashMap<>();
     }
 
     /** userDTO start **/
-    public boolean addUserDataToCache(long userId,UserDTO userDTO,UserAttributeDTO userAttributeDTO,
-                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap,Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
-                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap,Map<Integer,UserMagnateDTO> userMagnateDTOMap,
-                                      Map<Integer,UserBossDTO> userBossDTOMap){
+    public boolean addUserDataToCache(long userId, UserDTO userDTO, UserAttributeDTO userAttributeDTO,
+                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap, Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
+                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap, Map<Integer,UserMagnateDTO> userMagnateDTOMap,
+                                      Map<Integer,UserBossDTO> userBossDTOMap, UserVipDTO userVipDTO){
         boolean isSuccess = true;
         try{
             addUserToCache(userId,userDTO);
@@ -62,10 +65,11 @@ public class UserManagerSingleton {
             addUserBuffToolMapToCache(userId,userBuffToolDTOMap);
             addUserMagnateMapToCache(userId,userMagnateDTOMap);
             addUserBossMapToCache(userId,userBossDTOMap);
+            addUserVipToCache(userId,userVipDTO);
             log.info("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
         }catch (Exception e){
             isSuccess = false;
-            log.error("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存成功",userId);
+            log.error("UserManagerSingleton::addUserDataToCache:userId = {},用户数据存储至内存失败",userId);
         }
 
         return isSuccess;
@@ -285,4 +289,16 @@ public class UserManagerSingleton {
         return userBossDTOMap.get(bossId);
     }
     /** UserBossDTO end **/
+
+    /** UserVipDTO start **/
+    public void addUserVipToCache(long userId,UserVipDTO userVipDTO){
+        allUserVipDTOMap.put(userId,userVipDTO);
+    }
+    public UserVipDTO getUserVipFromCache(long userId){
+        return allUserVipDTOMap.get(userId);
+    }
+    public void removeUserVipInCache(long userId){
+        allUserVipDTOMap.remove(userId);
+    }
+    /** UserVipDTO end **/
 }

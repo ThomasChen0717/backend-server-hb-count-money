@@ -26,6 +26,8 @@ import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
 import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import common.pb.pb.UseEquipmentReqPb;
 import common.pb.pb.UseEquipmentResPb;
+import common.pb.pb.WatchedAdReqPb;
+import common.pb.pb.WatchedAdResPb;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
 import logic.server.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -97,5 +99,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.gmCommand)
     public GmCommandResPb gmCommand(GmCommandReqPb gmCommandReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (GmCommandResPb)userService.getExecutor(UserCmdModule.gmCommandExecutorName).executor(gmCommandReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.watchedAd)
+    public WatchedAdResPb watchedAd(WatchedAdReqPb watchedAdReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (WatchedAdResPb)userService.getExecutor(UserCmdModule.watchedAdExecutorName).executor(watchedAdReqPb,myFlowContext.getUserId());
     }
 }
