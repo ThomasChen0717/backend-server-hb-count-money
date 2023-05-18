@@ -25,7 +25,7 @@ public class WatchedAdExecutor implements BaseExecutor<WatchedAdReqPb, WatchedAd
         UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
         if(userVipDTO != null){
             userVipDTO.setVipCurrConditionCount(userVipDTO.getVipCurrConditionCount() + 1);
-            CfgVipDTO cfgVipDTO = CfgManagerSingleton.getInstance().getCfgVipDTOMap().get(userVipDTO.getVipLevel());
+            CfgVipDTO cfgVipDTO = CfgManagerSingleton.getInstance().getCfgVipDTOMap().get(userVipDTO.getVipLevel()+1);
             if(cfgVipDTO != null){
                 if(userVipDTO.getVipCurrConditionCount() >= cfgVipDTO.getConditionCount()){
                     userVipDTO.setVipLevel(cfgVipDTO.getVipLevel());

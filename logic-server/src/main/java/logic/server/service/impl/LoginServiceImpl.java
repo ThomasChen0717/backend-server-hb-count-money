@@ -337,7 +337,7 @@ public class LoginServiceImpl implements ILoginService {
 
             // t_user_vip表插入记录
             UserVipDTO newUserVipDTO = new UserVipDTO();
-            newUserVipDTO.setUserId(newUserDTO.getId());
+            newUserVipDTO.setUserId(newUserDTO.getId()).setVipLevel(0).setVipCurrConditionCount(0);
             userService.addUserVipToDB(newUserVipDTO);
 
             log.info("LoginServiceImpl::createUser:loginPlatform = {},unionId = {},userId = {},创建新角色成功",loginPlatform,unionId,newUserDTO.getId());
