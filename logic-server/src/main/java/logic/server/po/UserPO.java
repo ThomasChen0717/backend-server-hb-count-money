@@ -83,4 +83,9 @@ public class UserPO extends BaseEntity{
      * 权限等级：0 普通 1 GM
      */
     private int privilegeLevel;
+
+    /**
+     * 客户端版本号
+     */
+    private int clientVersion;
 }

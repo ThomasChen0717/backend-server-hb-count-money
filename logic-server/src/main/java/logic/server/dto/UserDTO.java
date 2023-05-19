@@ -29,4 +29,5 @@ public class UserDTO implements DTO{
     private Date latestLoginTime;
     private Date latestLogoutTime;
     private int privilegeLevel;
+    private int clientVersion;
 }

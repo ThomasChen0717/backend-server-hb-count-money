@@ -182,17 +182,19 @@ public class LoginServiceImpl implements ILoginService {
                 userDTO = userService.getUserByUnionIdFromDB(unionId);
                 String newToken = createToken();
                 if(userDTO == null){
-                    userDTO = createUser(loginReqPb.getLoginPlatform(),unionId,openid,newToken,currTime);
+                    userDTO = createUser(loginReqPb.getLoginPlatform(),unionId,openid,newToken,currTime,loginReqPb.clientVersion);
                     isNewUser = true;
                 }else{
                     // 刷新token（非必要）
                     userDTO.setToken(newToken).setLatestLoginTime(currTime);
+                    userDTO.setClientVersion(loginReqPb.clientVersion);
                     userService.updateUserToDB(userDTO);
                 }
             }
         }else if(loginReqPb.getToken() != null){
             // 通过token获取角色
             userDTO = userService.getUserByTokenFromDB(loginReqPb.getToken());
+            userDTO.setClientVersion(loginReqPb.clientVersion);
             userDTO.setLatestLoginTime(currTime);
             userService.updateUserToDB(userDTO);
         }
@@ -278,7 +280,7 @@ public class LoginServiceImpl implements ILoginService {
      * @param unionId
      * @param newToken
      */
-    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken,Date currTime){
+    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken,Date currTime,int clientVersion){
         try{
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();
@@ -286,7 +288,7 @@ public class LoginServiceImpl implements ILoginService {
             int privilegeLevel = nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0 ? 0 : 1;
             newUserDTO.setName(name).setTitle(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("firstTitle").getValueName())
                     .setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
-                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L);
+                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L).setClientVersion(clientVersion);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录
