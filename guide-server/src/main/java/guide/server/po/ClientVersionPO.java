@@ -21,7 +21,7 @@ public class ClientVersionPO extends BaseEntity{
     /**
      * 客户端版本号
      */
-    private int clientVersion;
+    private String clientVersion;
 
     /**
      * 0：未审核或审核中 1 审核已通过

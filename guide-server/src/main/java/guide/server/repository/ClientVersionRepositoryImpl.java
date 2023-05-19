@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public class ClientVersionRepositoryImpl implements ClientVersionRepository{
     private final ClientVersionMapper clientVersionMapper;
     @Override
-    public ClientVersionDTO get(int version){
+    public ClientVersionDTO get(String version){
         ClientVersionPO po = clientVersionMapper.selectOne(new QueryWrapper<ClientVersionPO>()
                 .lambda().eq(ClientVersionPO::getClientVersion, version));
         return Convertor.convert(ClientVersionDTO.class, po);

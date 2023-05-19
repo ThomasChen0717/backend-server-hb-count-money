@@ -280,7 +280,7 @@ public class LoginServiceImpl implements ILoginService {
      * @param unionId
      * @param newToken
      */
-    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken,Date currTime,int clientVersion){
+    private UserDTO createUser(String loginPlatform,String unionId,String openid,String newToken,Date currTime,String clientVersion){
         try{
             // t_user表插入新记录
             UserDTO newUserDTO = new UserDTO();

@@ -29,5 +29,5 @@ public class LoginReqPb {
     /** token */
     String token;
     /** 客户端版本号 */
-    int clientVersion = 0;
+    String clientVersion;
 }

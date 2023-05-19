@@ -14,7 +14,7 @@ public class ClientVersionServiceImpl implements IClientVersionService {
     private ClientVersionRepository clientVersionRepository;
 
     @Override
-    public String getServerUrl(int clientVersion){
+    public String getServerUrl(String clientVersion){
         log.info("ClientVersionServiceImpl::getServerUrl:clientVersion = {}",clientVersion);
 
         String serverUrl = "";

@@ -16,6 +16,6 @@ public class ClientVersionController {
 
     @RequestMapping(value = "getServerUrl", method = RequestMethod.GET)
     public String getServerUrl(@RequestBody JSONObject jsonBody) {
-        return clientVersionService.getServerUrl(jsonBody.getIntValue ("version"));
+        return clientVersionService.getServerUrl(jsonBody.getString ("version"));
     }
 }

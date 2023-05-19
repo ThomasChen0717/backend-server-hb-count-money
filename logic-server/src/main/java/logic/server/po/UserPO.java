@@ -87,5 +87,5 @@ public class UserPO extends BaseEntity{
     /**
      * 客户端版本号
      */
-    private int clientVersion;
+    private String clientVersion;
 }

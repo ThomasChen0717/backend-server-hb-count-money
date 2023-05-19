@@ -9,7 +9,7 @@ public class ClientVersionDTO implements DTO{
     private static final long serialVersionUID = 1L;
 
     private long id;
-    private int clientVersion;
+    private String clientVersion;
     private boolean isVerified;
     private String verificationServer;
     private String releaseServer;
