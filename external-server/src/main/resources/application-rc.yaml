@@ -1,0 +1,8 @@
+# 本服（对外服）对外端口
+server:
+  port: 10100
+
+# 网关服连接信息
+brokerServer:
+  url: 127.0.0.1
+  port: 10200

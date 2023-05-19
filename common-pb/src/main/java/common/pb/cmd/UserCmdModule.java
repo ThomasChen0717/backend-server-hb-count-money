@@ -36,9 +36,14 @@ public interface UserCmdModule {
     /** GM命令报文 */
     int gmCommand = 11;
     String gmCommandExecutorName = "gmCommand";// 执行器名称
+    /** 看完广告报文 */
+    int watchedAd = 12;
+    String watchedAdExecutorName = "watchedAd";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;
     /** 同步称号（推送） */
     int titleSyncPush = 101;
+    /** vip等级（推送） */
+    int vipSyncPush = 102;
 }

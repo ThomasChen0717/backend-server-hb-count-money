@@ -6,7 +6,9 @@ import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import common.pb.cmd.UserCmdModule;
 import common.pb.pb.MoneySyncPushPb;
 import common.pb.pb.TitleSyncPushPb;
+import common.pb.pb.VipSyncPushPb;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserVipDTO;
 import logic.server.service.IPushPbService;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +35,15 @@ public class PushPbServiceImpl implements IPushPbService {
         BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
         CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd,UserCmdModule.titleSyncPush);
         broadcastContext.broadcast(cmdInfo, titleSyncPushPb,userId);
+    }
+
+    @Override
+    public void vipSync(long userId){
+        VipSyncPushPb vipSyncPushPb = new VipSyncPushPb();
+        UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
+        vipSyncPushPb.setVipLevel(userVipDTO.getVipLevel()).setVipCurrConditionCount(userVipDTO.getVipCurrConditionCount());
+        BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd,UserCmdModule.vipSyncPush);
+        broadcastContext.broadcast(cmdInfo, vipSyncPushPb,userId);
     }
 }

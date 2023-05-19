@@ -103,4 +103,12 @@ public class LoginResPb{
 
     /** 角色boss挑战列表 **/
     List<BossInfoPb> bossInfoPbList = new ArrayList<>();
+
+    /** 当前vip等级 */
+    int vipLevel;
+    /** 当前vip条件进度 */
+    int vipCurrConditionCount;
+
+    /** 角色vip等级列表 **/
+    List<VipInfoPb> vipInfoPbList = new ArrayList<>();
 }

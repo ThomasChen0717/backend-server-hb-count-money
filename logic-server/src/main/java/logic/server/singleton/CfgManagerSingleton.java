@@ -7,6 +7,7 @@ import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVipDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.ognl.IntHashMap;
@@ -33,6 +34,7 @@ public class CfgManagerSingleton {
     private Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap;
     private Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap;
     private Map<Integer, CfgBossDTO> cfgBossDTOMap;
+    private Map<Integer, CfgVipDTO> cfgVipDTOMap;
 
     /** 模版数据是否使用redisson再议
     @Autowired
@@ -58,6 +60,7 @@ public class CfgManagerSingleton {
         cfgBuffToolDTOMap = new HashMap<>();
         cfgMagnateDTOMap = new HashMap<>();
         cfgBossDTOMap = new IntHashMap();
+        cfgVipDTOMap = new IntHashMap();
     }
 
     public void setServerId(int serverIdFromNacos){
@@ -114,5 +117,10 @@ public class CfgManagerSingleton {
             }
         }
         return null;
+    }
+
+    /** t_cfg_vip **/
+    public CfgVipDTO getCfgVipByVipLevelFromCache(int vipLevel){
+        return cfgVipDTOMap.get(vipLevel);
     }
 }

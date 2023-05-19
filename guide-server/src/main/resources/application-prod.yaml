@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.16.0.70:3306/hb_countmoney?useUnicode=true&characterEncoding=UTF-8&useSSL=true&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: hb_countmoney
+    password: RTkaZmZNGBHWTJ5BNsWhwS1i

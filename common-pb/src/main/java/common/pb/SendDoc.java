@@ -19,6 +19,9 @@ import common.pb.pb.TitleSyncPushPb;
         @DocActionSend(cmd = UserCmdModule.cmd,
                 subCmd = UserCmdModule.titleSyncPush,
                 dataClass = TitleSyncPushPb.class),
+        @DocActionSend(cmd = UserCmdModule.cmd,
+                subCmd = UserCmdModule.vipSyncPush,
+                dataClass = TitleSyncPushPb.class),
 })
 public class SendDoc {
 }

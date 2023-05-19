@@ -8,6 +8,7 @@ import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVipDTO;
 import logic.server.repository.CfgAttributeRepository;
 import logic.server.repository.CfgBossRepository;
 import logic.server.repository.CfgBuffToolRepository;
@@ -15,6 +16,7 @@ import logic.server.repository.CfgEquipmentRepository;
 import logic.server.repository.CfgGlobalRepository;
 import logic.server.repository.CfgMagnateRepository;
 import logic.server.repository.CfgVehicleRepository;
+import logic.server.repository.CfgVipRepository;
 import logic.server.service.ICfgService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class CfgServiceImpl implements ICfgService {
     private CfgMagnateRepository cfgMagnateRepository;
     @Autowired
     private CfgBossRepository cfgBossRepository;
+    @Autowired
+    private CfgVipRepository cfgVipRepository;
 
     /** nacos **/
     public int getServerId(){
@@ -92,5 +96,11 @@ public class CfgServiceImpl implements ICfgService {
     @Override
     public Map<Integer, CfgBossDTO> getCfgBossMap(){
         return cfgBossRepository.getMap();
+    }
+
+    /** t_cfg_vip **/
+    @Override
+    public Map<Integer, CfgVipDTO> getCfgVipMap(){
+        return cfgVipRepository.getMap();
     }
 }

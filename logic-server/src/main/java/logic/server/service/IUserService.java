@@ -7,6 +7,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVipDTO;
 import logic.server.service.impl.action.BaseExecutor;
 
 import java.util.Map;
@@ -46,6 +47,10 @@ public interface IUserService {
     /** t_user_boss **/
     int addUserBossToDB(UserBossDTO userBossDTO);
     Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId);
+
+    /** t_user_vip **/
+    int addUserVipToDB(UserVipDTO userVipDTO);
+    UserVipDTO getUserVipByIdFromDB(long userId);
 
     /** 角色下线数据处理 **/
     void saveDataFromCacheToDB(long userId);// 保存指定角色数据

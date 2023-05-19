@@ -18,6 +18,7 @@
     <module>common-pb</module>
     <module>client-command</module>
     <module>websocket-client</module>
+    <module>guide-server</module>
     <!-- <module>run-as-one</module> -->
   </modules>
 
@@ -78,6 +79,17 @@
       <id>test</id>
       <properties>
         <activated>test</activated>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <!-- 审核服 -->
+    <profile>
+      <id>rc</id>
+      <properties>
+        <activated>rc</activated>
       </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
