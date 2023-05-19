@@ -85,6 +85,17 @@
       </activation>
     </profile>
 
+    <!-- 审核服 -->
+    <profile>
+      <id>rc</id>
+      <properties>
+        <activated>rc</activated>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
     <profile>
       <id>prod</id>
       <properties>
