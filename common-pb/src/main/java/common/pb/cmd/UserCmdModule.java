@@ -39,6 +39,12 @@ public interface UserCmdModule {
     /** 看完广告报文 */
     int watchedAd = 12;
     String watchedAdExecutorName = "watchedAd";// 执行器名称
+    /** 选择石头 */
+    int selectStone = 13;
+    String selectStoneExecutorName = "selectStone";// 执行器名称
+    /** 售卖石头 */
+    int sellStone = 14;
+    String sellStoneExecutorName = "sellStone";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

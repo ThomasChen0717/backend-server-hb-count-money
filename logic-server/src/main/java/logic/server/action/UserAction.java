@@ -18,6 +18,10 @@ import common.pb.pb.GmCommandReqPb;
 import common.pb.pb.GmCommandResPb;
 import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
+import common.pb.pb.SelectStoneReqPb;
+import common.pb.pb.SelectStoneResPb;
+import common.pb.pb.SellStoneReqPb;
+import common.pb.pb.SellStoneResPb;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import common.pb.pb.StartOrEndBuffToolReqPb;
@@ -104,5 +108,15 @@ public class UserAction {
     @ActionMethod(UserCmdModule.watchedAd)
     public WatchedAdResPb watchedAd(WatchedAdReqPb watchedAdReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (WatchedAdResPb)userService.getExecutor(UserCmdModule.watchedAdExecutorName).executor(watchedAdReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.selectStone)
+    public SelectStoneResPb selectStone(SelectStoneReqPb selectStoneReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (SelectStoneResPb)userService.getExecutor(UserCmdModule.selectStoneExecutorName).executor(selectStoneReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.sellStone)
+    public SellStoneResPb sellStone(SellStoneReqPb sellStoneReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (SellStoneResPb)userService.getExecutor(UserCmdModule.sellStoneExecutorName).executor(sellStoneReqPb,myFlowContext.getUserId());
     }
 }

@@ -111,4 +111,7 @@ public class LoginResPb{
 
     /** 角色vip等级列表 **/
     List<VipInfoPb> vipInfoPbList = new ArrayList<>();
+
+    /** 选择石头次数 **/
+    int selectStoneCount = 0;
 }

@@ -26,6 +26,8 @@ import logic.server.service.impl.action.ChangeVehicleExecutor;
 import logic.server.service.impl.action.GetRedPacketExecutor;
 import logic.server.service.impl.action.GmCommandExecutor;
 import logic.server.service.impl.action.LogicHeartbeatExecutor;
+import logic.server.service.impl.action.SelectStoneExecutor;
+import logic.server.service.impl.action.SellStoneExecutor;
 import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.service.impl.action.UnlockVehicleOrEquipmentExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
@@ -38,7 +40,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +88,10 @@ public class UserServiceImpl implements IUserService {
     private GmCommandExecutor gmCommandExecutor;
     @Autowired
     private WatchedAdExecutor watchedAdExecutor;
+    @Autowired
+    private SelectStoneExecutor selectStoneExecutor;
+    @Autowired
+    private SellStoneExecutor sellStoneExecutor;
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -309,6 +314,10 @@ public class UserServiceImpl implements IUserService {
             return gmCommandExecutor;
         }else if(executorName.compareTo(UserCmdModule.watchedAdExecutorName) == 0){
             return watchedAdExecutor;
+        }else if(executorName.compareTo(UserCmdModule.selectStoneExecutorName) == 0){
+            return selectStoneExecutor;
+        }else if(executorName.compareTo(UserCmdModule.sellStoneExecutorName) == 0){
+            return sellStoneExecutor;
         }
 
         return null;

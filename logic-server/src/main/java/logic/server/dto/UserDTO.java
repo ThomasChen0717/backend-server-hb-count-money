@@ -30,4 +30,5 @@ public class UserDTO implements DTO{
     private Date latestLogoutTime;
     private int privilegeLevel;
     private String clientVersion;
+    private int selectStoneCount = 0;
 }
