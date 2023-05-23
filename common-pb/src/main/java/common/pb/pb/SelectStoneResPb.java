@@ -28,5 +28,5 @@ public class SelectStoneResPb {
     String message = "success";
 
     /** 累积选择石头次数 **/
-    long selectStoneCount;
+    int selectStoneCount;
 }
