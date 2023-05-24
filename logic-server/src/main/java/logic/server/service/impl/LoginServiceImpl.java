@@ -535,6 +535,9 @@ public class LoginServiceImpl implements ILoginService {
             loginResPb.getVipInfoPbList().add(vipInfoPb);
         }
 
+        /** 选择石头次数 **/
+        loginResPb.setSelectStoneCount(userDTO.getSelectStoneCount());
+
         return loginResPb;
     }
 

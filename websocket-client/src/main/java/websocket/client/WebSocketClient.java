@@ -14,6 +14,10 @@ import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
+import common.pb.pb.SelectStoneReqPb;
+import common.pb.pb.SelectStoneResPb;
+import common.pb.pb.SellStoneReqPb;
+import common.pb.pb.SellStoneResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -151,17 +155,28 @@ public class WebSocketClient {
             //return;
         //}
 
-        LogicHeartbeatReqPb logicHeartbeatReqPb = new LogicHeartbeatReqPb();
+        // 逻辑心跳请求
+        {
+            LogicHeartbeatReqPb logicHeartbeatReqPb = new LogicHeartbeatReqPb();
+            ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                    UserCmdModule.cmd,
+                    UserCmdModule.logicHeartbeat,
+                    logicHeartbeatReqPb
+            );
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
+        }
 
-        // 请求、响应
-        ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
-                UserCmdModule.cmd,
-                UserCmdModule.logicHeartbeat,
-                logicHeartbeatReqPb
-        );
-
-        clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
-
+        // 售卖石头请求
+        {
+            SellStoneReqPb sellStoneReqPb = new SellStoneReqPb();
+            sellStoneReqPb.setSellStoneMoney(100);
+            ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                    UserCmdModule.cmd,
+                    UserCmdModule.sellStone,
+                    sellStoneReqPb
+            );
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, SellStoneResPb.class,10000);
+        }
 
         /**
         // 请求、无响应

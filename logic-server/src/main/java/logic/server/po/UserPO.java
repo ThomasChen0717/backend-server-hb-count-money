@@ -88,4 +88,9 @@ public class UserPO extends BaseEntity{
      * 客户端版本号
      */
     private String clientVersion;
+
+    /**
+     * 累积选择石头次数
+     */
+    private int selectStoneCount;
 }
