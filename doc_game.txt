@@ -13,75 +13,80 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:54】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:56】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SettlementReqPb
     方法返回值: common.pb.pb.SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:59】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:61】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AttributeLevelUpReqPb
     方法返回值: common.pb.pb.AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:64】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:66】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChangeVehicleReqPb
     方法返回值: common.pb.pb.ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:69】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:71】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UseEquipmentReqPb
     方法返回值: common.pb.pb.UseEquipmentResPb
  
-路由: 2 - 5  --- 【】 --- 【UserAction:74】【startOrEndBuffTool】
+路由: 2 - 5  --- 【】 --- 【UserAction:76】【startOrEndBuffTool】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.StartOrEndBuffToolReqPb
     方法返回值: common.pb.pb.StartOrEndBuffToolResPb
  
-路由: 2 - 6  --- 【】 --- 【UserAction:79】【getRedPacket】
+路由: 2 - 6  --- 【】 --- 【UserAction:81】【getRedPacket】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GetRedPacketReqPb
     方法返回值: common.pb.pb.GetRedPacketResPb
  
-路由: 2 - 7  --- 【】 --- 【UserAction:84】【challengeMagnateSuccess】
+路由: 2 - 7  --- 【】 --- 【UserAction:86】【challengeMagnateSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeMagnateSuccessReqPb
     方法返回值: common.pb.pb.ChallengeMagnateSuccessResPb
  
-路由: 2 - 8  --- 【】 --- 【UserAction:89】【challengeBossSuccess】
+路由: 2 - 8  --- 【】 --- 【UserAction:91】【challengeBossSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeBossSuccessReqPb
     方法返回值: common.pb.pb.ChallengeBossSuccessResPb
  
-路由: 2 - 9  --- 【】 --- 【UserAction:94】【unlockVehicleOrEquipment】
+路由: 2 - 9  --- 【】 --- 【UserAction:96】【unlockVehicleOrEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UnlockVehicleOrEquipmentReqPb
     方法返回值: common.pb.pb.UnlockVehicleOrEquipmentResPb
  
-路由: 2 - 10  --- 【】 --- 【UserAction:99】【logicHeartbeat】
+路由: 2 - 10  --- 【】 --- 【UserAction:101】【logicHeartbeat】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.LogicHeartbeatReqPb
     方法返回值: common.pb.pb.LogicHeartbeatResPb
  
-路由: 2 - 11  --- 【】 --- 【UserAction:104】【gmCommand】
+路由: 2 - 11  --- 【】 --- 【UserAction:106】【gmCommand】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GmCommandReqPb
     方法返回值: common.pb.pb.GmCommandResPb
  
-路由: 2 - 12  --- 【】 --- 【UserAction:109】【watchedAd】
+路由: 2 - 12  --- 【】 --- 【UserAction:111】【watchedAd】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.WatchedAdReqPb
     方法返回值: common.pb.pb.WatchedAdResPb
  
-路由: 2 - 13  --- 【】 --- 【UserAction:114】【selectStone】
+路由: 2 - 13  --- 【】 --- 【UserAction:116】【selectStone】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SelectStoneReqPb
     方法返回值: common.pb.pb.SelectStoneResPb
  
-路由: 2 - 14  --- 【】 --- 【UserAction:119】【sellStone】
+路由: 2 - 14  --- 【】 --- 【UserAction:121】【sellStone】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SellStoneReqPb
-    方法返回值: common.pb.pb.SellStoneResPb
+    方法返回值: common.pb.pb.AddClickCountResPb
+ 
+路由: 2 - 15  --- 【】 --- 【UserAction:126】【sellStone】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.AddClickCountReqPb
+    方法返回值: common.pb.pb.AddClickCountResPb
  
 
 ==================== 其它广播推送 ====================

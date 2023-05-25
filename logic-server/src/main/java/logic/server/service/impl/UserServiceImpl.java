@@ -18,6 +18,7 @@ import logic.server.repository.UserRepository;
 import logic.server.repository.UserVehicleRepository;
 import logic.server.repository.UserVipRepository;
 import logic.server.service.IUserService;
+import logic.server.service.impl.action.AddClickCountExecutor;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
 import logic.server.service.impl.action.ChallengeBossSuccessExecutor;
@@ -92,6 +93,9 @@ public class UserServiceImpl implements IUserService {
     private SelectStoneExecutor selectStoneExecutor;
     @Autowired
     private SellStoneExecutor sellStoneExecutor;
+    @Autowired
+    private AddClickCountExecutor addClickCountExecutor;
+
     /** 注入执行器-end **/
 
     /** t_user start **/
@@ -318,8 +322,9 @@ public class UserServiceImpl implements IUserService {
             return selectStoneExecutor;
         }else if(executorName.compareTo(UserCmdModule.sellStoneExecutorName) == 0){
             return sellStoneExecutor;
+        }else if(executorName.compareTo(UserCmdModule.addClickCountExecutorName) == 0){
+            return addClickCountExecutor;
         }
-
         return null;
     }
 }

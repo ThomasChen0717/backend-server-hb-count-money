@@ -31,4 +31,5 @@ public class UserDTO implements DTO{
     private int privilegeLevel;
     private String clientVersion;
     private int selectStoneCount = 0;
+    private int clickCount;
 }

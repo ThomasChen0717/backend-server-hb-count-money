@@ -6,6 +6,8 @@ import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
+import common.pb.pb.AddClickCountReqPb;
+import common.pb.pb.AddClickCountResPb;
 import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
 import common.pb.pb.GmCommandReqPb;
@@ -166,16 +168,15 @@ public class WebSocketClient {
             clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
         }
 
-        // 售卖石头请求
         {
-            SellStoneReqPb sellStoneReqPb = new SellStoneReqPb();
-            sellStoneReqPb.setSellStoneMoney(100);
+            AddClickCountReqPb addClickCountReqPb = new AddClickCountReqPb();
+            addClickCountReqPb.setAddClickCount(1);
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                     UserCmdModule.cmd,
-                    UserCmdModule.sellStone,
-                    sellStoneReqPb
+                    UserCmdModule.addClickCount,
+                    addClickCountReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, SellStoneResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, AddClickCountResPb.class,10000);
         }
 
         /**

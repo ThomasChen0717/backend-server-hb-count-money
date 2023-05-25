@@ -93,4 +93,9 @@ public class UserPO extends BaseEntity{
      * 累积选择石头次数
      */
     private int selectStoneCount;
+
+    /**
+     * 连续点击次数
+     */
+    private int clickCount;
 }

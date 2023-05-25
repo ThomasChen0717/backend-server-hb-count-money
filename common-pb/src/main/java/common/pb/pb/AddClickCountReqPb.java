@@ -10,27 +10,18 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 结算请求
+ * 连续点击增加数量请求
  *
  * @author mark
- * @date 2023-04-20
+ * @date 2023-05-25
  */
 @Data
 @ToString
 @ProtobufClass
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
-public class SettlementReqPb {
-    /** 结算角色：1 主角 2 宠物 */
+public class AddClickCountReqPb {
+    /** 连续点击增加数量 */
     @NotNull
-    int settlementRole;
-    /** 结算类型：1 在线计算 2 离线结算 （此字段只有结算角色为宠物时才有意义）*/
-    @NotNull
-    int settlementType;
-    /** 倍数 （此字段只有结算角色为宠物时才有意义）*/
-    @NotNull
-    int multiple;
-    /** 飞翔的金币（飞钱模式结算） */
-    @NotNull
-    long flyMoney = 0;
+    int addClickCount;
 }
