@@ -17,7 +17,7 @@ public class AddClickCountExecutor implements BaseExecutor<AddClickCountReqPb, A
 
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         if(userDTO != null){
-            userDTO.setClickCount(userDTO.getSelectStoneCount() + arg.getAddClickCount());
+            userDTO.setClickCount(userDTO.getClickCount() + arg.getAddClickCount());
             if(userDTO.getClickCount() > 10) userDTO.setClickCount(10);
         }
         addClickCountResPb.setClickCount(userDTO.getClickCount());

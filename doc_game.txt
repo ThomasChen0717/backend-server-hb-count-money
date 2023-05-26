@@ -81,9 +81,9 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
 路由: 2 - 14  --- 【】 --- 【UserAction:121】【sellStone】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SellStoneReqPb
-    方法返回值: common.pb.pb.AddClickCountResPb
+    方法返回值: common.pb.pb.SellStoneResPb
  
-路由: 2 - 15  --- 【】 --- 【UserAction:126】【sellStone】
+路由: 2 - 15  --- 【】 --- 【UserAction:126】【addClick】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AddClickCountReqPb
     方法返回值: common.pb.pb.AddClickCountResPb
