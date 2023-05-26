@@ -114,4 +114,7 @@ public class LoginResPb{
 
     /** 选择石头次数 **/
     int selectStoneCount = 0;
+
+    /** 连续点击次数 **/
+    int clickCount;
 }

@@ -288,7 +288,7 @@ public class LoginServiceImpl implements ILoginService {
             int privilegeLevel = nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0 ? 0 : 1;
             newUserDTO.setName(name).setTitle(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("firstTitle").getValueName())
                     .setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
-                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L).setClientVersion(clientVersion);
+                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L).setClientVersion(clientVersion).setClickCount(1);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录
@@ -537,6 +537,9 @@ public class LoginServiceImpl implements ILoginService {
 
         /** 选择石头次数 **/
         loginResPb.setSelectStoneCount(userDTO.getSelectStoneCount());
+
+        /** 连续点击次数 **/
+        loginResPb.setClickCount(userDTO.getClickCount());
 
         return loginResPb;
     }

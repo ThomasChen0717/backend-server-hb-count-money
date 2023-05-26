@@ -45,6 +45,9 @@ public interface UserCmdModule {
     /** 售卖石头 */
     int sellStone = 14;
     String sellStoneExecutorName = "sellStone";// 执行器名称
+    /** 连点次数增加 */
+    int addClickCount = 15;
+    String addClickCountExecutorName = "addClickCount";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

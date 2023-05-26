@@ -4,6 +4,8 @@ import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
 import common.pb.cmd.UserCmdModule;
+import common.pb.pb.AddClickCountReqPb;
+import common.pb.pb.AddClickCountResPb;
 import common.pb.pb.AttributeLevelUpReqPb;
 import common.pb.pb.AttributeLevelUpResPb;
 import common.pb.pb.ChallengeBossSuccessReqPb;
@@ -118,5 +120,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.sellStone)
     public SellStoneResPb sellStone(SellStoneReqPb sellStoneReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (SellStoneResPb)userService.getExecutor(UserCmdModule.sellStoneExecutorName).executor(sellStoneReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.addClickCount)
+    public AddClickCountResPb addClick(AddClickCountReqPb addClickCountReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (AddClickCountResPb)userService.getExecutor(UserCmdModule.addClickCountExecutorName).executor(addClickCountReqPb,myFlowContext.getUserId());
     }
 }
