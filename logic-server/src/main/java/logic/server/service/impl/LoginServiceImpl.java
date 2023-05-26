@@ -538,6 +538,9 @@ public class LoginServiceImpl implements ILoginService {
         /** 选择石头次数 **/
         loginResPb.setSelectStoneCount(userDTO.getSelectStoneCount());
 
+        /** 连续点击次数 **/
+        loginResPb.setClickCount(userDTO.getClickCount());
+
         return loginResPb;
     }
 
