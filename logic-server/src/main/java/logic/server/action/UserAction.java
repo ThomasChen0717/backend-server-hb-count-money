@@ -123,7 +123,7 @@ public class UserAction {
     }
 
     @ActionMethod(UserCmdModule.addClickCount)
-    public AddClickCountResPb sellStone(AddClickCountReqPb addClickCountReqPb, MyFlowContext myFlowContext) throws MsgException{
+    public AddClickCountResPb addClick(AddClickCountReqPb addClickCountReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (AddClickCountResPb)userService.getExecutor(UserCmdModule.addClickCountExecutorName).executor(addClickCountReqPb,myFlowContext.getUserId());
     }
 }
