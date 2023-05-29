@@ -8,6 +8,7 @@ import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 import logic.server.repository.CfgAttributeRepository;
 import logic.server.repository.CfgBossRepository;
@@ -15,6 +16,7 @@ import logic.server.repository.CfgBuffToolRepository;
 import logic.server.repository.CfgEquipmentRepository;
 import logic.server.repository.CfgGlobalRepository;
 import logic.server.repository.CfgMagnateRepository;
+import logic.server.repository.CfgVehicleNewRepository;
 import logic.server.repository.CfgVehicleRepository;
 import logic.server.repository.CfgVipRepository;
 import logic.server.service.ICfgService;
@@ -32,6 +34,8 @@ public class CfgServiceImpl implements ICfgService {
     private CfgGlobalRepository cfgGlobalRepository;
     @Autowired
     private CfgVehicleRepository cfgVehicleRepository;
+    @Autowired
+    private CfgVehicleNewRepository cfgVehicleNewRepository;
     @Autowired
     private CfgAttributeRepository cfgAttributeRepository;
     @Autowired
@@ -66,6 +70,12 @@ public class CfgServiceImpl implements ICfgService {
     @Override
     public Map<Integer,CfgVehicleDTO> getCfgVehicleMap(){
         return cfgVehicleRepository.getMap();
+    }
+
+    /** t_cfg_vehicle_new **/
+    @Override
+    public Map<Integer, CfgVehicleNewDTO> getCfgVehicleNewMap(){
+        return cfgVehicleNewRepository.getMap();
     }
 
     /** t_cfg_attribute **/

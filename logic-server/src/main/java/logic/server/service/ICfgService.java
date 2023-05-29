@@ -7,6 +7,7 @@ import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ public interface ICfgService {
     int getServerId();
     Map<String, CfgGlobalDTO> getCfgGlobalMap();
     Map<Integer,CfgVehicleDTO> getCfgVehicleMap();
+    Map<Integer, CfgVehicleNewDTO> getCfgVehicleNewMap();
     Map<Integer, CfgAttributeDTO> getCfgAttributeMap();
     Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap();
     Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap();

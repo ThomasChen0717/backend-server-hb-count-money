@@ -8,10 +8,9 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@TableName("t_user_boss")
-public class UserBossPO extends BaseEntity{
+@TableName("t_user_vehicle_new")
+public class UserVehicleNewPO extends BaseEntity{
     private static final long serialVersionUID = 1L;
-
     /**
      * 主键id
      */
@@ -19,14 +18,24 @@ public class UserBossPO extends BaseEntity{
     private Long id;
 
     /**
-     * 角色id
+     * 用户id
      */
     private long userId;
 
     /**
-     * bossId
+     * 载具id
      */
-    private int bossId;
+    private int vehicleId;
+
+    /**
+     * 前置条件是否已解除：0 未解除 1 已解除
+     */
+    private boolean isPreConditionClear;
+
+    /**
+     * 当前解锁条件数值
+     */
+    private int unlockConditionCurrCount;
 
     /**
      * 是否已解除锁定：0 未解锁 1 已解锁
@@ -34,7 +43,7 @@ public class UserBossPO extends BaseEntity{
     private boolean isUnlocked;
 
     /**
-     * 是否已击败：0 未击败 1 已击败
+     * 当前等级
      */
-    private boolean isBeat;
+    private int level;
 }

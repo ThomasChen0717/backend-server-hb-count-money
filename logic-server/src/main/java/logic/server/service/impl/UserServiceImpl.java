@@ -8,6 +8,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.repository.UserAttributeRepository;
 import logic.server.repository.UserBossRepository;
@@ -15,6 +16,7 @@ import logic.server.repository.UserBuffToolRepository;
 import logic.server.repository.UserEquipmentRepository;
 import logic.server.repository.UserMagnateRepository;
 import logic.server.repository.UserRepository;
+import logic.server.repository.UserVehicleNewRepository;
 import logic.server.repository.UserVehicleRepository;
 import logic.server.repository.UserVipRepository;
 import logic.server.service.IUserService;
@@ -33,6 +35,7 @@ import logic.server.service.impl.action.SettlementExecutor;
 import logic.server.service.impl.action.UnlockVehicleOrEquipmentExecutor;
 import logic.server.service.impl.action.UseEquipmentExecutor;
 import logic.server.service.impl.action.StartOrEndBuffToolExecutor;
+import logic.server.service.impl.action.VehicleNewLevelUpExecutor;
 import logic.server.service.impl.action.WatchedAdExecutor;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +56,8 @@ public class UserServiceImpl implements IUserService {
     private UserAttributeRepository userAttributeRepository;
     @Autowired
     private UserVehicleRepository userVehicleRepository;
+    @Autowired
+    private UserVehicleNewRepository userVehicleNewRepository;
     @Autowired
     private UserEquipmentRepository userEquipmentRepository;
     @Autowired
@@ -95,6 +100,8 @@ public class UserServiceImpl implements IUserService {
     private SellStoneExecutor sellStoneExecutor;
     @Autowired
     private AddClickCountExecutor addClickCountExecutor;
+    @Autowired
+    private VehicleNewLevelUpExecutor vehicleNewLevelUpExecutor;
 
     /** 注入执行器-end **/
 
@@ -142,6 +149,17 @@ public class UserServiceImpl implements IUserService {
         return userVehicleRepository.getMap(userId);
     }
     /** t_user_vehicle end **/
+
+    /** t_user_vehicle_new start **/
+    @Override
+    public int addUserVehicleNewToDB(UserVehicleNewDTO userVehicleNewDTO){
+        return userVehicleNewRepository.add(userVehicleNewDTO);
+    }
+    @Override
+    public Map<Integer,UserVehicleNewDTO> getUserVehicleNewMapByIdFromDB(long userId){
+        return userVehicleNewRepository.getMap(userId);
+    }
+    /** t_user_vehicle_new end **/
 
     /** t_user_equipment start **/
     @Override
@@ -223,6 +241,14 @@ public class UserServiceImpl implements IUserService {
                     userVehicleRepository.update(entryVehicle.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserVehicleMapInCache(userId);
+            }
+            /** save t_user_vehicle_new **/
+            Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
+            if(userVehicleNewDTOMap != null){
+                for(Map.Entry<Integer,UserVehicleNewDTO> entryVehicleNew : userVehicleNewDTOMap.entrySet()){
+                    userVehicleNewRepository.update(entryVehicleNew.getValue());
+                }
+                UserManagerSingleton.getInstance().removeUserVehicleNewMapInCache(userId);
             }
             /** save t_user_equipment **/
             Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentMapByIdFromCache(userId);
@@ -324,7 +350,10 @@ public class UserServiceImpl implements IUserService {
             return sellStoneExecutor;
         }else if(executorName.compareTo(UserCmdModule.addClickCountExecutorName) == 0){
             return addClickCountExecutor;
+        }else if(executorName.compareTo(UserCmdModule.vehicleNewLevelUpExecutorName) == 0){
+            return vehicleNewLevelUpExecutor;
         }
+
         return null;
     }
 }

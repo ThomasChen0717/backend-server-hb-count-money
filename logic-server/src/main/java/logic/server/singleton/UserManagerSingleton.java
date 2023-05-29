@@ -10,6 +10,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class UserManagerSingleton {
     private Map<Long, UserDTO> allUserDTOMap;
     private Map<Long, UserAttributeDTO> allUserAttributeDTOMap;
     private Map<Long, Map<Integer,UserVehicleDTO> > allUserVehicleDTOMap;
+    private Map<Long, Map<Integer,UserVehicleNewDTO> > allUserVehicleNewDTOMap;
     private Map<Long,Map<Integer, UserEquipmentDTO> > allUserEquipmentDTOMap;
     private Map<Long,Map<Integer, UserBuffToolDTO> > allUserBuffToolDTOMap;
     private Map<Long,Map<Integer, UserMagnateDTO> > allUserMagnateDTOMap;
@@ -44,6 +46,7 @@ public class UserManagerSingleton {
         allUserDTOMap = new HashMap<>();
         allUserAttributeDTOMap = new HashMap<>();
         allUserVehicleDTOMap = new HashMap<>();
+        allUserVehicleNewDTOMap = new HashMap<>();
         allUserEquipmentDTOMap = new HashMap<>();
         allUserBuffToolDTOMap = new HashMap<>();
         allUserMagnateDTOMap = new HashMap<>();
@@ -53,14 +56,15 @@ public class UserManagerSingleton {
 
     /** userDTO start **/
     public boolean addUserDataToCache(long userId, UserDTO userDTO, UserAttributeDTO userAttributeDTO,
-                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap, Map<Integer,UserEquipmentDTO> userEquipmentDTOMap,
-                                      Map<Integer,UserBuffToolDTO> userBuffToolDTOMap, Map<Integer,UserMagnateDTO> userMagnateDTOMap,
-                                      Map<Integer,UserBossDTO> userBossDTOMap, UserVipDTO userVipDTO){
+                                      Map<Integer,UserVehicleDTO> userVehicleDTOMap, Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap,
+                                      Map<Integer,UserEquipmentDTO> userEquipmentDTOMap, Map<Integer,UserBuffToolDTO> userBuffToolDTOMap,
+                                      Map<Integer,UserMagnateDTO> userMagnateDTOMap, Map<Integer,UserBossDTO> userBossDTOMap, UserVipDTO userVipDTO){
         boolean isSuccess = true;
         try{
             addUserToCache(userId,userDTO);
             addUserAttributeToCache(userId,userAttributeDTO);
             addUserVehicleMapToCache(userId,userVehicleDTOMap);
+            addUserVehicleNewMapToCache(userId,userVehicleNewDTOMap);
             addUserEquipmentMapToCache(userId,userEquipmentDTOMap);
             addUserBuffToolMapToCache(userId,userBuffToolDTOMap);
             addUserMagnateMapToCache(userId,userMagnateDTOMap);
@@ -156,6 +160,28 @@ public class UserManagerSingleton {
         return userVehicleDTOMap.get(vehicleId);
     }
     /** UserVehicleDTO end **/
+
+    /** UserVehicleNewDTO start **/
+    public void addUserVehicleNewMapToCache(long userId, Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap){
+        allUserVehicleNewDTOMap.put(userId,userVehicleNewDTOMap);
+    }
+    public void addUserVehicleNewToCache(long userId, int vehicleId, UserVehicleNewDTO userVehicleNewDTO){
+        Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = getUserVehicleNewMapByIdFromCache(userId);
+        if(userVehicleNewDTOMap != null){
+            userVehicleNewDTOMap.put(vehicleId,userVehicleNewDTO);
+        }
+    }
+    public void removeUserVehicleNewMapInCache(long userId){
+        allUserVehicleNewDTOMap.remove(userId);
+    }
+    public Map<Integer,UserVehicleNewDTO> getUserVehicleNewMapByIdFromCache(long userId){
+        return allUserVehicleNewDTOMap.get(userId);
+    }
+    public UserVehicleNewDTO getUserVehicleNewByIdFromCache(long userId,int vehicleId){
+        Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = getUserVehicleNewMapByIdFromCache(userId);
+        return userVehicleNewDTOMap.get(vehicleId);
+    }
+    /** UserVehicleNewDTO end **/
 
     /** UserEquipmentDTO start **/
     public void addUserEquipmentMapToCache(long userId, Map<Integer,UserEquipmentDTO> userEquipmentDTOMap){

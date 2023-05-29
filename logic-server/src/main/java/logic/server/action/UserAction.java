@@ -32,6 +32,8 @@ import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
 import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import common.pb.pb.UseEquipmentReqPb;
 import common.pb.pb.UseEquipmentResPb;
+import common.pb.pb.VehicleNewLevelUpReqPb;
+import common.pb.pb.VehicleNewLevelUpResPb;
 import common.pb.pb.WatchedAdReqPb;
 import common.pb.pb.WatchedAdResPb;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -125,5 +127,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.addClickCount)
     public AddClickCountResPb addClick(AddClickCountReqPb addClickCountReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (AddClickCountResPb)userService.getExecutor(UserCmdModule.addClickCountExecutorName).executor(addClickCountReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.vehicleNewLevelUp)
+    public VehicleNewLevelUpResPb vehicleNewLevelUp(VehicleNewLevelUpReqPb vehicleNewLevelUpReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (VehicleNewLevelUpResPb)userService.getExecutor(UserCmdModule.vehicleNewLevelUpExecutorName).executor(vehicleNewLevelUpReqPb,myFlowContext.getUserId());
     }
 }

@@ -17,6 +17,7 @@ import common.pb.pb.EquipmentInfoPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import common.pb.pb.MagnateInfoPb;
+import common.pb.pb.VehicleInfoNewPb;
 import common.pb.pb.VehicleInfoPb;
 import common.pb.pb.VipInfoPb;
 import logic.server.config.NacosConfiguration;
@@ -26,6 +27,7 @@ import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
@@ -34,6 +36,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -119,6 +122,7 @@ public class LoginServiceImpl implements ILoginService {
         /** 检测数据库中是否存在角色数据 **/
         UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapByIdFromDB(userId);
+        Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
@@ -146,7 +150,7 @@ public class LoginServiceImpl implements ILoginService {
 
         // 从数据库获取的角色数据存储到内存中
         boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId,userDTO,
-                userAttributeDTO,userVehicleDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap,userVipDTO);
+                userAttributeDTO,userVehicleDTOMap,userVehicleNewDTOMap,userEquipmentDTOMap,userBuffToolDTOMap,userMagnateDTOMap,userBossDTOMap,userVipDTO);
         if(!isAddSuccess){
             log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end",userId,ErrorCodeEnum.addUserDataToCacheFailed.getCode(),ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
             return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
@@ -160,6 +164,9 @@ public class LoginServiceImpl implements ILoginService {
             checkCfgMagnateOnOldUserLogin(userDTO.getId());
             checkCfgBossOnOldUserLogin(userDTO.getId());
             checkCfgVipOnOldUserLogin(userDTO.getId());
+
+            // 放在boss和富豪数据之后，用于老用户的载具（新）数据前置条件直接清除（因为boss或者富豪已挑战过）
+            checkCfgVehicleNewOnOldUserLogin(userDTO.getId());
         }
 
         // 填充登录报文回复数据
@@ -309,6 +316,19 @@ public class LoginServiceImpl implements ILoginService {
                 addUserVehicle(newUserDTO.getId(),isInUse,cfgVehicleDTO);
             }
 
+            // t_user_vehicle_new 表插入记录
+            Map<Integer, CfgVehicleNewDTO> cfgVehicleNewDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleNewDTOMap();
+            for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
+                CfgVehicleNewDTO cfgVehicleNewDTO = entry.getValue();
+                boolean isUnlocked = false;
+                boolean isPreConditionClear = false;
+                if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0){
+                    isPreConditionClear = true;
+                    if(cfgVehicleNewDTO.getUnlockConditionCount() == 0) isUnlocked = true;
+                }
+                addUserVehicleNew(newUserDTO.getId(),isPreConditionClear,isUnlocked,cfgVehicleNewDTO);
+            }
+
             // t_user_equipment表插入记录
             Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap = CfgManagerSingleton.getInstance().getCfgEquipmentDTOMap();
             for(Map.Entry<Integer,CfgEquipmentDTO> entryEquipment : cfgEquipmentDTOMap.entrySet()){
@@ -354,6 +374,7 @@ public class LoginServiceImpl implements ILoginService {
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
         Map<Integer,UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
+        Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
         Map<Integer,UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentMapByIdFromCache(userId);
         Map<Integer,UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
         Map<Integer,UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
@@ -419,6 +440,28 @@ public class LoginServiceImpl implements ILoginService {
                 Comparator.comparing(VehicleInfoPb::getShowIndex).thenComparing(VehicleInfoPb::getVehicleId)
         ).collect(Collectors.toList());
         loginResPb.setVehicleInfoPbList(vehicleInfoPbList);
+
+        /** 角色载具（新）数据 **/
+        for(Map.Entry<Integer,UserVehicleNewDTO> entryVehicleNew : userVehicleNewDTOMap.entrySet()){
+            UserVehicleNewDTO userVehicleNewDTO = entryVehicleNew.getValue();
+            VehicleInfoNewPb vehicleInfoNewPb = new VehicleInfoNewPb();
+
+            /** 载具（新）实例数据 **/
+            vehicleInfoNewPb.setVehicleId(userVehicleNewDTO.getVehicleId()).setPreConditionClear(userVehicleNewDTO.isPreConditionClear())
+                    .setUnlockConditionCurrCount(userVehicleNewDTO.getUnlockConditionCurrCount()).setUnlocked(userVehicleNewDTO.isUnlocked()).
+                    setLevel(userVehicleNewDTO.getLevel());
+            /** 载具（新）配置数据 **/
+            CfgVehicleNewDTO cfgVehicleNewDTO = CfgManagerSingleton.getInstance().getCfgVehicleNewByIdFromCache(userVehicleNewDTO.getVehicleId());
+            vehicleInfoNewPb.setShowIndex(cfgVehicleNewDTO.getShowIndex());
+
+            loginResPb.getVehicleInfoNewPbList().add(vehicleInfoNewPb);
+        }
+        // 载具根据showIndex排序
+        List<VehicleInfoNewPb> vehicleInfoNewPbList = loginResPb.getVehicleInfoNewPbList();
+        vehicleInfoNewPbList = vehicleInfoNewPbList.stream().sorted(
+                Comparator.comparing(VehicleInfoNewPb::getShowIndex).thenComparing(VehicleInfoNewPb::getVehicleId)
+        ).collect(Collectors.toList());
+        loginResPb.setVehicleInfoNewPbList(vehicleInfoNewPbList);
 
         /** 角色装备数据 **/
         for(Map.Entry<Integer,UserEquipmentDTO> entryEquipment : userEquipmentDTOMap.entrySet()){
@@ -553,6 +596,14 @@ public class LoginServiceImpl implements ILoginService {
         UserManagerSingleton.getInstance().addUserVehicleToCache(userId,newUserVehicleDTO.getVehicleId(),newUserVehicleDTO);
     }
 
+    private void addUserVehicleNew(long userId,boolean isPreConditionClear, boolean isUnlocked, CfgVehicleNewDTO cfgVehicleNewDTO){
+        UserVehicleNewDTO newUserVehicleNewDTO = new UserVehicleNewDTO();
+        newUserVehicleNewDTO.setUserId(userId).setVehicleId(cfgVehicleNewDTO.getVehicleId()).setPreConditionClear(isPreConditionClear).setUnlocked(isUnlocked).setLevel(1);
+        userService.addUserVehicleNewToDB(newUserVehicleNewDTO);
+        // 缓存存在，则缓存数据中也新增
+        UserManagerSingleton.getInstance().addUserVehicleNewToCache(userId,newUserVehicleNewDTO.getVehicleId(),newUserVehicleNewDTO);
+    }
+
     private void addUserEquipment(long userId,CfgEquipmentDTO cfgEquipmentDTO){
         UserEquipmentDTO newUserEquipmentDTO = new UserEquipmentDTO();
         boolean isUnlocked = false;
@@ -605,6 +656,45 @@ public class LoginServiceImpl implements ILoginService {
         // 新增的载具模版需要添加到角色载具数据中
         for(CfgVehicleDTO cfgVehicleDTO : newCfgVehicleDTOList){
             addUserVehicle(userId,false,cfgVehicleDTO);
+        }
+    }
+
+    /**
+     * 老角色登录检测是否有新的载具（新）模版数据需处理
+     * @param userId
+     */
+    private void checkCfgVehicleNewOnOldUserLogin(long userId){
+        List<CfgVehicleNewDTO> newCfgVehicleNewDTOList = new ArrayList<>();
+        Map<Integer,CfgVehicleNewDTO> cfgVehicleNewDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleNewDTOMap();
+        for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
+            Map<Integer,UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
+            if(userVehicleNewDTOMap.get(entry.getKey()) == null){
+                newCfgVehicleNewDTOList.add(entry.getValue());
+            }
+        }
+        // 新增的载具（新）模版需要添加到角色载具数据中
+        for(CfgVehicleNewDTO cfgVehicleNewDTO : newCfgVehicleNewDTOList){
+            boolean isUnlocked = false;
+            boolean isPreConditionClear = false;
+            if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0){
+                isPreConditionClear = true;
+                if(cfgVehicleNewDTO.getUnlockConditionCount() == 0) isUnlocked = true;
+            }else{
+                // 检测前置条件的boss或者富豪是否已挑战过（目前就已是否解锁作为判断条件，因为之前没有记录是否挑战成功过的标记）
+                // 挑战榜类型：0 富豪 1 BOSS
+                if(cfgVehicleNewDTO.getPreConditionChallengeType() == 0){
+                    UserMagnateDTO userMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,cfgVehicleNewDTO.getPreConditionChallengeId());
+                    if(userMagnateDTO != null && userMagnateDTO.isUnlocked()){
+                        isPreConditionClear = true;
+                    }
+                }else if(cfgVehicleNewDTO.getPreConditionChallengeType() == 1){
+                    UserBossDTO userBossDTO = UserManagerSingleton.getInstance().getUserBossByIdFromCache(userId,cfgVehicleNewDTO.getPreConditionChallengeId());
+                    if(userBossDTO != null && userBossDTO.isUnlocked()){
+                        isPreConditionClear = true;
+                    }
+                }
+            }
+            addUserVehicleNew(userId,isPreConditionClear,isUnlocked,cfgVehicleNewDTO);
         }
     }
 

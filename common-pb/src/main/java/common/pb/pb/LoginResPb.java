@@ -117,4 +117,7 @@ public class LoginResPb{
 
     /** 连续点击次数 **/
     int clickCount;
+
+    /** 角色载具（新）列表 **/
+    List<VehicleInfoNewPb> vehicleInfoNewPbList = new ArrayList<>();
 }

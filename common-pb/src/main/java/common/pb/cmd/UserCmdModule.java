@@ -48,6 +48,9 @@ public interface UserCmdModule {
     /** 连点次数增加 */
     int addClickCount = 15;
     String addClickCountExecutorName = "addClickCount";// 执行器名称
+    /** 载具（新）升级 */
+    int vehicleNewLevelUp = 16;
+    String vehicleNewLevelUpExecutorName = "vehicleNewLevelUp";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

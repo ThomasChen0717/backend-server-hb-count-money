@@ -5,9 +5,11 @@ import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
 import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.enums.ConditionEnum;
 import logic.server.service.IPushPbService;
 import logic.server.singleton.CfgManagerSingleton;
@@ -99,6 +101,39 @@ public class UnlockVehicleOrEquipmentExecutor implements BaseExecutor<UnlockVehi
             unlockVehicleOrEquipmentResPb.setInUse(userEquipmentDTO.isInUse());
             unlockVehicleOrEquipmentResPb.setUnlocked(userEquipmentDTO.isUnlocked());
             unlockVehicleOrEquipmentResPb.setUnlockConditionCurrCount(userEquipmentDTO.getUnlockConditionCurrCount());
+        }else if(arg.getType() == 3){
+            // 解锁载具（新）
+            UserVehicleNewDTO userVehicleNewDTO = UserManagerSingleton.getInstance().getUserVehicleNewByIdFromCache(userId,arg.getItemId());
+            if(userVehicleNewDTO == null){
+                unlockVehicleOrEquipmentResPb.setCode(ErrorCodeEnum.vehicleNotExist.getCode()).setMessage(ErrorCodeEnum.vehicleNotExist.getMsg());
+                log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId,unlockVehicleOrEquipmentResPb);
+                return unlockVehicleOrEquipmentResPb;
+            }
+            boolean isUnlocked = false;
+            CfgVehicleNewDTO cfgVehicleNewDTO = CfgManagerSingleton.getInstance().getCfgVehicleNewByIdFromCache(userVehicleNewDTO.getVehicleId());
+            if(cfgVehicleNewDTO.getUnlockConditionType() == ConditionEnum.ad.getConditionType()){
+                // 解锁条件是广告类型
+                userVehicleNewDTO.setUnlockConditionCurrCount(userVehicleNewDTO.getUnlockConditionCurrCount() + 1);
+                if(userVehicleNewDTO.getUnlockConditionCurrCount() >= cfgVehicleNewDTO.getUnlockConditionCount()){
+                    isUnlocked = true;
+                }
+            }else if(cfgVehicleNewDTO.getUnlockConditionType() == ConditionEnum.money.getConditionType()){
+                // 解锁条件是金钱类型
+                long leftMoney = userDTO.getMoney() - cfgVehicleNewDTO.getUnlockConditionCount();
+                if(leftMoney > 0){
+                    isUnlocked = true;
+                    userDTO.setMoney(leftMoney);
+                    /** 同步金钱数量（推送）**/
+                    pushPbService.moneySync(userId);
+                }else{
+                    unlockVehicleOrEquipmentResPb.setCode(ErrorCodeEnum.moneyCostNotEnough.getCode()).setMessage(ErrorCodeEnum.moneyCostNotEnough.getMsg());
+                    log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId,unlockVehicleOrEquipmentResPb);
+                    return unlockVehicleOrEquipmentResPb;
+                }
+            }
+            userVehicleNewDTO.setUnlocked(isUnlocked);
+            unlockVehicleOrEquipmentResPb.setUnlocked(userVehicleNewDTO.isUnlocked());
+            unlockVehicleOrEquipmentResPb.setUnlockConditionCurrCount(userVehicleNewDTO.getUnlockConditionCurrCount());
         }else{
             unlockVehicleOrEquipmentResPb.setCode(ErrorCodeEnum.unlockTypeError.getCode()).setMessage(ErrorCodeEnum.unlockTypeError.getMsg());
             log.info("UnlockVehicleOrEquipmentExecutor::executor:userId = {},unlockVehicleOrEquipmentResPb = {},end",userId,unlockVehicleOrEquipmentResPb);

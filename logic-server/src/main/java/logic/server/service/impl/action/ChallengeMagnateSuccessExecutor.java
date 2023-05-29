@@ -4,15 +4,19 @@ import common.pb.enums.ErrorCodeEnum;
 import common.pb.pb.ChallengeMagnateSuccessReqPb;
 import common.pb.pb.ChallengeMagnateSuccessResPb;
 import logic.server.dto.CfgMagnateDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.service.IPushPbService;
 import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -72,6 +76,22 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
             UserMagnateDTO nextUserMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,unlockCfgMagnateDTO.getMagnateId());
             nextUserMagnateDTO.setUnlocked(true);
             challengeMagnateSuccessResPb.setUnlockedMagnateId(unlockCfgMagnateDTO.getMagnateId());
+        }
+
+        // 检测载具（新）前置条件是否清除
+        Map<Integer, CfgVehicleNewDTO> cfgVehicleNewDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleNewDTOMap();
+        for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
+            CfgVehicleNewDTO cfgVehicleNewDTO = entry.getValue();
+            // 挑战榜类型：0 富豪 1 BOSS
+            if(cfgVehicleNewDTO.getPreConditionChallengeType() == 0 && cfgVehicleNewDTO.getPreConditionChallengeId() == arg.getMagnateId()){
+                UserVehicleNewDTO userVehicleNewDTO = UserManagerSingleton.getInstance().getUserVehicleNewByIdFromCache(userId,cfgVehicleNewDTO.getVehicleId());
+                if(userVehicleNewDTO == null) break;
+                if(userVehicleNewDTO.isPreConditionClear()) break;
+                if(userVehicleNewDTO.isUnlocked()) break;
+                userVehicleNewDTO.setPreConditionClear(true);
+                challengeMagnateSuccessResPb.setPreConditionClearVehicleNewId(cfgVehicleNewDTO.getVehicleId());
+                break;
+            }
         }
 
         log.info("ChallengeMagnateSuccessExecutor::executor:userId = {},challengeMagnateSuccessResPb = {},end",userId,challengeMagnateSuccessResPb);

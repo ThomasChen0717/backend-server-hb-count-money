@@ -1,25 +1,22 @@
 package websocket.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baida.countmoney.client.command.ClientCommandKit;
 import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
-import common.pb.pb.AddClickCountReqPb;
-import common.pb.pb.AddClickCountResPb;
 import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
-import common.pb.pb.GmCommandReqPb;
-import common.pb.pb.GmCommandResPb;
+import common.pb.pb.ChallengeMagnateSuccessReqPb;
+import common.pb.pb.ChallengeMagnateSuccessResPb;
 import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
-import common.pb.pb.SelectStoneReqPb;
-import common.pb.pb.SelectStoneResPb;
-import common.pb.pb.SellStoneReqPb;
-import common.pb.pb.SellStoneResPb;
+import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
+import common.pb.pb.UnlockVehicleOrEquipmentResPb;
+import common.pb.pb.VehicleNewLevelUpReqPb;
+import common.pb.pb.VehicleNewLevelUpResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -169,14 +166,15 @@ public class WebSocketClient {
         }
 
         {
-            AddClickCountReqPb addClickCountReqPb = new AddClickCountReqPb();
-            addClickCountReqPb.setAddClickCount(1);
+            UnlockVehicleOrEquipmentReqPb unlockVehicleOrEquipmentReqPb = new UnlockVehicleOrEquipmentReqPb();
+            unlockVehicleOrEquipmentReqPb.setType(3);
+            unlockVehicleOrEquipmentReqPb.setItemId(2);
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                     UserCmdModule.cmd,
-                    UserCmdModule.addClickCount,
-                    addClickCountReqPb
+                    UserCmdModule.unlockVehicleOrEquipment,
+                    unlockVehicleOrEquipmentReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, AddClickCountResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, UnlockVehicleOrEquipmentResPb.class,10000);
         }
 
         /**

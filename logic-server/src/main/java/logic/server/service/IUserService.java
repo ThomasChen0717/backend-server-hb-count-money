@@ -7,6 +7,7 @@ import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.service.impl.action.BaseExecutor;
 
@@ -31,6 +32,10 @@ public interface IUserService {
     /** t_user_vehicle **/
     int addUserVehicleToDB(UserVehicleDTO userVehicleDTO);
     Map<Integer,UserVehicleDTO> getUserVehicleMapByIdFromDB(long userId);
+
+    /** t_user_vehicle_new **/
+    int addUserVehicleNewToDB(UserVehicleNewDTO userVehicleNewDTO);
+    Map<Integer,UserVehicleNewDTO> getUserVehicleNewMapByIdFromDB(long userId);
 
     /** t_user_equipment **/
     int addUserEquipmentToDB(UserEquipmentDTO userEquipmentDTO);

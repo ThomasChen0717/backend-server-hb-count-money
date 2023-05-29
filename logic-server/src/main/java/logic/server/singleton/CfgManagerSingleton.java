@@ -7,6 +7,7 @@ import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class CfgManagerSingleton {
     private int serverId = 0;
     private Map<String,CfgGlobalDTO> cfgGlobalDTOMap;
     private Map<Integer,CfgVehicleDTO> cfgVehicleDTOMap;
+    private Map<Integer, CfgVehicleNewDTO> cfgVehicleNewDTOMap;
     private Map<Integer, CfgAttributeDTO> cfgAttributeDTOMap;
     private Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap;
     private Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap;
@@ -55,6 +57,7 @@ public class CfgManagerSingleton {
     public CfgManagerSingleton() {
         cfgGlobalDTOMap = new HashMap<>();
         cfgVehicleDTOMap = new HashMap<>();
+        cfgVehicleNewDTOMap = new HashMap<>();
         cfgAttributeDTOMap = new HashMap<>();
         cfgEquipmentDTOMap = new HashMap<>();
         cfgBuffToolDTOMap = new HashMap<>();
@@ -76,6 +79,11 @@ public class CfgManagerSingleton {
     /** t_cfg_vehicle **/
     public CfgVehicleDTO getCfgVehicleByIdFromCache(int vehicleId){
         return cfgVehicleDTOMap.get(vehicleId);
+    }
+
+    /** t_cfg_vehicle_new **/
+    public CfgVehicleNewDTO getCfgVehicleNewByIdFromCache(int vehicleId){
+        return cfgVehicleNewDTOMap.get(vehicleId);
     }
 
     /** t_cfg_attribute **/
