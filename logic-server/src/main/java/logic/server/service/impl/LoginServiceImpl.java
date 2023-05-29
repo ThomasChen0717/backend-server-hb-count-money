@@ -515,7 +515,7 @@ public class LoginServiceImpl implements ILoginService {
             MagnateInfoPb magnateInfoPb = new MagnateInfoPb();
 
             /** 富豪挑战实例数据 **/
-            magnateInfoPb.setMagnateId(userMagnateDTO.getMagnateId()).setUnlocked(userMagnateDTO.isUnlocked());
+            magnateInfoPb.setMagnateId(userMagnateDTO.getMagnateId()).setUnlocked(userMagnateDTO.isUnlocked()).setBeat(userMagnateDTO.isBeat());
 
             /** 富豪挑战配置数据 **/
             CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(userMagnateDTO.getMagnateId());
@@ -540,7 +540,7 @@ public class LoginServiceImpl implements ILoginService {
             BossInfoPb bossInfoPb = new BossInfoPb();
 
             /** boss挑战实例数据 **/
-            bossInfoPb.setBossId(userBossDTO.getBossId()).setUnlocked(userBossDTO.isUnlocked());
+            bossInfoPb.setBossId(userBossDTO.getBossId()).setUnlocked(userBossDTO.isUnlocked()).setBeat(userBossDTO.isBeat());
 
             /** boss挑战配置数据 **/
             CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(userBossDTO.getBossId());

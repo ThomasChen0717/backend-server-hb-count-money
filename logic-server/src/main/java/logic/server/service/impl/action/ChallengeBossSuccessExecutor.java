@@ -59,21 +59,7 @@ public class ChallengeBossSuccessExecutor implements BaseExecutor<ChallengeBossS
             challengeBossSuccessResPb.setUnlockedBossId(unlockedUserBossDTO.getBossId());
         }
 
-        // 检测载具（新）前置条件是否清除
-        Map<Integer,CfgVehicleNewDTO> cfgVehicleNewDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleNewDTOMap();
-        for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
-            CfgVehicleNewDTO cfgVehicleNewDTO = entry.getValue();
-            // 挑战榜类型：0 富豪 1 BOSS
-            if(cfgVehicleNewDTO.getPreConditionChallengeType() == 1 && cfgVehicleNewDTO.getPreConditionChallengeId() == arg.getBossId()){
-                UserVehicleNewDTO userVehicleNewDTO = UserManagerSingleton.getInstance().getUserVehicleNewByIdFromCache(userId,cfgVehicleNewDTO.getVehicleId());
-                if(userVehicleNewDTO == null) break;
-                if(userVehicleNewDTO.isPreConditionClear()) break;
-                if(userVehicleNewDTO.isUnlocked()) break;
-                userVehicleNewDTO.setPreConditionClear(true);
-                challengeBossSuccessResPb.setPreConditionClearVehicleNewId(cfgVehicleNewDTO.getVehicleId());
-                break;
-            }
-        }
+        challengeBossSuccessResPb.setBeatBossId(arg.getBossId());
 
         log.info("ChallengeBossSuccessExecutor::executor:userId = {},challengeBossSuccessResPb = {},end",userId,challengeBossSuccessResPb);
         return challengeBossSuccessResPb;

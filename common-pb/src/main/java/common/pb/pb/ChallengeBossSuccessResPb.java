@@ -29,6 +29,6 @@ public class ChallengeBossSuccessResPb {
 
     /** 下一个解锁的bossId:0 表示没有解锁下一个boss **/
     int unlockedBossId = 0;
-    /** 前置条件清除的载具（新）的id */
-    int preConditionClearVehicleNewId = 0;
+    /** 打败的bossId */
+    int beatBossId = 0;
 }

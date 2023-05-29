@@ -24,7 +24,7 @@ import lombok.experimental.FieldDefaults;
 public class BossInfoPb {
     /** bossId **/
     int bossId;
-    /** 是否已解除锁定：0 未解锁 1 已解锁 **/
+    /** 是否已解除锁定：false 未解锁 true 已解锁 **/
     boolean isUnlocked;
 
     /** boss名称 **/
@@ -45,4 +45,7 @@ public class BossInfoPb {
     String resourceName;
     /** 话语文本 **/
     String bossWord;
+
+    /** 是否已击败：false 未击败 true 已击败 **/
+    boolean isBeat;
 }
