@@ -98,6 +98,7 @@ public class GmCommandExecutor implements BaseExecutor<GmCommandReqPb, GmCommand
             Map<Integer, UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
             for(Map.Entry<Integer,UserMagnateDTO> entry : userMagnateDTOMap.entrySet()){
                 entry.getValue().setUnlocked(true);
+                entry.getValue().setBeat(true);
             }
         }else if(arg.getGmCommandId() == GmCommandEnum.unlockBoss.getGmCommandId()){
             /** boss全解锁命令:
@@ -106,6 +107,7 @@ public class GmCommandExecutor implements BaseExecutor<GmCommandReqPb, GmCommand
             Map<Integer, UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
             for(Map.Entry<Integer,UserBossDTO> entry : userBossDTOMap.entrySet()){
                 entry.getValue().setUnlocked(true);
+                entry.getValue().setBeat(true);
             }
         }else if(arg.getGmCommandId() == GmCommandEnum.attributeLevelUp.getGmCommandId()){
             /** 属性升级命令:
