@@ -11,7 +11,6 @@ public class UserVehicleNewDTO implements DTO{
     private long id;
     private long userId;
     private int vehicleId;
-    private boolean isPreConditionClear;
     private int unlockConditionCurrCount;
     private boolean isUnlocked;
     private int level;

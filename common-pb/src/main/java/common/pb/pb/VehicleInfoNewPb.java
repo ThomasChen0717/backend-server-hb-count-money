@@ -24,8 +24,6 @@ import lombok.experimental.FieldDefaults;
 public class VehicleInfoNewPb {
     /** 载具id **/
     int vehicleId;
-    /** 前置条件是否已解除：false 未解除 true 已解除 */
-    boolean isPreConditionClear;
     /** 当前解锁条件数值 **/
     int unlockConditionCurrCount;
     /** 是否已解除锁定：false 未解锁 true 已解锁 **/

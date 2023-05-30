@@ -321,12 +321,10 @@ public class LoginServiceImpl implements ILoginService {
             for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
                 CfgVehicleNewDTO cfgVehicleNewDTO = entry.getValue();
                 boolean isUnlocked = false;
-                boolean isPreConditionClear = false;
-                if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0){
-                    isPreConditionClear = true;
-                    if(cfgVehicleNewDTO.getUnlockConditionCount() == 0) isUnlocked = true;
+                if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0 && cfgVehicleNewDTO.getUnlockConditionCount() == 0){
+                    isUnlocked = true;
                 }
-                addUserVehicleNew(newUserDTO.getId(),isPreConditionClear,isUnlocked,cfgVehicleNewDTO);
+                addUserVehicleNew(newUserDTO.getId(),isUnlocked,cfgVehicleNewDTO);
             }
 
             // t_user_equipment表插入记录
@@ -447,9 +445,8 @@ public class LoginServiceImpl implements ILoginService {
             VehicleInfoNewPb vehicleInfoNewPb = new VehicleInfoNewPb();
 
             /** 载具（新）实例数据 **/
-            vehicleInfoNewPb.setVehicleId(userVehicleNewDTO.getVehicleId()).setPreConditionClear(userVehicleNewDTO.isPreConditionClear())
-                    .setUnlockConditionCurrCount(userVehicleNewDTO.getUnlockConditionCurrCount()).setUnlocked(userVehicleNewDTO.isUnlocked()).
-                    setLevel(userVehicleNewDTO.getLevel());
+            vehicleInfoNewPb.setVehicleId(userVehicleNewDTO.getVehicleId()).setUnlockConditionCurrCount(userVehicleNewDTO.getUnlockConditionCurrCount())
+                    .setUnlocked(userVehicleNewDTO.isUnlocked()).setLevel(userVehicleNewDTO.getLevel());
             /** 载具（新）配置数据 **/
             CfgVehicleNewDTO cfgVehicleNewDTO = CfgManagerSingleton.getInstance().getCfgVehicleNewByIdFromCache(userVehicleNewDTO.getVehicleId());
             vehicleInfoNewPb.setShowIndex(cfgVehicleNewDTO.getShowIndex());
@@ -596,9 +593,9 @@ public class LoginServiceImpl implements ILoginService {
         UserManagerSingleton.getInstance().addUserVehicleToCache(userId,newUserVehicleDTO.getVehicleId(),newUserVehicleDTO);
     }
 
-    private void addUserVehicleNew(long userId,boolean isPreConditionClear, boolean isUnlocked, CfgVehicleNewDTO cfgVehicleNewDTO){
+    private void addUserVehicleNew(long userId, boolean isUnlocked, CfgVehicleNewDTO cfgVehicleNewDTO){
         UserVehicleNewDTO newUserVehicleNewDTO = new UserVehicleNewDTO();
-        newUserVehicleNewDTO.setUserId(userId).setVehicleId(cfgVehicleNewDTO.getVehicleId()).setPreConditionClear(isPreConditionClear).setUnlocked(isUnlocked).setLevel(1);
+        newUserVehicleNewDTO.setUserId(userId).setVehicleId(cfgVehicleNewDTO.getVehicleId()).setUnlocked(isUnlocked).setLevel(1);
         userService.addUserVehicleNewToDB(newUserVehicleNewDTO);
         // 缓存存在，则缓存数据中也新增
         UserManagerSingleton.getInstance().addUserVehicleNewToCache(userId,newUserVehicleNewDTO.getVehicleId(),newUserVehicleNewDTO);
@@ -675,26 +672,10 @@ public class LoginServiceImpl implements ILoginService {
         // 新增的载具（新）模版需要添加到角色载具数据中
         for(CfgVehicleNewDTO cfgVehicleNewDTO : newCfgVehicleNewDTOList){
             boolean isUnlocked = false;
-            boolean isPreConditionClear = false;
-            if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0){
-                isPreConditionClear = true;
-                if(cfgVehicleNewDTO.getUnlockConditionCount() == 0) isUnlocked = true;
-            }else{
-                // 检测前置条件的boss或者富豪是否已挑战过（目前就已是否解锁作为判断条件，因为之前没有记录是否挑战成功过的标记）
-                // 挑战榜类型：0 富豪 1 BOSS
-                if(cfgVehicleNewDTO.getPreConditionChallengeType() == 0){
-                    UserMagnateDTO userMagnateDTO = UserManagerSingleton.getInstance().getUserMagnateByIdFromCache(userId,cfgVehicleNewDTO.getPreConditionChallengeId());
-                    if(userMagnateDTO != null && userMagnateDTO.isUnlocked()){
-                        isPreConditionClear = true;
-                    }
-                }else if(cfgVehicleNewDTO.getPreConditionChallengeType() == 1){
-                    UserBossDTO userBossDTO = UserManagerSingleton.getInstance().getUserBossByIdFromCache(userId,cfgVehicleNewDTO.getPreConditionChallengeId());
-                    if(userBossDTO != null && userBossDTO.isUnlocked()){
-                        isPreConditionClear = true;
-                    }
-                }
+            if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0 && cfgVehicleNewDTO.getUnlockConditionCount() == 0){
+                isUnlocked = true;
             }
-            addUserVehicleNew(userId,isPreConditionClear,isUnlocked,cfgVehicleNewDTO);
+            addUserVehicleNew(userId,isUnlocked,cfgVehicleNewDTO);
         }
     }
 
@@ -760,10 +741,29 @@ public class LoginServiceImpl implements ILoginService {
      * @param userId
      */
     private void checkCfgBossOnOldUserLogin(long userId){
-        List<CfgBossDTO> newCfgBossDTOList = new ArrayList<>();
+        // 已有的boss设置下is_beat字段，此字段是新增的，如不是当前最后一个解锁的boss，都可以设置is_beat = true
         Map<Integer,CfgBossDTO> cfgBossDTOMap = CfgManagerSingleton.getInstance().getCfgBossDTOMap();
+        List<CfgBossDTO> cfgBossDTOList = cfgBossDTOMap.values().stream().toList();
+        cfgBossDTOList = cfgBossDTOList.stream().sorted(
+                Comparator.comparing(CfgBossDTO::getShowIndex)
+        ).collect(Collectors.toList());
+
+        UserBossDTO lastUserBossDTO = null;
+        Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
+        for(CfgBossDTO cfgBossDTO : cfgBossDTOList){
+            UserBossDTO userBossDTO = userBossDTOMap.get(cfgBossDTO.getBossId());
+            if(userBossDTO == null) continue;
+            if(userBossDTO.isBeat()) continue;
+            if(userBossDTO.isUnlocked()){
+                userBossDTO.setBeat(true);
+                lastUserBossDTO = userBossDTO;
+            }
+        }
+        if(lastUserBossDTO != null) lastUserBossDTO.setBeat(false);
+
+        // 检测是否有新的boss配置
+        List<CfgBossDTO> newCfgBossDTOList = new ArrayList<>();
         for(Map.Entry<Integer,CfgBossDTO> entry : cfgBossDTOMap.entrySet()){
-            Map<Integer,UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
             if(userBossDTOMap.get(entry.getKey()) == null){
                 newCfgBossDTOList.add(entry.getValue());
             }

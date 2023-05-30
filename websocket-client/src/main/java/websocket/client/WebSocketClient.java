@@ -165,6 +165,7 @@ public class WebSocketClient {
             clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
         }
 
+        if(false)
         {
             UnlockVehicleOrEquipmentReqPb unlockVehicleOrEquipmentReqPb = new UnlockVehicleOrEquipmentReqPb();
             unlockVehicleOrEquipmentReqPb.setType(3);

@@ -28,11 +28,6 @@ public class UserVehicleNewPO extends BaseEntity{
     private int vehicleId;
 
     /**
-     * 前置条件是否已解除：0 未解除 1 已解除
-     */
-    private boolean isPreConditionClear;
-
-    /**
      * 当前解锁条件数值
      */
     private int unlockConditionCurrCount;
