@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum RoleEnum {
     user(1, "主角"),
     pet(2, "宠物"),
+    vehicleNew(3, "载具（新）"),
     ;
 
     private final int roleType;

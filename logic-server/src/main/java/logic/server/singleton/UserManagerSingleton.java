@@ -1,8 +1,10 @@
 package logic.server.singleton;
 
+import com.alibaba.fastjson.JSONObject;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgMagnateDTO;
+import logic.server.dto.CfgVipDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -124,6 +126,24 @@ public class UserManagerSingleton {
                 }
             }
             inComeMultiple *= buffToolMultiple;
+        }
+        /** vip系统-收益倍数加成 **/
+        // vip等级效果中是否有宠物搬运金额加成
+        UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
+        if(userVipDTO != null){
+            CfgVipDTO cfgVipDTO = CfgManagerSingleton.getInstance().getCfgVipByVipLevelFromCache(userVipDTO.getVipLevel());
+            float vipMultiple = 1.0f;
+            if(cfgVipDTO != null){
+                for(int i=0;i<cfgVipDTO.getJsonArrayEffectAttributeInfo().size();i++){
+                    JSONObject jsonEffectAttributeInfo = cfgVipDTO.getJsonArrayEffectAttributeInfo().getJSONObject(i);
+                    int attributeType = jsonEffectAttributeInfo.getIntValue("attributeType");
+                    if(attributeType == AttributeEnum.incomeMultiple.getAttributeType()){
+                        vipMultiple = jsonEffectAttributeInfo.getFloatValue("multiple");
+                        break;
+                    }
+                }
+            }
+            inComeMultiple *= vipMultiple;
         }
 
         return inComeMultiple;

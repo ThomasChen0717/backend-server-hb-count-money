@@ -13,6 +13,8 @@ import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
+import common.pb.pb.SettlementReqPb;
+import common.pb.pb.SettlementResPb;
 import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
 import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import common.pb.pb.VehicleNewLevelUpReqPb;
@@ -165,17 +167,18 @@ public class WebSocketClient {
             clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
         }
 
-        if(false)
+        if(true)
         {
-            UnlockVehicleOrEquipmentReqPb unlockVehicleOrEquipmentReqPb = new UnlockVehicleOrEquipmentReqPb();
-            unlockVehicleOrEquipmentReqPb.setType(3);
-            unlockVehicleOrEquipmentReqPb.setItemId(2);
+            SettlementReqPb settlementReqPb = new SettlementReqPb();
+            settlementReqPb.setSettlementRole(3);
+            settlementReqPb.setSettlementType(2);
+            settlementReqPb.setMultiple(1);
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                     UserCmdModule.cmd,
-                    UserCmdModule.unlockVehicleOrEquipment,
-                    unlockVehicleOrEquipmentReqPb
+                    UserCmdModule.settlement,
+                    settlementReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, UnlockVehicleOrEquipmentResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, SettlementResPb.class,10000);
         }
 
         /**
