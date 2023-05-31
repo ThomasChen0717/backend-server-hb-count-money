@@ -380,10 +380,10 @@ public class LoginServiceImpl implements ILoginService {
         loginResPb.setUserId(userDTO.getId()).setToken(userDTO.getToken()).setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory()).
                 setTitle(userDTO.getTitle()).setPrivilegeLevel(userDTO.getPrivilegeLevel());
 
-        /** 宠物离线时间：单位秒 **/
+        /** 离线时间：单位秒 **/
         loginResPb.setOfflineTime( (int)((userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000) );
-        /** 宠物离线收益 **/
-        long petOfflineIncome = settlementExecutor.petOfflineIncome(userDTO,userAttributeDTO,1);
+        /** 载具（新）离线收益 **/
+        long petOfflineIncome = settlementExecutor.vehicleNewIncome(userId,1,true);
         loginResPb.setPetOfflineIncome((int)petOfflineIncome);
 
         /** 角色属性等级数据 **/
