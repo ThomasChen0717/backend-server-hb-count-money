@@ -120,10 +120,10 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
 
         try{
             int finishJobCount = 1;// 在线收益，收益次数固定为1次
+            UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
+            long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
             if(isOfflineIncome){
                 // 离线收益：收益次数
-                UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
-                long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
                 int vehicleNewOfflineIncomeMaxTime = Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petOfflineIncomeMaxTime").getValueName()) * 3600;
                 if(offlineTime >= vehicleNewOfflineIncomeMaxTime) offlineTime = vehicleNewOfflineIncomeMaxTime;
                 finishJobCount = (int)offlineTime / (Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime").getValueName()));
@@ -147,9 +147,11 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
             // 最终收益 = 所有解锁载具（新）基础收益总和 * 广告收益倍数 * 用户收益倍数（装备 + buffTool + vip） * 完成次数
             float finalIncome = totalVehicleNewBaseIncome * multipleByAd * userIncomeMultiple * finishJobCount;
             income = (long)finalIncome;
-            log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {}," +
-                    "totalVehicleNewBaseIncome = {},multipleByAd = {},userIncomeMultiple = {},finishJobCount = {}",
-                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,finishJobCount);
+            log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},totalVehicleNewBaseIncome = {}," +
+                            "multipleByAd = {},userIncomeMultiple = {},latestLoginTime = {},latestLogoutTime = {},offlineTime = {}," +
+                            "finishJobCount = {},income = {}",
+                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,offlineTime,
+                    userDTO.getLatestLoginTime().getTime(),userDTO.getLatestLogoutTime().getTime(), finishJobCount,income);
         }catch (Exception e){
             log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},message = {},载具（新）收益计算异常",userId,isOfflineIncome,e.getMessage());
         }
