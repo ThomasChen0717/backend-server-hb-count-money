@@ -76,11 +76,12 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
         }else if(arg.getSettlementRole() == RoleEnum.vehicleNew.getRoleType()){
             // 载具（新）结算
             boolean isOfflineIncome = true;
-            int multipleByAd = 1;
+            int multipleByAd = arg.getMultiple();
             if(arg.getSettlementType() == 1){
-                multipleByAd = arg.getMultiple();
                 isOfflineIncome = false;
             }
+            if(multipleByAd == 0) multipleByAd = 1;
+
             moneyIncome = vehicleNewIncome(userId,multipleByAd,isOfflineIncome);
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
