@@ -147,6 +147,9 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
             // 最终收益 = 所有解锁载具（新）基础收益总和 * 广告收益倍数 * 用户收益倍数（装备 + buffTool + vip） * 完成次数
             float finalIncome = totalVehicleNewBaseIncome * multipleByAd * userIncomeMultiple * finishJobCount;
             income = (long)finalIncome;
+            log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {}," +
+                    "totalVehicleNewBaseIncome = {},multipleByAd = {},userIncomeMultiple = {},finishJobCount = {}",
+                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,finishJobCount);
         }catch (Exception e){
             log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},message = {},载具（新）收益计算异常",userId,isOfflineIncome,e.getMessage());
         }
