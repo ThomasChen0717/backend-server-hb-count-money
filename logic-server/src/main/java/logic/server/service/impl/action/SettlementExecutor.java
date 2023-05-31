@@ -150,8 +150,8 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
             log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},totalVehicleNewBaseIncome = {}," +
                             "multipleByAd = {},userIncomeMultiple = {},latestLoginTime = {},latestLogoutTime = {},offlineTime = {}," +
                             "finishJobCount = {},income = {}",
-                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,offlineTime,
-                    userDTO.getLatestLoginTime().getTime(),userDTO.getLatestLogoutTime().getTime(), finishJobCount,income);
+                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,
+                    userDTO.getLatestLoginTime().getTime(),userDTO.getLatestLogoutTime().getTime(),offlineTime,finishJobCount,income);
         }catch (Exception e){
             log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},message = {},载具（新）收益计算异常",userId,isOfflineIncome,e.getMessage());
         }
