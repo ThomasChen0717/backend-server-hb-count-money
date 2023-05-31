@@ -120,4 +120,7 @@ public class LoginResPb{
 
     /** 角色载具（新）列表 **/
     List<VehicleInfoNewPb> vehicleInfoNewPbList = new ArrayList<>();
+
+    /** 创建角色时客户端版本号 **/
+    String firstClientVersion;
 }

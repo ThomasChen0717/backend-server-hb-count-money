@@ -164,9 +164,20 @@ public class LoginServiceImpl implements ILoginService {
             checkCfgMagnateOnOldUserLogin(userDTO.getId());
             checkCfgBossOnOldUserLogin(userDTO.getId());
             checkCfgVipOnOldUserLogin(userDTO.getId());
-
-            // 放在boss和富豪数据之后，用于老用户的载具（新）数据前置条件直接清除（因为boss或者富豪已挑战过）
             checkCfgVehicleNewOnOldUserLogin(userDTO.getId());
+        }
+
+        // 数据修复
+        {
+            // 用户版本号:之前没有记录版本号的统一设置为：1.0.0
+            if(userDTO.getClientVersion() == null || userDTO.getClientVersion().isEmpty()){
+                String defaultClientVersion = "1.0.0";
+                userDTO.setClientVersion(defaultClientVersion);
+                userDTO.setFirstClientVersion(defaultClientVersion);
+            }
+            if(userDTO.getFirstClientVersion() == null || userDTO.getFirstClientVersion().isEmpty()){
+                userDTO.setFirstClientVersion(userDTO.getClientVersion());
+            }
         }
 
         // 填充登录报文回复数据
