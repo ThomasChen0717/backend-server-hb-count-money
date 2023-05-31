@@ -21,4 +21,5 @@ public class CfgMagnateDTO implements DTO{
     private int showIndex;
     private String resourceName;
     private String bossWord;
+    private int fixed;
 }

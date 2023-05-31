@@ -19,4 +19,6 @@ public class CfgEquipmentDTO implements DTO{
     private int showIndex;
     private int preEquipmentId;
     private String resourceName;
+    private int preConditionChallengeType;
+    private int preConditionChallengeId;
 }

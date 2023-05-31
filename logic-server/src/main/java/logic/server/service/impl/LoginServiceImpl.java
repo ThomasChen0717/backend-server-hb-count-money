@@ -474,7 +474,8 @@ public class LoginServiceImpl implements ILoginService {
             equipmentInfoPb.setEquipmentName(cfgEquipmentDTO.getEquipmentName()).setUnlockConditionType(cfgEquipmentDTO.getUnlockConditionType())
                     .setUnlockConditionCount(cfgEquipmentDTO.getUnlockConditionCount()).setEffectAttributeType(cfgEquipmentDTO.getEffectAttributeType())
                     .setEffectAttributeMultiple(cfgEquipmentDTO.getEffectAttributeMultiple()).setEffectAttributeRemark(cfgEquipmentDTO.getEffectAttributeRemark())
-                    .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId()).setResourceName(cfgEquipmentDTO.getResourceName());
+                    .setShowIndex(cfgEquipmentDTO.getShowIndex()).setPreEquipmentId(cfgEquipmentDTO.getPreEquipmentId()).setResourceName(cfgEquipmentDTO.getResourceName())
+                    .setPreConditionChallengeType(cfgEquipmentDTO.getPreConditionChallengeType()).setPreConditionChallengeId(cfgEquipmentDTO.getPreConditionChallengeId());
 
             loginResPb.getEquipmentInfoPbList().add(equipmentInfoPb);
         }
@@ -520,7 +521,8 @@ public class LoginServiceImpl implements ILoginService {
                     .setTargetMoneyAmount(cfgMagnateDTO.getTargetMoneyAmount())
                             .setRewardMoneyAmount(cfgMagnateDTO.getRewardMoneyAmount()).setUnlockVehicleId(cfgMagnateDTO.getUnlockVehicleId())
                             .setCdTime(cfgMagnateDTO.getCdTime()).setChallengeTime(cfgMagnateDTO.getChallengeTime())
-                            .setPreMagnateId(cfgMagnateDTO.getPreMagnateId()).setResourceName(cfgMagnateDTO.getResourceName()).setBossWord(cfgMagnateDTO.getBossWord());
+                            .setPreMagnateId(cfgMagnateDTO.getPreMagnateId()).setResourceName(cfgMagnateDTO.getResourceName())
+                    .setBossWord(cfgMagnateDTO.getBossWord()).setFixed(cfgMagnateDTO.getFixed());
 
             loginResPb.getMagnateInfoPbList().add(magnateInfoPb);
         }
@@ -543,7 +545,7 @@ public class LoginServiceImpl implements ILoginService {
             CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(userBossDTO.getBossId());
             bossInfoPb.setBossName(cfgBossDTO.getBossName()).setSpeed(cfgBossDTO.getSpeed()).setTargetMoneyAmount(cfgBossDTO.getTargetMoneyAmount())
                     .setRewardMoneyAmount(cfgBossDTO.getRewardMoneyAmount()).setChallengeTime(cfgBossDTO.getChallengeTime()).setPreBossId(cfgBossDTO.getPreBossId())
-                    .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName()).setBossWord(cfgBossDTO.getBossWord());
+                    .setShowIndex(cfgBossDTO.getShowIndex()).setResourceName(cfgBossDTO.getResourceName()).setBossWord(cfgBossDTO.getBossWord()).setFixed(cfgBossDTO.getFixed());
 
             loginResPb.getBossInfoPbList().add(bossInfoPb);
         }

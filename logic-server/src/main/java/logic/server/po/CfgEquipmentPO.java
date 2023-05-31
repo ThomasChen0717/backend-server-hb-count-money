@@ -67,4 +67,14 @@ public class CfgEquipmentPO extends BaseEntity{
      * 资源名称
      */
     private String resourceName;
+
+    /**
+     * 挑战榜类型：0 富豪 1 BOSS
+     */
+    private int preConditionChallengeType;
+
+    /**
+     * 挑战富豪或者BOSS id
+     */
+    private int preConditionChallengeId;
 }

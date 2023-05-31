@@ -77,4 +77,9 @@ public class CfgMagnatePO extends BaseEntity{
      * 话语文本
      */
     private String bossWord;
+
+    /**
+     * 0 不固定 1固定
+     */
+    private int fixed;
 }

@@ -52,4 +52,6 @@ public class MagnateInfoPb {
 
     /** 是否已击败：false 未击败 true 已击败 **/
     boolean isBeat;
+    /** 0 不固定 1固定 **/
+    int fixed;
 }

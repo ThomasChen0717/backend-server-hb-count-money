@@ -49,4 +49,8 @@ public class EquipmentInfoPb {
     int preEquipmentId;
     /** 资源名称 **/
     String resourceName;
+    /** 挑战榜类型：0 富豪 1 BOSS */
+    int preConditionChallengeType;
+    /** 挑战富豪或者BOSS id */
+    int preConditionChallengeId;
 }
