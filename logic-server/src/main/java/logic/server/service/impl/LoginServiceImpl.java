@@ -320,11 +320,7 @@ public class LoginServiceImpl implements ILoginService {
             Map<Integer, CfgVehicleNewDTO> cfgVehicleNewDTOMap = CfgManagerSingleton.getInstance().getCfgVehicleNewDTOMap();
             for(Map.Entry<Integer,CfgVehicleNewDTO> entry : cfgVehicleNewDTOMap.entrySet()){
                 CfgVehicleNewDTO cfgVehicleNewDTO = entry.getValue();
-                boolean isUnlocked = false;
-                if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0 && cfgVehicleNewDTO.getUnlockConditionCount() == 0){
-                    isUnlocked = true;
-                }
-                addUserVehicleNew(newUserDTO.getId(),isUnlocked,cfgVehicleNewDTO);
+                addUserVehicleNew(newUserDTO.getId(),cfgVehicleNewDTO);
             }
 
             // t_user_equipment表插入记录
@@ -595,9 +591,9 @@ public class LoginServiceImpl implements ILoginService {
         UserManagerSingleton.getInstance().addUserVehicleToCache(userId,newUserVehicleDTO.getVehicleId(),newUserVehicleDTO);
     }
 
-    private void addUserVehicleNew(long userId, boolean isUnlocked, CfgVehicleNewDTO cfgVehicleNewDTO){
+    private void addUserVehicleNew(long userId, CfgVehicleNewDTO cfgVehicleNewDTO){
         UserVehicleNewDTO newUserVehicleNewDTO = new UserVehicleNewDTO();
-        newUserVehicleNewDTO.setUserId(userId).setVehicleId(cfgVehicleNewDTO.getVehicleId()).setUnlocked(isUnlocked).setLevel(1);
+        newUserVehicleNewDTO.setUserId(userId).setVehicleId(cfgVehicleNewDTO.getVehicleId()).setUnlocked(false).setLevel(1);
         userService.addUserVehicleNewToDB(newUserVehicleNewDTO);
         // 缓存存在，则缓存数据中也新增
         UserManagerSingleton.getInstance().addUserVehicleNewToCache(userId,newUserVehicleNewDTO.getVehicleId(),newUserVehicleNewDTO);
@@ -605,11 +601,7 @@ public class LoginServiceImpl implements ILoginService {
 
     private void addUserEquipment(long userId,CfgEquipmentDTO cfgEquipmentDTO){
         UserEquipmentDTO newUserEquipmentDTO = new UserEquipmentDTO();
-        boolean isUnlocked = false;
-        if(cfgEquipmentDTO.getUnlockConditionCount() == 0){
-            isUnlocked = true;
-        }
-        newUserEquipmentDTO.setUserId(userId).setEquipmentId(cfgEquipmentDTO.getEquipmentId()).setInUse(false).setUnlocked(isUnlocked);
+        newUserEquipmentDTO.setUserId(userId).setEquipmentId(cfgEquipmentDTO.getEquipmentId()).setInUse(false).setUnlocked(false);
         userService.addUserEquipmentToDB(newUserEquipmentDTO);
         // 缓存存在，则缓存数据中也新增
         UserManagerSingleton.getInstance().addUserEquipmentToCache(userId,newUserEquipmentDTO.getEquipmentId(),newUserEquipmentDTO);
@@ -673,11 +665,7 @@ public class LoginServiceImpl implements ILoginService {
         }
         // 新增的载具（新）模版需要添加到角色载具数据中
         for(CfgVehicleNewDTO cfgVehicleNewDTO : newCfgVehicleNewDTOList){
-            boolean isUnlocked = false;
-            if(cfgVehicleNewDTO.getPreConditionChallengeId() == 0 && cfgVehicleNewDTO.getUnlockConditionCount() == 0){
-                isUnlocked = true;
-            }
-            addUserVehicleNew(userId,isUnlocked,cfgVehicleNewDTO);
+            addUserVehicleNew(userId,cfgVehicleNewDTO);
         }
     }
 
