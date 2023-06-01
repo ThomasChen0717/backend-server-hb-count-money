@@ -590,6 +590,8 @@ public class LoginServiceImpl implements ILoginService {
         /** 连续点击次数 **/
         loginResPb.setClickCount(userDTO.getClickCount());
 
+        loginResPb.setFirstClientVersion(userDTO.getFirstClientVersion());
+
         return loginResPb;
     }
 
