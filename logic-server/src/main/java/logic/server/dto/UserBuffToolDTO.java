@@ -12,4 +12,5 @@ public class UserBuffToolDTO implements DTO{
     private long userId;
     private int buffToolId;
     private boolean isInUse;
+    private int effectLeftTime;
 }

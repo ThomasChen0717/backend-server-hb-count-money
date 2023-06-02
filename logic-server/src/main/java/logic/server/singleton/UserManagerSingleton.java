@@ -117,6 +117,7 @@ public class UserManagerSingleton {
         List<UserBuffToolDTO> userBuffToolDTOList = getUserBuffToolListByAttributeTypeFromCache(userId, AttributeEnum.incomeMultiple.getAttributeType());
         for(UserBuffToolDTO userBuffToolDTO : userBuffToolDTOList){
             if(!userBuffToolDTO.isInUse()) continue;
+            if(userBuffToolDTO.getEffectLeftTime() <= 0) continue;
             CfgBuffToolDTO cfgBuffToolDTO = CfgManagerSingleton.getInstance().getCfgBuffToolByIdFromCache(userBuffToolDTO.getBuffToolId());
             float buffToolMultiple = 1.0f;
             for(int i=0;i<cfgBuffToolDTO.getJsonArrayEffectAttributeInfo().size();i++){

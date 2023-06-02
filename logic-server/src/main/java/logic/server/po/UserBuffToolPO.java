@@ -32,4 +32,9 @@ public class UserBuffToolPO extends BaseEntity{
      * 是否使用中：0 未使用 1 使用中
      */
     private boolean isInUse;
+
+    /**
+     * 剩余生效时间，单位秒
+     */
+    private int effectLeftTime;
 }

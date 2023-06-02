@@ -25,4 +25,7 @@ public class StartOrEndBuffToolReqPb {
     int buffToolId;
     @NotNull
     boolean isStart;
+    /** 剩余生效时间，单位秒 */
+    @NotNull
+    int effectLeftTime;
 }
