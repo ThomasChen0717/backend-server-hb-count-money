@@ -173,10 +173,6 @@ public class LoginServiceImpl implements ILoginService {
             if(userDTO.getClientVersion() == null || userDTO.getClientVersion().isEmpty()){
                 String defaultClientVersion = "1.0.0";
                 userDTO.setClientVersion(defaultClientVersion);
-                userDTO.setFirstClientVersion(defaultClientVersion);
-            }
-            if(userDTO.getFirstClientVersion() == null || userDTO.getFirstClientVersion().isEmpty()){
-                userDTO.setFirstClientVersion(userDTO.getClientVersion());
             }
         }
 
@@ -306,7 +302,8 @@ public class LoginServiceImpl implements ILoginService {
             int privilegeLevel = nacosConfiguration.getSpringProfilesActive().compareTo("prod") == 0 ? 0 : 1;
             newUserDTO.setName(name).setTitle(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("firstTitle").getValueName())
                     .setLoginPlatform(loginPlatform).setToken(newToken).setUnionId(unionId).setOpenid(openid).setLatestLoginTime(currTime)
-                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L).setClientVersion(clientVersion).setClickCount(1);
+                    .setLatestLogoutTime(currTime).setPrivilegeLevel(privilegeLevel).setMoney(100L).setClientVersion(clientVersion)
+                    .setFirstClientVersion(clientVersion).setClickCount(1);
             userService.addUserToDB(newUserDTO);
 
             // t_user_attribute表插入记录
