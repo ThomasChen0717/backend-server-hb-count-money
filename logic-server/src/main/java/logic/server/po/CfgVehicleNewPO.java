@@ -46,7 +46,7 @@ public class CfgVehicleNewPO extends BaseEntity{
     /**
      * 解锁条件数值
      */
-    private int unlockConditionCount;
+    private long unlockConditionCount;
 
     /**
      * 显示顺序：值越小展示越靠前
