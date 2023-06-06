@@ -18,49 +18,84 @@ import java.util.Map;
  * @date 2023-04-14
  */
 public interface IUserService {
-    /** t_user **/
+    /**
+     * t_user
+     **/
     int addUserToDB(UserDTO userDTO);
+
     UserDTO getUserByIdFromDB(long userId);
+
     UserDTO getUserByUnionIdFromDB(String unionId);
+
     UserDTO getUserByTokenFromDB(String token);
+
     int updateUserToDB(UserDTO dto);
 
-    /** t_user_attribute **/
+    /**
+     * t_user_attribute
+     **/
     int addUserAttributeToDB(UserAttributeDTO userAttributeDTO);
+
     UserAttributeDTO getUserAttributeByIdFromDB(long userId);
 
-    /** t_user_vehicle **/
+    /**
+     * t_user_vehicle
+     **/
     int addUserVehicleToDB(UserVehicleDTO userVehicleDTO);
-    Map<Integer,UserVehicleDTO> getUserVehicleMapByIdFromDB(long userId);
 
-    /** t_user_vehicle_new **/
+    Map<Integer, UserVehicleDTO> getUserVehicleMapByIdFromDB(long userId);
+
+    /**
+     * t_user_vehicle_new
+     **/
     int addUserVehicleNewToDB(UserVehicleNewDTO userVehicleNewDTO);
-    Map<Integer,UserVehicleNewDTO> getUserVehicleNewMapByIdFromDB(long userId);
 
-    /** t_user_equipment **/
+    Map<Integer, UserVehicleNewDTO> getUserVehicleNewMapByIdFromDB(long userId);
+
+    /**
+     * t_user_equipment
+     **/
     int addUserEquipmentToDB(UserEquipmentDTO userEquipmentDTO);
-    Map<Integer,UserEquipmentDTO> getUserEquipmentMapByIdFromDB(long userId);
 
-    /** t_user_buff_tool **/
+    Map<Integer, UserEquipmentDTO> getUserEquipmentMapByIdFromDB(long userId);
+
+    /**
+     * t_user_buff_tool
+     **/
     int addUserBuffToolToDB(UserBuffToolDTO userBuffToolDTO);
-    Map<Integer,UserBuffToolDTO> getUserBuffToolMapByIdFromDB(long userId);
 
-    /** t_user_magnate **/
+    Map<Integer, UserBuffToolDTO> getUserBuffToolMapByIdFromDB(long userId);
+
+    /**
+     * t_user_magnate
+     **/
     int addUserMagnateToDB(UserMagnateDTO userMagnateDTO);
-    Map<Integer,UserMagnateDTO> getUserMagnateMapByIdFromDB(long userId);
 
-    /** t_user_boss **/
+    Map<Integer, UserMagnateDTO> getUserMagnateMapByIdFromDB(long userId);
+
+    /**
+     * t_user_boss
+     **/
     int addUserBossToDB(UserBossDTO userBossDTO);
-    Map<Integer,UserBossDTO> getUserBossMapByIdFromDB(long userId);
 
-    /** t_user_vip **/
+    Map<Integer, UserBossDTO> getUserBossMapByIdFromDB(long userId);
+
+    /**
+     * t_user_vip
+     **/
     int addUserVipToDB(UserVipDTO userVipDTO);
+
     UserVipDTO getUserVipByIdFromDB(long userId);
 
-    /** 角色下线数据处理 **/
+    /**
+     * 角色下线数据处理
+     **/
     void saveDataFromCacheToDB(long userId);// 保存指定角色数据
+
     void saveDataFromCacheToDB();// 保存所有角色数据
 
-    /** 获取指定执行器**/
+    /**
+     * 获取指定执行器
+     **/
     BaseExecutor getExecutor(String executorName);
 }

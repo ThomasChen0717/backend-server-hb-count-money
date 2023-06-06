@@ -1,8 +1,10 @@
 package logic.server.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.mapper.CfgBuffToolMapper;
+import logic.server.po.CfgBossPO;
 import logic.server.po.CfgBuffToolPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +27,18 @@ public class CfgBuffToolRepositoryImpl implements CfgBuffToolRepository{
         List<CfgBuffToolDTO> cfgBuffToolDTOListDTOList = Convertor.convert(cfgBuffToolPOList, CfgBuffToolDTO.class);
         Map<Integer, CfgBuffToolDTO> cfgBuffToolDTOMap = cfgBuffToolDTOListDTOList.stream().collect(Collectors.toMap(CfgBuffToolDTO::getBuffToolId, CfgBuffToolDTO -> CfgBuffToolDTO));
         return cfgBuffToolDTOMap;
+    }
+
+    @Override
+    public int add(CfgBuffToolDTO dto) {
+        CfgBuffToolPO po = Convertor.convert(CfgBuffToolPO.class, dto);
+        int result = cfgBuffToolMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
+    }
+
+    @Override
+    public int delete(){
+        return cfgBuffToolMapper.delete(new QueryWrapper<CfgBuffToolPO>().lambda());
     }
 }

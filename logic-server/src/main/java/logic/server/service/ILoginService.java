@@ -10,5 +10,6 @@ import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
  */
 public interface ILoginService {
     LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext);
+
     void Logout(MyFlowContext myFlowContext);
 }

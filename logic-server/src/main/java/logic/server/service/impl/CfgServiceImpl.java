@@ -23,6 +23,7 @@ import logic.server.service.ICfgService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Map;
 
 @Slf4j
@@ -49,68 +50,88 @@ public class CfgServiceImpl implements ICfgService {
     @Autowired
     private CfgVipRepository cfgVipRepository;
 
-    /** nacos **/
-    public int getServerId(){
+    /**
+     * nacos
+     **/
+    public int getServerId() {
         String serverIdFromNacos = nacosConfiguration.getServerId();
-        if(serverIdFromNacos == null || serverIdFromNacos.isEmpty()){
-            log.error("CfgServiceImpl::getServerId:serverIdFromNacos = {},非法！",serverIdFromNacos);
+        if (serverIdFromNacos == null || serverIdFromNacos.isEmpty()) {
+            log.error("CfgServiceImpl::getServerId:serverIdFromNacos = {},非法！", serverIdFromNacos);
             return 0;
         }
         int serverId = Integer.parseInt(serverIdFromNacos);
         return serverId;
     }
 
-    /** t_cfg_global **/
+    /**
+     * t_cfg_global
+     **/
     @Override
-    public Map<String, CfgGlobalDTO> getCfgGlobalMap(){
+    public Map<String, CfgGlobalDTO> getCfgGlobalMap() {
         return cfgGlobalRepository.getMap();
     }
 
-    /** t_cfg_vehicle **/
+    /**
+     * t_cfg_vehicle
+     **/
     @Override
-    public Map<Integer,CfgVehicleDTO> getCfgVehicleMap(){
+    public Map<Integer, CfgVehicleDTO> getCfgVehicleMap() {
         return cfgVehicleRepository.getMap();
     }
 
-    /** t_cfg_vehicle_new **/
+    /**
+     * t_cfg_vehicle_new
+     **/
     @Override
-    public Map<Integer, CfgVehicleNewDTO> getCfgVehicleNewMap(){
+    public Map<Integer, CfgVehicleNewDTO> getCfgVehicleNewMap() {
         return cfgVehicleNewRepository.getMap();
     }
 
-    /** t_cfg_attribute **/
+    /**
+     * t_cfg_attribute
+     **/
     @Override
-    public Map<Integer, CfgAttributeDTO> getCfgAttributeMap(){
+    public Map<Integer, CfgAttributeDTO> getCfgAttributeMap() {
         return cfgAttributeRepository.getMap();
     }
 
-    /** t_cfg_equipment **/
+    /**
+     * t_cfg_equipment
+     **/
     @Override
-    public Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap(){
+    public Map<Integer, CfgEquipmentDTO> getCfgEquipmentMap() {
         return cfgEquipmentRepository.getMap();
     }
 
-    /** t_cfg_buff_tool **/
+    /**
+     * t_cfg_buff_tool
+     **/
     @Override
-    public Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap(){
+    public Map<Integer, CfgBuffToolDTO> getCfgBuffToolMap() {
         return cfgBuffToolRepository.getMap();
     }
 
-    /** t_cfg_magnate **/
+    /**
+     * t_cfg_magnate
+     **/
     @Override
-    public Map<Integer, CfgMagnateDTO> getCfgMagnateMap(){
+    public Map<Integer, CfgMagnateDTO> getCfgMagnateMap() {
         return cfgMagnateRepository.getMap();
     }
 
-    /** t_cfg_boss **/
+    /**
+     * t_cfg_boss
+     **/
     @Override
-    public Map<Integer, CfgBossDTO> getCfgBossMap(){
+    public Map<Integer, CfgBossDTO> getCfgBossMap() {
         return cfgBossRepository.getMap();
     }
 
-    /** t_cfg_vip **/
+    /**
+     * t_cfg_vip
+     **/
     @Override
-    public Map<Integer, CfgVipDTO> getCfgVipMap(){
+    public Map<Integer, CfgVipDTO> getCfgVipMap() {
         return cfgVipRepository.getMap();
     }
 }

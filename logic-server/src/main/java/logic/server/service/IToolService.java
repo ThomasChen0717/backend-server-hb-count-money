@@ -1,11 +1,7 @@
 package logic.server.service;
 
-import org.apache.poi.ss.usermodel.Cell;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IToolService {
-    void getExcel(String path);
-
-    String addCellValue(String cellValues, Cell cell);
+    List<String> updateFromExcel(String path, List<String> fileNames);
 }

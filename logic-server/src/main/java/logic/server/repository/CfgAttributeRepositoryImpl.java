@@ -19,11 +19,24 @@ public class CfgAttributeRepositoryImpl implements CfgAttributeRepository{
     private final CfgAttributeMapper cfgAttributeMapper;
 
     @Override
-    public Map<Integer, CfgAttributeDTO> getMap(){
+    public Map<Integer, CfgAttributeDTO> getMap() {
         List<CfgAttributePO> cfgAttributePOList = cfgAttributeMapper.selectList(new QueryWrapper<CfgAttributePO>()
                 .lambda());
         List<CfgAttributeDTO> cfgAttributeDTOListDTOList = Convertor.convert(cfgAttributePOList, CfgAttributeDTO.class);
         Map<Integer, CfgAttributeDTO> cfgAttributeDTOMap = cfgAttributeDTOListDTOList.stream().collect(Collectors.toMap(CfgAttributeDTO::getAttributeType, CfgAttributeDTO -> CfgAttributeDTO));
         return cfgAttributeDTOMap;
+    }
+
+    @Override
+    public int add(CfgAttributeDTO dto) {
+        CfgAttributePO po = Convertor.convert(CfgAttributePO.class, dto);
+        int result = cfgAttributeMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
+    }
+
+    @Override
+    public int delete(){
+        return cfgAttributeMapper.delete(new QueryWrapper<CfgAttributePO>().lambda());
     }
 }
