@@ -31,4 +31,6 @@ public class ChallengeMagnateSuccessResPb {
     int unlockedMagnateId = 0;
     /** 解锁的载具id：0 表示没有奖励解锁载具 */
     int unlockedVehicleId = 0;
+    /** 打败的富豪Id */
+    int beatMagnateId = 0;
 }

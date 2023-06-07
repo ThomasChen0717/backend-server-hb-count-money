@@ -2,7 +2,9 @@ package logic.server.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.mapper.CfgVehicleMapper;
+import logic.server.po.CfgVehicleNewPO;
 import logic.server.po.CfgVehiclePO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +27,18 @@ public class CfgVehicleRepositoryImpl implements CfgVehicleRepository{
         List<CfgVehicleDTO> cfgVehicleDTOList = Convertor.convert(cfgVehiclePOList, CfgVehicleDTO.class);
         Map<Integer, CfgVehicleDTO> cfgVehicleDTOmap = cfgVehicleDTOList.stream().collect(Collectors.toMap(CfgVehicleDTO::getVehicleId, CfgVehicleDTO -> CfgVehicleDTO));
         return cfgVehicleDTOmap;
+    }
+
+    @Override
+    public int add(CfgVehicleDTO dto) {
+        CfgVehiclePO po = Convertor.convert(CfgVehiclePO.class, dto);
+        int result = cfgVehicleMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
+    }
+
+    @Override
+    public int delete(){
+        return cfgVehicleMapper.delete(new QueryWrapper<CfgVehiclePO>().lambda());
     }
 }

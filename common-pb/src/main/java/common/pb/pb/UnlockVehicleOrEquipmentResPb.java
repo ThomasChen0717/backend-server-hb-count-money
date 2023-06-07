@@ -28,9 +28,9 @@ public class UnlockVehicleOrEquipmentResPb {
     /** 响应文本：默认 success **/
     String message = "success";
 
-    /** 1 载具 2 装备 **/
+    /** 1 载具 2 装备 3 载具（新） **/
     int type;
-    /** 载具或者装备id **/
+    /** 载具或者装备或者载具（新）id **/
     int itemId;
     boolean isUnlocked;
     boolean isInUse;

@@ -11,6 +11,7 @@ public class CfgBuffToolDTO implements DTO{
 
     private long id;
     private int buffToolId;
+    private String name;
     private String effectAttributeInfo;
     private int durations;
 

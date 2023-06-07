@@ -22,6 +22,11 @@ public class CfgBuffToolPO extends BaseEntity{
     private int buffToolId;
 
     /**
+     * Buff名
+     */
+    private String name;
+
+    /**
      * 影响属性信息
      */
     private String effectAttributeInfo;

@@ -24,6 +24,7 @@ public class StartOrEndBuffToolExecutor implements BaseExecutor<StartOrEndBuffTo
         }
 
         userBuffToolDTO.setInUse(arg.isStart);
+        userBuffToolDTO.setEffectLeftTime(arg.getEffectLeftTime());
 
         log.info("StartOrEndBuffToolExecutor::executor:userId = {},startBuffToolResPb = {},end",userId, startOrEndBuffToolResPb);
         return startOrEndBuffToolResPb;

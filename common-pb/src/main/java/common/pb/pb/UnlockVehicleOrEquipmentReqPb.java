@@ -21,10 +21,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
 public class UnlockVehicleOrEquipmentReqPb {
-    /** 1 载具 2 装备 **/
+    /** 1 载具 2 装备 3 载具（新） **/
     @NotNull
     int type;
-    /** 载具或者装备id **/
+    /** 载具或者装备或者载具（新）id **/
     @NotNull
     int itemId;
 }

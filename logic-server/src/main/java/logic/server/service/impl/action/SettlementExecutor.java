@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import common.pb.pb.SettlementReqPb;
 import common.pb.pb.SettlementResPb;
 import logic.server.dto.CfgVehicleDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
 import logic.server.enums.RoleEnum;
@@ -15,8 +17,12 @@ import logic.server.service.IPushPbService;
 import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
+import org.nfunk.jep.JEP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
 @Slf4j
 @Service
 public class SettlementExecutor implements BaseExecutor<SettlementReqPb,SettlementResPb,Long>{
@@ -67,6 +73,16 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
                     }
                 }
             }
+        }else if(arg.getSettlementRole() == RoleEnum.vehicleNew.getRoleType()){
+            // 载具（新）结算
+            boolean isOfflineIncome = true;
+            int multipleByAd = arg.getMultiple();
+            if(arg.getSettlementType() == 1){
+                isOfflineIncome = false;
+            }
+            if(multipleByAd == 0) multipleByAd = 1;
+
+            moneyIncome = vehicleNewIncome(userId,multipleByAd,isOfflineIncome);
         }
         long finalMoney = userDTO.getMoney() + moneyIncome;
         long finalMoneyHistory = userDTO.getMoneyHistory() + moneyIncome;
@@ -76,7 +92,7 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
         /** 同步金钱数量（推送）**/
         pushPbService.moneySync(userId);
 
-        log.info("SettlementExecutor::executor:userId = {},settlementResPb = {},end",userId,settlementResPb);
+        log.info("SettlementExecutor::executor:userId = {},settlementResPb = {},moneyIncome = {},finalMoney = {},end",userId,settlementResPb,moneyIncome,finalMoney);
         return settlementResPb;
     }
 
@@ -90,5 +106,56 @@ public class SettlementExecutor implements BaseExecutor<SettlementReqPb,Settleme
         long offlineIncome = multiple * finishJobCount * (userAttributeDTO.getPetLevel() + 1);
 
         return offlineIncome;
+    }
+
+    /**
+     * 载具（新）收益
+     * @param userId
+     * @param multipleByAd:倍数（来源于是否看广告，客户端发送，默认是1倍）
+     * @param isOfflineIncome：是否是离线收益
+     * @return
+     */
+    public long vehicleNewIncome(long userId,int multipleByAd,boolean isOfflineIncome){
+        long income = 0;
+
+        try{
+            int finishJobCount = 1;// 在线收益，收益次数固定为1次
+            UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
+            long offlineTime = (userDTO.getLatestLoginTime().getTime() - userDTO.getLatestLogoutTime().getTime())/1000;
+            if(isOfflineIncome){
+                // 离线收益：收益次数
+                int vehicleNewOfflineIncomeMaxTime = Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petOfflineIncomeMaxTime").getValueName()) * 3600;
+                if(offlineTime >= vehicleNewOfflineIncomeMaxTime) offlineTime = vehicleNewOfflineIncomeMaxTime;
+                finishJobCount = (int)offlineTime / (Integer.valueOf(CfgManagerSingleton.getInstance().getCfgGlobalByKeyFromCache("petFinishJobTime").getValueName()));
+            }
+            // 遍历所有已解锁的载具（新）
+            long totalVehicleNewBaseIncome = 0;// 所有载具（新）基础收益综合
+            Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
+            for(Map.Entry<Integer,UserVehicleNewDTO> entry : userVehicleNewDTOMap.entrySet()){
+                UserVehicleNewDTO userVehicleNewDTO = entry.getValue();
+                if(!userVehicleNewDTO.isUnlocked()) continue;
+                CfgVehicleNewDTO cfgVehicleNewDTO = CfgManagerSingleton.getInstance().getCfgVehicleNewByIdFromCache(userVehicleNewDTO.getVehicleId());
+                String incomeFormula = cfgVehicleNewDTO.getIncomeFormula();
+                incomeFormula = incomeFormula.replace("`lv`","lv");
+                JEP jep = new JEP();
+                jep.addVariable("lv",userVehicleNewDTO.getLevel());
+                jep.parseExpression(incomeFormula);
+                totalVehicleNewBaseIncome += (long)jep.getValue();
+            }
+
+            float userIncomeMultiple = UserManagerSingleton.getInstance().getUserIncomeMultipleAttributeFromCache(userId);
+            // 最终收益 = 所有解锁载具（新）基础收益总和 * 广告收益倍数 * 用户收益倍数（装备 + buffTool + vip） * 完成次数
+            float finalIncome = totalVehicleNewBaseIncome * multipleByAd * userIncomeMultiple * finishJobCount;
+            income = (long)finalIncome;
+            log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},totalVehicleNewBaseIncome = {}," +
+                            "multipleByAd = {},userIncomeMultiple = {},latestLoginTime = {},latestLogoutTime = {},offlineTime = {}," +
+                            "finishJobCount = {},income = {}",
+                    userId,isOfflineIncome,totalVehicleNewBaseIncome,multipleByAd,userIncomeMultiple,
+                    userDTO.getLatestLoginTime().getTime(),userDTO.getLatestLogoutTime().getTime(),offlineTime,finishJobCount,income);
+        }catch (Exception e){
+            log.info("SettlementExecutor::vehicleNewIncome:userId = {},isOfflineIncome = {},message = {},载具（新）收益计算异常",userId,isOfflineIncome,e.getMessage());
+        }
+
+        return income;
     }
 }

@@ -1,8 +1,10 @@
 package logic.server.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.mapper.CfgEquipmentMapper;
+import logic.server.po.CfgBuffToolPO;
 import logic.server.po.CfgEquipmentPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +27,18 @@ public class CfgEquipmentRepositoryImpl implements CfgEquipmentRepository{
         List<CfgEquipmentDTO> cfgEquipmentDTOListDTOList = Convertor.convert(cfgEquipmentPOList, CfgEquipmentDTO.class);
         Map<Integer, CfgEquipmentDTO> cfgEquipmentDTOMap = cfgEquipmentDTOListDTOList.stream().collect(Collectors.toMap(CfgEquipmentDTO::getEquipmentId, CfgEquipmentDTO -> CfgEquipmentDTO));
         return cfgEquipmentDTOMap;
+    }
+
+    @Override
+    public int add(CfgEquipmentDTO dto) {
+        CfgEquipmentPO po = Convertor.convert(CfgEquipmentPO.class, dto);
+        int result = cfgEquipmentMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
+    }
+
+    @Override
+    public int delete(){
+        return cfgEquipmentMapper.delete(new QueryWrapper<CfgEquipmentPO>().lambda());
     }
 }

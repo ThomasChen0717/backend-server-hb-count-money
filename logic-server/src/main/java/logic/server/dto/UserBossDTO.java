@@ -12,4 +12,5 @@ public class UserBossDTO implements DTO{
     private long userId;
     private int bossId;
     private boolean isUnlocked;
+    private boolean isBeat;
 }

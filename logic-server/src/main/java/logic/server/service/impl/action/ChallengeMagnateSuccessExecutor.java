@@ -4,15 +4,19 @@ import common.pb.enums.ErrorCodeEnum;
 import common.pb.pb.ChallengeMagnateSuccessReqPb;
 import common.pb.pb.ChallengeMagnateSuccessResPb;
 import logic.server.dto.CfgMagnateDTO;
+import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
+import logic.server.dto.UserVehicleNewDTO;
 import logic.server.service.IPushPbService;
 import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -73,6 +77,8 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
             nextUserMagnateDTO.setUnlocked(true);
             challengeMagnateSuccessResPb.setUnlockedMagnateId(unlockCfgMagnateDTO.getMagnateId());
         }
+
+        challengeMagnateSuccessResPb.setBeatMagnateId(arg.getMagnateId());
 
         log.info("ChallengeMagnateSuccessExecutor::executor:userId = {},challengeMagnateSuccessResPb = {},end",userId,challengeMagnateSuccessResPb);
         return challengeMagnateSuccessResPb;

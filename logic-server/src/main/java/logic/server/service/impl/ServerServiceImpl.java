@@ -14,7 +14,7 @@ public class ServerServiceImpl implements IServerService {
     private ApplicationContext context;
 
     @Override
-    public void closeServer(){
+    public void closeServer() {
         // shutdown()方法会在等待所有正在进行的HTTP请求处理完毕之后关闭服务，因此可能需要等待一段时间
         // 如果需要立即关闭服务，可以通过调用close()方法来实现
         log.info("ServerServiceImpl::closeServer:服务器关闭");

@@ -18,32 +18,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class PushPbServiceImpl implements IPushPbService {
     @Override
-    public void moneySync(long userId){
+    public void moneySync(long userId) {
         MoneySyncPushPb moneySyncPushPb = new MoneySyncPushPb();
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         moneySyncPushPb.setMoney(userDTO.getMoney()).setMoneyHistory(userDTO.getMoneyHistory());
         BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd,UserCmdModule.moneySyncPush);
-        broadcastContext.broadcast(cmdInfo, moneySyncPushPb,userId);
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd, UserCmdModule.moneySyncPush);
+        broadcastContext.broadcast(cmdInfo, moneySyncPushPb, userId);
     }
 
     @Override
-    public void titleSync(long userId){
+    public void titleSync(long userId) {
         TitleSyncPushPb titleSyncPushPb = new TitleSyncPushPb();
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         titleSyncPushPb.setTitle(userDTO.getTitle());
         BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd,UserCmdModule.titleSyncPush);
-        broadcastContext.broadcast(cmdInfo, titleSyncPushPb,userId);
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd, UserCmdModule.titleSyncPush);
+        broadcastContext.broadcast(cmdInfo, titleSyncPushPb, userId);
     }
 
     @Override
-    public void vipSync(long userId){
+    public void vipSync(long userId) {
         VipSyncPushPb vipSyncPushPb = new VipSyncPushPb();
         UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
         vipSyncPushPb.setVipLevel(userVipDTO.getVipLevel()).setVipCurrConditionCount(userVipDTO.getVipCurrConditionCount());
         BroadcastContext broadcastContext = BrokerClientHelper.getBroadcastContext();
-        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd,UserCmdModule.vipSyncPush);
-        broadcastContext.broadcast(cmdInfo, vipSyncPushPb,userId);
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd, UserCmdModule.vipSyncPush);
+        broadcastContext.broadcast(cmdInfo, vipSyncPushPb, userId);
     }
 }
