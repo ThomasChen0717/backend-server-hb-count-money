@@ -5,20 +5,15 @@ import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
+import logic.server.dto.CfgLotteryTicketDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.CfgVehicleNewDTO;
 import logic.server.dto.CfgVipDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.ognl.IntHashMap;
-import org.redisson.Redisson;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +32,7 @@ public class CfgManagerSingleton {
     private Map<Integer, CfgMagnateDTO> cfgMagnateDTOMap;
     private Map<Integer, CfgBossDTO> cfgBossDTOMap;
     private Map<Integer, CfgVipDTO> cfgVipDTOMap;
+    private Map<Integer, CfgLotteryTicketDTO> cfgLotteryTicketDTOMap;
 
     /** 模版数据是否使用redisson再议
     @Autowired
@@ -62,8 +58,9 @@ public class CfgManagerSingleton {
         cfgEquipmentDTOMap = new HashMap<>();
         cfgBuffToolDTOMap = new HashMap<>();
         cfgMagnateDTOMap = new HashMap<>();
-        cfgBossDTOMap = new IntHashMap();
-        cfgVipDTOMap = new IntHashMap();
+        cfgBossDTOMap = new HashMap();
+        cfgVipDTOMap = new HashMap();
+        cfgLotteryTicketDTOMap = new HashMap<>();
     }
 
     public void setServerId(int serverIdFromNacos){
@@ -130,5 +127,10 @@ public class CfgManagerSingleton {
     /** t_cfg_vip **/
     public CfgVipDTO getCfgVipByVipLevelFromCache(int vipLevel){
         return cfgVipDTOMap.get(vipLevel);
+    }
+
+    /** t_cfg_lottery_ticket **/
+    public CfgLotteryTicketDTO getCfgLotteryTicketByFaceValueFromCache(int faceValue){
+        return cfgLotteryTicketDTOMap.get(faceValue);
     }
 }

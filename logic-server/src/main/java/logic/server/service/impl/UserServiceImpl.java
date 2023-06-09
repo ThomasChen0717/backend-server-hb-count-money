@@ -23,6 +23,8 @@ import logic.server.service.IUserService;
 import logic.server.service.impl.action.AddClickCountExecutor;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
+import logic.server.service.impl.action.LotteryTicketBonusGetExecutor;
+import logic.server.service.impl.action.LotteryTicketBuyExecutor;
 import logic.server.service.impl.action.ChallengeBossSuccessExecutor;
 import logic.server.service.impl.action.ChallengeMagnateSuccessExecutor;
 import logic.server.service.impl.action.ChangeVehicleExecutor;
@@ -104,6 +106,10 @@ public class UserServiceImpl implements IUserService {
     private AddClickCountExecutor addClickCountExecutor;
     @Autowired
     private VehicleNewLevelUpExecutor vehicleNewLevelUpExecutor;
+    @Autowired
+    private LotteryTicketBuyExecutor lotteryTicketBuyExecutor;
+    @Autowired
+    private LotteryTicketBonusGetExecutor lotteryTicketBonusGetExecutor;
 
     /** 注入执行器-end **/
 
@@ -387,6 +393,10 @@ public class UserServiceImpl implements IUserService {
             return addClickCountExecutor;
         } else if (executorName.compareTo(UserCmdModule.vehicleNewLevelUpExecutorName) == 0) {
             return vehicleNewLevelUpExecutor;
+        } else if (executorName.compareTo(UserCmdModule.lotteryTicketBuyExecutorName) == 0) {
+            return lotteryTicketBuyExecutor;
+        } else if (executorName.compareTo(UserCmdModule.lotteryTicketBonusGetExecutorName) == 0) {
+            return lotteryTicketBonusGetExecutor;
         }
 
         return null;

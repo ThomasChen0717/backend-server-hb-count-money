@@ -8,6 +8,10 @@ import common.pb.pb.AddClickCountReqPb;
 import common.pb.pb.AddClickCountResPb;
 import common.pb.pb.AttributeLevelUpReqPb;
 import common.pb.pb.AttributeLevelUpResPb;
+import common.pb.pb.LotteryTicketBonusGetReqPb;
+import common.pb.pb.LotteryTicketBonusGetResPb;
+import common.pb.pb.LotteryTicketBuyReqPb;
+import common.pb.pb.LotteryTicketBuyResPb;
 import common.pb.pb.ChallengeBossSuccessReqPb;
 import common.pb.pb.ChallengeBossSuccessResPb;
 import common.pb.pb.ChallengeMagnateSuccessReqPb;
@@ -132,5 +136,15 @@ public class UserAction {
     @ActionMethod(UserCmdModule.vehicleNewLevelUp)
     public VehicleNewLevelUpResPb vehicleNewLevelUp(VehicleNewLevelUpReqPb vehicleNewLevelUpReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (VehicleNewLevelUpResPb)userService.getExecutor(UserCmdModule.vehicleNewLevelUpExecutorName).executor(vehicleNewLevelUpReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.lotteryTicketBuy)
+    public LotteryTicketBuyResPb lotteryTicketBuy(LotteryTicketBuyReqPb lotteryTicketBuyReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (LotteryTicketBuyResPb)userService.getExecutor(UserCmdModule.lotteryTicketBuyExecutorName).executor(lotteryTicketBuyReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.lotteryTicketBonusGet)
+    public LotteryTicketBonusGetResPb lotteryTicketBonusGet(LotteryTicketBonusGetReqPb lotteryTicketBonusGetReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (LotteryTicketBonusGetResPb)userService.getExecutor(UserCmdModule.lotteryTicketBonusGetExecutorName).executor(lotteryTicketBonusGetReqPb,myFlowContext.getUserId());
     }
 }

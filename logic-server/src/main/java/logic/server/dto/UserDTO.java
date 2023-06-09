@@ -33,4 +33,5 @@ public class UserDTO implements DTO{
     private String firstClientVersion;
     private int selectStoneCount = 0;
     private int clickCount;
+    private int boughtLotteryTicketCount;
 }

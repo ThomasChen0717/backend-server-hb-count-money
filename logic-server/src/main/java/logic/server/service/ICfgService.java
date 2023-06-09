@@ -5,6 +5,7 @@ import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
+import logic.server.dto.CfgLotteryTicketDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.CfgVehicleNewDTO;
@@ -32,4 +33,5 @@ public interface ICfgService {
     Map<Integer, CfgBossDTO> getCfgBossMap();
 
     Map<Integer, CfgVipDTO> getCfgVipMap();
+    Map<Integer, CfgLotteryTicketDTO> getCfgLotteryTicketMap();
 }

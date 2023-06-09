@@ -13,85 +13,95 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:58】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:62】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SettlementReqPb
     方法返回值: common.pb.pb.SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:63】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:67】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AttributeLevelUpReqPb
     方法返回值: common.pb.pb.AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:68】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:72】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChangeVehicleReqPb
     方法返回值: common.pb.pb.ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:73】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:77】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UseEquipmentReqPb
     方法返回值: common.pb.pb.UseEquipmentResPb
  
-路由: 2 - 5  --- 【】 --- 【UserAction:78】【startOrEndBuffTool】
+路由: 2 - 5  --- 【】 --- 【UserAction:82】【startOrEndBuffTool】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.StartOrEndBuffToolReqPb
     方法返回值: common.pb.pb.StartOrEndBuffToolResPb
  
-路由: 2 - 6  --- 【】 --- 【UserAction:83】【getRedPacket】
+路由: 2 - 6  --- 【】 --- 【UserAction:87】【getRedPacket】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GetRedPacketReqPb
     方法返回值: common.pb.pb.GetRedPacketResPb
  
-路由: 2 - 7  --- 【】 --- 【UserAction:88】【challengeMagnateSuccess】
+路由: 2 - 7  --- 【】 --- 【UserAction:92】【challengeMagnateSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeMagnateSuccessReqPb
     方法返回值: common.pb.pb.ChallengeMagnateSuccessResPb
  
-路由: 2 - 8  --- 【】 --- 【UserAction:93】【challengeBossSuccess】
+路由: 2 - 8  --- 【】 --- 【UserAction:97】【challengeBossSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.ChallengeBossSuccessReqPb
     方法返回值: common.pb.pb.ChallengeBossSuccessResPb
  
-路由: 2 - 9  --- 【】 --- 【UserAction:98】【unlockVehicleOrEquipment】
+路由: 2 - 9  --- 【】 --- 【UserAction:102】【unlockVehicleOrEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.UnlockVehicleOrEquipmentReqPb
     方法返回值: common.pb.pb.UnlockVehicleOrEquipmentResPb
  
-路由: 2 - 10  --- 【】 --- 【UserAction:103】【logicHeartbeat】
+路由: 2 - 10  --- 【】 --- 【UserAction:107】【logicHeartbeat】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.LogicHeartbeatReqPb
     方法返回值: common.pb.pb.LogicHeartbeatResPb
  
-路由: 2 - 11  --- 【】 --- 【UserAction:108】【gmCommand】
+路由: 2 - 11  --- 【】 --- 【UserAction:112】【gmCommand】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.GmCommandReqPb
     方法返回值: common.pb.pb.GmCommandResPb
  
-路由: 2 - 12  --- 【】 --- 【UserAction:113】【watchedAd】
+路由: 2 - 12  --- 【】 --- 【UserAction:117】【watchedAd】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.WatchedAdReqPb
     方法返回值: common.pb.pb.WatchedAdResPb
  
-路由: 2 - 13  --- 【】 --- 【UserAction:118】【selectStone】
+路由: 2 - 13  --- 【】 --- 【UserAction:122】【selectStone】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SelectStoneReqPb
     方法返回值: common.pb.pb.SelectStoneResPb
  
-路由: 2 - 14  --- 【】 --- 【UserAction:123】【sellStone】
+路由: 2 - 14  --- 【】 --- 【UserAction:127】【sellStone】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.SellStoneReqPb
     方法返回值: common.pb.pb.SellStoneResPb
  
-路由: 2 - 15  --- 【】 --- 【UserAction:128】【addClick】
+路由: 2 - 15  --- 【】 --- 【UserAction:132】【addClick】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.AddClickCountReqPb
     方法返回值: common.pb.pb.AddClickCountResPb
  
-路由: 2 - 16  --- 【】 --- 【UserAction:133】【vehicleNewLevelUp】
+路由: 2 - 16  --- 【】 --- 【UserAction:137】【vehicleNewLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: common.pb.pb.VehicleNewLevelUpReqPb
     方法返回值: common.pb.pb.VehicleNewLevelUpResPb
+ 
+路由: 2 - 17  --- 【】 --- 【UserAction:142】【lotteryTicketBuy】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.LotteryTicketBuyReqPb
+    方法返回值: common.pb.pb.LotteryTicketBuyResPb
+ 
+路由: 2 - 18  --- 【】 --- 【UserAction:147】【lotteryTicketBonusGet】
+    触发异常: (方法有可能会触发异常)
+    方法参数: common.pb.pb.LotteryTicketBonusGetReqPb
+    方法返回值: common.pb.pb.LotteryTicketBonusGetResPb
  
 
 ==================== 其它广播推送 ====================

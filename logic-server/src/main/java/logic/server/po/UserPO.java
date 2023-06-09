@@ -103,4 +103,9 @@ public class UserPO extends BaseEntity{
      * 连续点击次数
      */
     private int clickCount;
+
+    /**
+     * 购买彩票次数
+     */
+    private int boughtLotteryTicketCount;
 }

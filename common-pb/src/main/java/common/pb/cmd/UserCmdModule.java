@@ -51,6 +51,12 @@ public interface UserCmdModule {
     /** 载具（新）升级 */
     int vehicleNewLevelUp = 16;
     String vehicleNewLevelUpExecutorName = "vehicleNewLevelUp";// 执行器名称
+    /** 购买彩票 */
+    int lotteryTicketBuy = 17;
+    String lotteryTicketBuyExecutorName = "lotteryTicketBuy";// 执行器名称
+    /** 领取彩金 */
+    int lotteryTicketBonusGet = 18;
+    String lotteryTicketBonusGetExecutorName = "lotteryTicketBonusGet";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

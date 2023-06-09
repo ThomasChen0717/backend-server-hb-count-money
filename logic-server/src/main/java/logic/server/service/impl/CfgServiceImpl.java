@@ -6,6 +6,7 @@ import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
+import logic.server.dto.CfgLotteryTicketDTO;
 import logic.server.dto.CfgMagnateDTO;
 import logic.server.dto.CfgVehicleDTO;
 import logic.server.dto.CfgVehicleNewDTO;
@@ -15,6 +16,7 @@ import logic.server.repository.CfgBossRepository;
 import logic.server.repository.CfgBuffToolRepository;
 import logic.server.repository.CfgEquipmentRepository;
 import logic.server.repository.CfgGlobalRepository;
+import logic.server.repository.CfgLotteryTicketRepository;
 import logic.server.repository.CfgMagnateRepository;
 import logic.server.repository.CfgVehicleNewRepository;
 import logic.server.repository.CfgVehicleRepository;
@@ -49,6 +51,8 @@ public class CfgServiceImpl implements ICfgService {
     private CfgBossRepository cfgBossRepository;
     @Autowired
     private CfgVipRepository cfgVipRepository;
+    @Autowired
+    private CfgLotteryTicketRepository cfgLotteryTicketRepository;
 
     /**
      * nacos
@@ -133,5 +137,13 @@ public class CfgServiceImpl implements ICfgService {
     @Override
     public Map<Integer, CfgVipDTO> getCfgVipMap() {
         return cfgVipRepository.getMap();
+    }
+
+    /**
+     * t_cfg_lottery_ticket
+     **/
+    @Override
+    public Map<Integer, CfgLotteryTicketDTO> getCfgLotteryTicketMap() {
+        return cfgLotteryTicketRepository.getMap();
     }
 }

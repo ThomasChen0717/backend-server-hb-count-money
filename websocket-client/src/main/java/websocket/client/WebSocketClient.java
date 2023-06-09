@@ -5,20 +5,14 @@ import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
-import common.pb.pb.ChallengeBossSuccessReqPb;
-import common.pb.pb.ChallengeBossSuccessResPb;
-import common.pb.pb.ChallengeMagnateSuccessReqPb;
-import common.pb.pb.ChallengeMagnateSuccessResPb;
+import common.pb.pb.LotteryTicketBonusGetReqPb;
+import common.pb.pb.LotteryTicketBonusGetResPb;
+import common.pb.pb.LotteryTicketBuyReqPb;
+import common.pb.pb.LotteryTicketBuyResPb;
 import common.pb.pb.LogicHeartbeatReqPb;
 import common.pb.pb.LogicHeartbeatResPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
-import common.pb.pb.SettlementReqPb;
-import common.pb.pb.SettlementResPb;
-import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
-import common.pb.pb.UnlockVehicleOrEquipmentResPb;
-import common.pb.pb.VehicleNewLevelUpReqPb;
-import common.pb.pb.VehicleNewLevelUpResPb;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -169,16 +163,14 @@ public class WebSocketClient {
 
         if(true)
         {
-            SettlementReqPb settlementReqPb = new SettlementReqPb();
-            settlementReqPb.setSettlementRole(3);
-            settlementReqPb.setSettlementType(2);
-            settlementReqPb.setMultiple(1);
+            LotteryTicketBonusGetReqPb lotteryTicketBonusGetReqPb = new LotteryTicketBonusGetReqPb();
+            lotteryTicketBonusGetReqPb.setBonus(10000);
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                     UserCmdModule.cmd,
-                    UserCmdModule.settlement,
-                    settlementReqPb
+                    UserCmdModule.lotteryTicketBonusGet,
+                    lotteryTicketBonusGetReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, SettlementResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, LotteryTicketBonusGetResPb.class,10000);
         }
 
         /**

@@ -24,8 +24,8 @@ public class CfgVipRepositoryImpl implements CfgVipRepository{
     public Map<Integer, CfgVipDTO> getMap(){
         List<CfgVipPO> cfgVipPOList = cfgVipMapper.selectList(new QueryWrapper<CfgVipPO>()
                 .lambda());
-        List<CfgVipDTO> cfgVipDTOListDTOList = Convertor.convert(cfgVipPOList, CfgVipDTO.class);
-        Map<Integer, CfgVipDTO> cfgVipDTOMap = cfgVipDTOListDTOList.stream().collect(Collectors.toMap(CfgVipDTO::getVipLevel, CfgVipDTO -> CfgVipDTO));
+        List<CfgVipDTO> cfgVipDTOList = Convertor.convert(cfgVipPOList, CfgVipDTO.class);
+        Map<Integer, CfgVipDTO> cfgVipDTOMap = cfgVipDTOList.stream().collect(Collectors.toMap(CfgVipDTO::getVipLevel, CfgVipDTO -> CfgVipDTO));
         return cfgVipDTOMap;
     }
 
