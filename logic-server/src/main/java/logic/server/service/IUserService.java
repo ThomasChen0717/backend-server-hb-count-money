@@ -30,6 +30,7 @@ public interface IUserService {
     UserDTO getUserByTokenFromDB(String token);
 
     int updateUserToDB(UserDTO dto);
+    void checkUserOnlineServerId(int onlineServerId);
 
     /**
      * t_user_attribute

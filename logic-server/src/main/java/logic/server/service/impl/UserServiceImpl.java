@@ -140,6 +140,11 @@ public class UserServiceImpl implements IUserService {
     public int updateUserToDB(UserDTO userDTO) {
         return userRepository.update(userDTO);
     }
+
+    @Override
+    public void checkUserOnlineServerId(int onlineServerId){
+        userRepository.checkUserOnlineServerId(onlineServerId);
+    }
     /** t_user end **/
 
     /**

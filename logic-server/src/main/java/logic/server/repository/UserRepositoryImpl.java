@@ -49,4 +49,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .lambda().eq(UserPO::getToken, token));
         return Convertor.convert(UserDTO.class, po);
     }
+
+    @Override
+    public void checkUserOnlineServerId(int onlineServerId){
+        userMapper.updateOnlineServerId(onlineServerId);
+    }
 }

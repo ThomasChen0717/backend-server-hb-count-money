@@ -3,6 +3,7 @@ package logic.server.init;
 import groovy.util.logging.Slf4j;
 import logic.server.service.ICfgService;
 import logic.server.service.IServerService;
+import logic.server.service.IUserService;
 import logic.server.singleton.CfgManagerSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 public class DataInit implements CommandLineRunner {
     @Autowired
     private ICfgService cfgService;
+    @Autowired
+    private IUserService userService;
     @Autowired
     private IServerService serverService;
 
@@ -36,5 +39,7 @@ public class DataInit implements CommandLineRunner {
         CfgManagerSingleton.getInstance().setCfgBossDTOMap(cfgService.getCfgBossMap());
         CfgManagerSingleton.getInstance().setCfgVipDTOMap(cfgService.getCfgVipMap());
         CfgManagerSingleton.getInstance().setCfgLotteryTicketDTOMap(cfgService.getCfgLotteryTicketMap());
+
+        userService.checkUserOnlineServerId(cfgService.getServerId());
     }
 }
