@@ -271,7 +271,12 @@ public class UserServiceImpl implements IUserService {
             if (userDTO != null) {
                 userDTO.setLatestLogoutTime(currTime);
                 userDTO.setOnlineServerId(0);
-                userRepository.update(userDTO);
+                try{
+                    userRepository.update(userDTO);
+                }catch (Exception e){
+                    userRepository.updateOnlineServerIdById(userId,0);
+                    log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},userDTO = {},message = {},t_user数据保存失败", userId,userDTO,e.getMessage());
+                }
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
             }
             /** save t_user_attribute **/

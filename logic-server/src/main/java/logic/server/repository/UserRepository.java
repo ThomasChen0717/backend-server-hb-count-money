@@ -15,4 +15,5 @@ public interface UserRepository {
     UserDTO getByUnionId(String unionId);
     UserDTO getByToken(String token);
     void checkUserOnlineServerId(int onlineServerId);
+    void updateOnlineServerIdById(long userId,int onlineServerId);
 }

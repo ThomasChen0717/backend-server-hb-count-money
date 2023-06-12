@@ -15,4 +15,7 @@ import org.apache.ibatis.annotations.Update;
 public interface UserMapper extends BaseMapper<UserPO> {
     @Update("update t_user set `online_server_id` = 0 where `online_server_id` = #{onlineServerId}")
     Integer updateOnlineServerId(@Param("onlineServerId") int onlineServerId);
+
+    @Update("update t_user set `online_server_id` = #{onlineServerId} where `id` = #{userId}")
+    Integer updateOnlineServerIdById(@Param("userId") long userId,@Param("onlineServerId") int onlineServerId);
 }
