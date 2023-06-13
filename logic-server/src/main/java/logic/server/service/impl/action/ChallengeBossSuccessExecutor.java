@@ -44,7 +44,7 @@ public class ChallengeBossSuccessExecutor implements BaseExecutor<ChallengeBossS
         userBossDTO.setBeat(true);
 
         CfgBossDTO cfgBossDTO = CfgManagerSingleton.getInstance().getCfgBossByIdFromCache(arg.getBossId());
-        long moneyIncome = arg.getMultiple() * cfgBossDTO.getRewardMoneyAmount();
+        long moneyIncome = ((long)arg.getMultiple()) * ((long)cfgBossDTO.getRewardMoneyAmount());
         long finalMoney = userDTO.getMoney() + moneyIncome;
         userDTO.setMoney(finalMoney);
 

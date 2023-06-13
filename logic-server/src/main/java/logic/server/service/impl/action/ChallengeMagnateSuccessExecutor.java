@@ -43,7 +43,7 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
         }
 
         CfgMagnateDTO cfgMagnateDTO = CfgManagerSingleton.getInstance().getCfgMagnateByIdFromCache(arg.getMagnateId());
-        long moneyIncome = arg.getMultiple() * cfgMagnateDTO.getRewardMoneyAmount();
+        long moneyIncome = ((long)arg.getMultiple()) * ((long)cfgMagnateDTO.getRewardMoneyAmount());
         long finalMoney = userDTO.getMoney() + moneyIncome;
         userDTO.setMoney(finalMoney);
 

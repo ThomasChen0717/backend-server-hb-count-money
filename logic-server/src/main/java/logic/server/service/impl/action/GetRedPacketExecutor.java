@@ -27,7 +27,7 @@ public class GetRedPacketExecutor implements BaseExecutor<GetRedPacketReqPb, Get
             return getRedPacketResPb;
         }
 
-        long moneyIncome = arg.getMoney() * arg.getMultiple();
+        long moneyIncome = arg.getMoney() * ((long)arg.getMultiple());
         long finalMoney = userDTO.getMoney() + moneyIncome;
         userDTO.setMoney(finalMoney);
 
