@@ -163,14 +163,16 @@ public class WebSocketClient {
 
         if(true)
         {
-            LotteryTicketBonusGetReqPb lotteryTicketBonusGetReqPb = new LotteryTicketBonusGetReqPb();
-            lotteryTicketBonusGetReqPb.setBonus(10000);
+            LotteryTicketBuyReqPb lotteryTicketBuyReqPb = new LotteryTicketBuyReqPb();
+            lotteryTicketBuyReqPb.setFaceValue(1000);
+            lotteryTicketBuyReqPb.setAmount(1);
+            lotteryTicketBuyReqPb.setBoughtByAd(true);
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
                     UserCmdModule.cmd,
-                    UserCmdModule.lotteryTicketBonusGet,
-                    lotteryTicketBonusGetReqPb
+                    UserCmdModule.lotteryTicketBuy,
+                    lotteryTicketBuyReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, LotteryTicketBonusGetResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, LotteryTicketBuyResPb.class,10000);
         }
 
         /**

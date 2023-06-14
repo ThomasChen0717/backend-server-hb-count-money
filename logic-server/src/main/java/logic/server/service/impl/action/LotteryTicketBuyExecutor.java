@@ -61,6 +61,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
 
         for(int i=0;i<amount;i++){
             LotteryTicketInfoPb lotteryTicketInfoPb = new LotteryTicketInfoPb();
+            JSONArray jsonArrayMyNumber = new JSONArray();
 
             // 面值
             lotteryTicketInfoPb.setFaceValue(cfgLotteryTicketDTO.getFaceValue());
@@ -113,7 +114,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                         long bonus = randomBaseBonus * cfgLotteryTicketDTO.getFaceValue();
                         jsonMyNumber.put("bonus",bonus);
                     }
-                    lotteryTicketInfoPb.getMyNumberList().add(jsonMyNumber.toJSONString());
+                    jsonArrayMyNumber.add(jsonMyNumber);
                 }else{
                     // 常规购买彩票
                     JEP jep = new JEP();
@@ -162,11 +163,12 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                         long bonus = randomBaseBonus * cfgLotteryTicketDTO.getFaceValue();
                         jsonMyNumber.put("bonus",bonus);
                     }
-                    lotteryTicketInfoPb.getMyNumberList().add(jsonMyNumber.toJSONString());
+                    jsonArrayMyNumber.add(jsonMyNumber);
                 }
             }
 
             userDTO.setBoughtLotteryTicketCount(userDTO.getBoughtLotteryTicketCount() + 1);
+            lotteryTicketInfoPb.setMyNumberList(jsonArrayMyNumber.toJSONString());
             lotteryTicketInfoPbList.add(lotteryTicketInfoPb);
         }
     }

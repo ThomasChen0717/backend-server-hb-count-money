@@ -29,6 +29,6 @@ public class LotteryTicketInfoPb {
     int faceValue;
     /** 中奖号码 **/
     String winningNumber;
-    /** 我的号码：{"number":"08","isWinning":false,"bonus":86000} **/
-    List<String> myNumberList = new ArrayList<>();
+    /** 我的号码：[{"number":"08","isWinning":false,"bonus":40000},{"number":"04","isWinning":false,"bonus":39000}] **/
+    String myNumberList = "";
 }
