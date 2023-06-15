@@ -83,6 +83,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                         Float startPercent = .0f;
                         Float endPercent = .0f;
                         float randomFirstTimeWinningBonusPercent = r.nextFloat() * 100;// 随机中奖金额概率
+                        randomFirstTimeWinningBonusPercent = Math.round(randomFirstTimeWinningBonusPercent * 10) / 10f;
                         for(int a=0;a<jsonArrayFirstTimeBonusFormula.size();a++){
                             // 中奖金额计算
                             JSONObject jsonFirstTimeBonusFormula = jsonArrayFirstTimeBonusFormula.getJSONObject(a);
@@ -131,6 +132,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                         Float startPercent = .0f;
                         Float endPercent = .0f;
                         float randomWinningBonusPercent = r.nextFloat() * 100;
+                        randomWinningBonusPercent = Math.round(randomWinningBonusPercent * 10) / 10f;
                         for(int b=0;b<jsonArrayWinningBonusFormula.size();b++){
                             JSONObject jsonWinningBonusFormula = jsonArrayWinningBonusFormula.getJSONObject(b);
                             Float percent = jsonWinningBonusFormula.getFloatValue("percent");
@@ -144,6 +146,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                                 Float winningBonusMin = Float.valueOf(range.substring(0,range.indexOf("-")));
                                 Float winningBonusMax = Float.valueOf(range.substring(range.indexOf("-")+1));
                                 float randomWinningBaseBonus = winningBonusMin + r.nextFloat() * winningBonusMax;
+                                randomWinningBaseBonus = Math.round(randomWinningBaseBonus * 10) / 10f;
                                 long bonus = (long)(randomWinningBaseBonus * cfgLotteryTicketDTO.getFaceValue());
                                 jsonMyNumber.put("bonus",bonus);
                                 break;
