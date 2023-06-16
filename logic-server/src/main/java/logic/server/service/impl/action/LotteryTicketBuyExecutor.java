@@ -43,10 +43,13 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
         // 创建彩票
         createLotteryTicket(lotteryTicketBuyResPb.getLotteryTicketInfoPbList(),arg.getAmount(),cfgLotteryTicketDTO, userDTO);
 
-        long finalMoney = userDTO.getMoney() - cfgLotteryTicketDTO.getFaceValue();
-        userDTO.setMoney(finalMoney);
-        /** 同步金钱数量（推送）**/
-        pushPbService.moneySync(userId);
+        if(!arg.isBoughtByAd){
+            long finalMoney = userDTO.getMoney() - cfgLotteryTicketDTO.getFaceValue();
+            if(finalMoney <= 0) finalMoney = 0;
+            userDTO.setMoney(finalMoney);
+            /** 同步金钱数量（推送）**/
+            pushPbService.moneySync(userId);
+        }
 
         log.info("LotteryTicketBuyExecutor::executor:userId = {},buyLotteryTicketResPb = {},end",userId, lotteryTicketBuyResPb);
         return lotteryTicketBuyResPb;
