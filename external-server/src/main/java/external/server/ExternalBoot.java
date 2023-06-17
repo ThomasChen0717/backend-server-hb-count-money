@@ -35,12 +35,12 @@ public class ExternalBoot {
         UserSessions.me().setUserHook(new ClientUserHook());
 
         // 心跳相关设置
-        IdleProcessSetting idleProcessSetting = new IdleProcessSetting()
-                .readerIdleTime(40L)
-                .writerIdleTime(40L)
-                .allIdleTime(40L)
+        //IdleProcessSetting idleProcessSetting = new IdleProcessSetting()
+                //.readerIdleTime(40L)
+                //.writerIdleTime(40L)
+                //.allIdleTime(40L)
                 // 设置 自定义心跳钩子事件回调
-                .idleHook(new ClientIdleHook());
+                //.idleHook(new ClientIdleHook());
 
         String brokerServerUrl = configTemplate.getBrokerServerUrl();
         int brokerServerPort = configTemplate.getBrokerServerPort();
