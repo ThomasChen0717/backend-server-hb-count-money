@@ -35,12 +35,12 @@ public class ExternalBoot {
         UserSessions.me().setUserHook(new ClientUserHook());
 
         // 心跳相关设置
-        //IdleProcessSetting idleProcessSetting = new IdleProcessSetting()
-                //.readerIdleTime(40L)
-                //.writerIdleTime(40L)
-                //.allIdleTime(40L)
-                // 设置 自定义心跳钩子事件回调
-                //.idleHook(new ClientIdleHook());
+        IdleProcessSetting idleProcessSetting = new IdleProcessSetting()
+                .readerIdleTime(40L)
+                .writerIdleTime(40L)
+                .allIdleTime(40L)
+                //设置 自定义心跳钩子事件回调
+                .idleHook(new ClientIdleHook());
 
         String brokerServerUrl = configTemplate.getBrokerServerUrl();
         int brokerServerPort = configTemplate.getBrokerServerPort();
@@ -52,7 +52,7 @@ public class ExternalBoot {
                 // Broker （游戏网关）的连接地址；如果不设置，默认也是这个配置
                 .brokerAddress(new BrokerAddress(brokerServerUrl, brokerServerPort))
                 // 开启心跳
-                //.enableIdle(idleProcessSetting)
+                .enableIdle(idleProcessSetting)
                 ;
 
         // 构建游戏对外服

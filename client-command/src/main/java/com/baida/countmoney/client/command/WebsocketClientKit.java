@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class WebsocketClientKit {
     public WebSocketClient runClient(ClientCommandKit clientCommandKit) throws Exception {
         // 连接游戏服务器的地址
-        String wsUrl = "ws://127.0.0.1:10100/websocket";//本机
-        //String wsUrl = "wss://hb-games-external-test.leyonb.com:443/websocket";//测试服
+        //String wsUrl = "ws://127.0.0.1:10100/websocket";//本机
+        String wsUrl = "wss://hb-games-external-test.leyonb.com:443/websocket";//测试服
         //String wsUrl = "wss://hb-games-external.shoyoo.com/";//正式服
         //String wsUrl = "wss://hb-games-external-direct.shoyoo.com:20443/";//正式服
 
