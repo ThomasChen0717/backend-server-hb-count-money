@@ -31,8 +31,8 @@ public class WebSocketClient {
     public static void main(String[] args) throws Exception {
         // 启动客户端测试
         List<String> tokenList = new ArrayList<>();
-        tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
-        int createRobotCount = 0;
+        //tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
+        int createRobotCount = 1000;
         for(int i=0;i<createRobotCount;i++){
             tokenList.add("");
         }
@@ -151,6 +151,7 @@ public class WebSocketClient {
         //}
 
         // 逻辑心跳请求
+        if(true)
         {
             LogicHeartbeatReqPb logicHeartbeatReqPb = new LogicHeartbeatReqPb();
             ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
@@ -158,10 +159,10 @@ public class WebSocketClient {
                     UserCmdModule.logicHeartbeat,
                     logicHeartbeatReqPb
             );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,10000);
+            clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,3000);
         }
 
-        if(true)
+        if(false)
         {
             LotteryTicketBuyReqPb lotteryTicketBuyReqPb = new LotteryTicketBuyReqPb();
             lotteryTicketBuyReqPb.setFaceValue(1000);
