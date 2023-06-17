@@ -34,7 +34,7 @@
 
     <!-- ioGame游戏引擎版本 -->
     <!-- <ioGame.version>17.1.37</ioGame.version> -->
-    <ioGame.version>17.1.44</ioGame.version>
+    <ioGame.version>17.1.43</ioGame.version>
 
     <!-- lombok 消除冗长的 Java 代码 https://www.oschina.net/p/lombok https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.24</lombok.version>
