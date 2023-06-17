@@ -279,9 +279,6 @@ public class UserServiceImpl implements IUserService {
                 }
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
             }
-            if(true){
-                return;
-            }
             /** save t_user_attribute **/
             UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
             if (userAttributeDTO != null) {

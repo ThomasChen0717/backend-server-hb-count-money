@@ -32,7 +32,7 @@ public class WebSocketClient {
         // 启动客户端测试
         List<String> tokenList = new ArrayList<>();
         //tokenList.add("3d9abe07-2c5c-46bb-8047-10d25f42e02b");
-        int createRobotCount = 1000;
+        int createRobotCount = 300;
         for(int i=0;i<createRobotCount;i++){
             tokenList.add("");
         }
@@ -52,7 +52,7 @@ public class WebSocketClient {
         // 元信息相关
         attachmentCommands();
 
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(200);
 
         // 请求构建
         initClientCommands(clientCommandKit);
