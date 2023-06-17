@@ -263,7 +263,7 @@ public class UserServiceImpl implements IUserService {
      **/
 
     @Override
-    public void saveDataFromCacheToDB(long userId) {
+    public void saveDataFromCacheToDB(long userId,boolean isRealSave) {
         try {
             Date currTime = new Date();
             /** save t_user **/
@@ -276,6 +276,9 @@ public class UserServiceImpl implements IUserService {
                 }catch (Exception e){
                     userRepository.updateOnlineServerIdById(userId,0);
                     log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},userDTO = {},message = {},t_user数据保存失败", userId,userDTO,e.getMessage());
+                }
+                if(!isRealSave){
+                    return;
                 }
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
             }
@@ -357,7 +360,7 @@ public class UserServiceImpl implements IUserService {
 
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据开始", userId);
             try {
-                saveDataFromCacheToDB(userId);
+                saveDataFromCacheToDB(userId,true);
             } catch (Exception e) {
                 log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},优雅关闭角色保存数据异常", userId);
                 continue;

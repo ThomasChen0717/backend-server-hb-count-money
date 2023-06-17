@@ -109,11 +109,11 @@ public class LoginServiceImpl implements ILoginService {
         }
 
         /** 检测角色此逻辑服内存中是否存在数据 **/
-        boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
-        if (isUserDataStillInCache) {
-            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.userDataStillInCache.getCode(), ErrorCodeEnum.userDataStillInCache.getMsg());
-            return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
-        }
+        //boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
+        //if (isUserDataStillInCache) {
+            //log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.userDataStillInCache.getCode(), ErrorCodeEnum.userDataStillInCache.getMsg());
+            //return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
+        //}
         /** 有多个逻辑服后应检测t_user.online_server_id是否等于0 **/
         if (true) {
             if (userDTO.getOnlineServerId() > 0) {
@@ -121,16 +121,6 @@ public class LoginServiceImpl implements ILoginService {
                 return new LoginResPb().setCode(ErrorCodeEnum.userStillOnline.getCode()).setMessage(ErrorCodeEnum.userStillOnline.getMsg());
             }
         }
-
-        /** 检测数据库中是否存在角色数据 **/
-        UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
-        Map<Integer, UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapByIdFromDB(userId);
-        Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
-        Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
-        Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
-        Map<Integer, UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
-        Map<Integer, UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
-        UserVipDTO userVipDTO = userService.getUserVipByIdFromDB(userId);
 
         // channel 中设置用户的真实 userId；
         boolean success = UserIdSettingKit.settingUserId(myFlowContext, userId);
@@ -151,11 +141,25 @@ public class LoginServiceImpl implements ILoginService {
             userService.updateUserToDB(userDTO);
         }
 
-        // 从数据库获取的角色数据存储到内存中
-        boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId, userDTO, userAttributeDTO, userVehicleDTOMap, userVehicleNewDTOMap, userEquipmentDTOMap, userBuffToolDTOMap, userMagnateDTOMap, userBossDTOMap, userVipDTO);
-        if (!isAddSuccess) {
-            log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.addUserDataToCacheFailed.getCode(), ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
-            return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+        // 内存中是否存在用户数据
+        UserDTO userDTOFromCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
+        if(userDTOFromCache == null){
+            // 从数据库获取的角色数据存储到内存中
+            UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
+            Map<Integer, UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapByIdFromDB(userId);
+            Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
+            Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
+            Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
+            Map<Integer, UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
+            Map<Integer, UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
+            UserVipDTO userVipDTO = userService.getUserVipByIdFromDB(userId);
+            boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId, userDTO, userAttributeDTO, userVehicleDTOMap, userVehicleNewDTOMap, userEquipmentDTOMap, userBuffToolDTOMap, userMagnateDTOMap, userBossDTOMap, userVipDTO);
+            if (!isAddSuccess) {
+                log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.addUserDataToCacheFailed.getCode(), ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+                return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
+            }
+        }else{
+            UserManagerSingleton.getInstance().addUserToCache(userId,userDTO);
         }
 
         // 老用户需要检测载具,装备,buffTool,富豪挑战模版数据，是否有新增
@@ -799,9 +803,9 @@ public class LoginServiceImpl implements ILoginService {
         long userId = myFlowContext.getUserId();
 
         // 经测试：此处执行保存用户数据，如短时间内用户下线较多，会造成新用户无法登录（对外服和网关服不工作，一直在等待所有用户保存完毕，可能框架问题）
-        // userService.saveDataFromCacheToDB(userId);
+        userService.saveDataFromCacheToDB(userId,false);
         // 修改为抛出用户下线事件方式
-        eventPublisher.publish(new UserLogoutEvent(this, userId));
+        //eventPublisher.publish(new UserLogoutEvent(this, userId));
 
         log.info("LoginServiceImpl::Logout:userId = {},用户登出", userId);
     }

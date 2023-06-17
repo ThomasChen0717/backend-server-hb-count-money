@@ -91,7 +91,7 @@ public interface IUserService {
     /**
      * 角色下线数据处理
      **/
-    void saveDataFromCacheToDB(long userId);// 保存指定角色数据
+    void saveDataFromCacheToDB(long userId,boolean isRealSave);// 保存指定角色数据
 
     void saveDataFromCacheToDB();// 保存所有角色数据
 

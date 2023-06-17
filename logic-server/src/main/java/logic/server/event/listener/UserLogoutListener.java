@@ -15,6 +15,6 @@ public class UserLogoutListener {
     @EventListener
     public void handleUserLogout(UserLogoutEvent event) {
         long userId = event.getUserId();
-        userService.saveDataFromCacheToDB(userId);
+        userService.saveDataFromCacheToDB(userId,false);
     }
 }
