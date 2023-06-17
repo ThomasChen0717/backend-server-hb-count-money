@@ -793,7 +793,7 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public void Logout(MyFlowContext myFlowContext) {
         long userId = myFlowContext.getUserId();
-        //userService.saveDataFromCacheToDB(userId);
+        userService.saveDataFromCacheToDB(userId);
         log.info("LoginServiceImpl::Logout:userId = {},用户登出", userId);
     }
 }

@@ -282,14 +282,14 @@ public class UserServiceImpl implements IUserService {
             /** save t_user_attribute **/
             UserAttributeDTO userAttributeDTO = UserManagerSingleton.getInstance().getUserAttributeFromCache(userId);
             if (userAttributeDTO != null) {
-                userAttributeRepository.update(userAttributeDTO);
+                //userAttributeRepository.update(userAttributeDTO);
                 UserManagerSingleton.getInstance().removeUserAttributeInCache(userId);
             }
             /** save t_user_vehicle **/
             Map<Integer, UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
             if (userVehicleDTOMap != null) {
                 for (Map.Entry<Integer, UserVehicleDTO> entryVehicle : userVehicleDTOMap.entrySet()) {
-                    userVehicleRepository.update(entryVehicle.getValue());
+                    //userVehicleRepository.update(entryVehicle.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserVehicleMapInCache(userId);
             }
@@ -297,7 +297,7 @@ public class UserServiceImpl implements IUserService {
             Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
             if (userVehicleNewDTOMap != null) {
                 for (Map.Entry<Integer, UserVehicleNewDTO> entryVehicleNew : userVehicleNewDTOMap.entrySet()) {
-                    userVehicleNewRepository.update(entryVehicleNew.getValue());
+                    //userVehicleNewRepository.update(entryVehicleNew.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserVehicleNewMapInCache(userId);
             }
@@ -305,7 +305,7 @@ public class UserServiceImpl implements IUserService {
             Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = UserManagerSingleton.getInstance().getUserEquipmentMapByIdFromCache(userId);
             if (userEquipmentDTOMap != null) {
                 for (Map.Entry<Integer, UserEquipmentDTO> entryEquipment : userEquipmentDTOMap.entrySet()) {
-                    userEquipmentRepository.update(entryEquipment.getValue());
+                    //userEquipmentRepository.update(entryEquipment.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserEquipmentMapInCache(userId);
             }
@@ -313,7 +313,7 @@ public class UserServiceImpl implements IUserService {
             Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = UserManagerSingleton.getInstance().getUserBuffToolMapByIdFromCache(userId);
             if (userBuffToolDTOMap != null) {
                 for (Map.Entry<Integer, UserBuffToolDTO> entryBuffTool : userBuffToolDTOMap.entrySet()) {
-                    userBuffToolRepository.update(entryBuffTool.getValue());
+                    //userBuffToolRepository.update(entryBuffTool.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserBuffToolMapInCache(userId);
             }
@@ -321,7 +321,7 @@ public class UserServiceImpl implements IUserService {
             Map<Integer, UserMagnateDTO> userMagnateDTOMap = UserManagerSingleton.getInstance().getUserMagnateMapByIdFromCache(userId);
             if (userMagnateDTOMap != null) {
                 for (Map.Entry<Integer, UserMagnateDTO> entryMagnate : userMagnateDTOMap.entrySet()) {
-                    userMagnateRepository.update(entryMagnate.getValue());
+                    //userMagnateRepository.update(entryMagnate.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserMagnateMapInCache(userId);
             }
@@ -329,14 +329,14 @@ public class UserServiceImpl implements IUserService {
             Map<Integer, UserBossDTO> userBossDTOMap = UserManagerSingleton.getInstance().getUserBossMapByIdFromCache(userId);
             if (userBossDTOMap != null) {
                 for (Map.Entry<Integer, UserBossDTO> entryBoss : userBossDTOMap.entrySet()) {
-                    userBossRepository.update(entryBoss.getValue());
+                    //userBossRepository.update(entryBoss.getValue());
                 }
                 UserManagerSingleton.getInstance().removeUserBossMapInCache(userId);
             }
             /** save t_user_vip **/
             UserVipDTO userVipDTO = UserManagerSingleton.getInstance().getUserVipFromCache(userId);
             if (userVipDTO != null) {
-                userVipRepository.update(userVipDTO);
+                //userVipRepository.update(userVipDTO);
                 UserManagerSingleton.getInstance().removeUserVipInCache(userId);
             }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功", userId);
