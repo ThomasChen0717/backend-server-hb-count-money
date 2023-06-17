@@ -52,7 +52,7 @@ public class ExternalBoot {
                 // Broker （游戏网关）的连接地址；如果不设置，默认也是这个配置
                 .brokerAddress(new BrokerAddress(brokerServerUrl, brokerServerPort))
                 // 开启心跳
-                .enableIdle(idleProcessSetting)
+                //.enableIdle(idleProcessSetting)
                 ;
 
         // 构建游戏对外服
