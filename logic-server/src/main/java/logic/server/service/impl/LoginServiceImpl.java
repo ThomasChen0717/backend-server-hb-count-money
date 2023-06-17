@@ -39,6 +39,8 @@ import logic.server.dto.UserVehicleDTO;
 import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
+import logic.server.event.name.UserLogoutEvent;
+import logic.server.event.publisher.EventPublisher;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
 import logic.server.service.ILoginService;
 import logic.server.service.IUserService;
@@ -70,6 +72,8 @@ public class LoginServiceImpl implements ILoginService {
     private NacosConfiguration nacosConfiguration;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private EventPublisher eventPublisher;
     @Autowired
     private SettlementExecutor settlementExecutor;
 
@@ -793,7 +797,12 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public void Logout(MyFlowContext myFlowContext) {
         long userId = myFlowContext.getUserId();
-        userService.saveDataFromCacheToDB(userId);
+
+        // 经测试：此处执行保存用户数据，如短时间内用户下线较多，会造成新用户无法登录（对外服和网关服不工作，一直在等待所有用户保存完毕，可能框架问题）
+        // userService.saveDataFromCacheToDB(userId);
+        // 修改为抛出用户下线事件方式
+        eventPublisher.publish(new UserLogoutEvent(this, userId));
+
         log.info("LoginServiceImpl::Logout:userId = {},用户登出", userId);
     }
 }
