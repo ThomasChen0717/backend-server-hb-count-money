@@ -806,9 +806,9 @@ public class LoginServiceImpl implements ILoginService {
 
 
         // 经测试：此处执行保存用户数据，如短时间内用户下线较多，会造成新用户无法登录（对外服和网关服不工作，一直在等待所有用户保存完毕，可能框架问题）
-        userService.saveDataFromCacheToDB(userId,true);
+        //userService.saveDataFromCacheToDB(userId,true);
         // 修改为抛出用户下线事件方式
-        //eventPublisher.publish(new UserLogoutEvent(this, userId));
+        eventPublisher.publish(new UserLogoutEvent(this, userId));
 
         Date currTime1 = new Date();
         log.info("LoginServiceImpl::Logout:userId = {},time = {},costTime = {}ms,用户登出", userId,currTime1,(currTime1.getTime() - currTime.getTime()));
