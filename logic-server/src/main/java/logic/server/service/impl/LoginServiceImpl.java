@@ -163,7 +163,7 @@ public class LoginServiceImpl implements ILoginService{
 
         // 老用户需要检测载具,装备,buffTool,富豪挑战模版数据，是否有新增
         if (!userDTO.isNewUser()) {
-            checkCfgVehicleOnOldUserLogin(userDTO.getId());
+            //checkCfgVehicleOnOldUserLogin(userDTO.getId());
             checkCfgEquipmentOnOldUserLogin(userDTO.getId());
             checkCfgBuffToolOnOldUserLogin(userDTO.getId());
             checkCfgMagnateOnOldUserLogin(userDTO.getId());
