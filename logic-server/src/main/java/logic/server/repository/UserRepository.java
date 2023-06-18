@@ -16,4 +16,5 @@ public interface UserRepository {
     UserDTO getByToken(String token);
     void checkUserOnlineServerId(int onlineServerId);
     void updateOnlineServerIdById(long userId,int onlineServerId);
+    void updateIsOnlineById(long userId,boolean isOnline);
 }

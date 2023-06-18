@@ -56,6 +56,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -106,16 +107,15 @@ public class LoginServiceImpl implements ILoginService{
             ExternalCommunicationKit.forcedOffline(userId);
         }
 
-        /** 检测角色此逻辑服内存中是否存在数据 **/
-        //boolean isUserDataStillInCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId) == null ? false : true;
-        //if (isUserDataStillInCache) {
-            //log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.userDataStillInCache.getCode(), ErrorCodeEnum.userDataStillInCache.getMsg());
-            //return new LoginResPb().setCode(ErrorCodeEnum.userDataStillInCache.getCode()).setMessage(ErrorCodeEnum.userDataStillInCache.getMsg());
-        //}
-        /** 有多个逻辑服后应检测t_user.online_server_id是否等于0 **/
+        /** 有多个逻辑服后应检测 **/
         if (true) {
-            if (userDTO.getOnlineServerId() > 0) {
-                log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},onlineServerId = {},end", userId, ErrorCodeEnum.userStillOnline.getCode(), ErrorCodeEnum.userStillOnline.getMsg(), userDTO.getOnlineServerId());
+            // 数据库中用户OnlineServerId不等于0（说明当前用户内存数据在某个逻辑服中），并且用户内存数据所在逻辑服不是本逻辑服，通知用户内存数据所在逻辑服保存
+            if (userDTO.getOnlineServerId() > 0 && userDTO.getOnlineServerId() != CfgManagerSingleton.getInstance().getServerId()) {
+                // TODO:通知用户内存数据所在逻辑服保存
+
+                log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},onlineServerId = {},currServerId = {},end",
+                        userId, ErrorCodeEnum.userStillOnline.getCode(), ErrorCodeEnum.userStillOnline.getMsg(),
+                        userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId());
                 return new LoginResPb().setCode(ErrorCodeEnum.userStillOnline.getCode()).setMessage(ErrorCodeEnum.userStillOnline.getMsg());
             }
         }
@@ -136,15 +136,16 @@ public class LoginServiceImpl implements ILoginService{
         } else {
             // 绑定成功，设置并且保存t_user.online_server_id,表示角色在线
             userDTO.setOnlineServerId(CfgManagerSingleton.getInstance().getServerId());
+            userDTO.setOnline(true);
             userService.updateUserToDB(userDTO);
         }
 
-        // 内存中是否存在用户数据
+        /** 检测角色此逻辑服内存中是否存在数据 **/
         UserDTO userDTOFromCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         if(userDTOFromCache == null){
             // 从数据库获取的角色数据存储到内存中
             UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
-            Map<Integer, UserVehicleDTO> userVehicleDTOMap = userService.getUserVehicleMapByIdFromDB(userId);
+            Map<Integer, UserVehicleDTO> userVehicleDTOMap = new HashMap<>();// 已废弃 userService.getUserVehicleMapByIdFromDB(userId);
             Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
             Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
             Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
@@ -206,7 +207,7 @@ public class LoginServiceImpl implements ILoginService{
                     // 刷新token（非必要）
                     userDTO.setToken(newToken).setLatestLoginTime(currTime);
                     userDTO.setClientVersion(loginReqPb.clientVersion);
-                    userService.updateUserToDB(userDTO);
+                    //userService.updateUserToDB(userDTO);
                 }
             }
         } else if (loginReqPb.getToken() != null) {
@@ -214,7 +215,7 @@ public class LoginServiceImpl implements ILoginService{
             userDTO = userService.getUserByTokenFromDB(loginReqPb.getToken());
             userDTO.setClientVersion(loginReqPb.clientVersion);
             userDTO.setLatestLoginTime(currTime);
-            userService.updateUserToDB(userDTO);
+            //userService.updateUserToDB(userDTO);
         }
 
         userDTO.setNewUser(isNewUser);
@@ -803,7 +804,10 @@ public class LoginServiceImpl implements ILoginService{
         log.info("LoginServiceImpl::Logout:userId = {},time = {}",userId,currTime);
 
         // 异步保存用户数据
-        userService.asyncSaveDataOnLogoutEvent(userId);
+        // userService.asyncSaveDataOnLogoutEvent(userId);
+
+        // 保存t_user表数据（其他数据保留在内存中）
+        userService.saveDataFromCacheToDB(userId,false);
 
         Date currTime1 = new Date();
         log.info("LoginServiceImpl::Logout:userId = {},time = {},costTime = {}ms,用户登出", userId,currTime1,(currTime1.getTime() - currTime.getTime()));

@@ -1,5 +1,6 @@
 package logic.server.service.impl;
 
+import com.baida.countmoney.client.command.ClientCommand;
 import common.pb.cmd.UserCmdModule;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
@@ -39,8 +40,11 @@ import logic.server.service.impl.action.UseEquipmentExecutor;
 import logic.server.service.impl.action.StartOrEndBuffToolExecutor;
 import logic.server.service.impl.action.VehicleNewLevelUpExecutor;
 import logic.server.service.impl.action.WatchedAdExecutor;
+import logic.server.singleton.CfgManagerSingleton;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -51,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -74,6 +79,8 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     private UserBossRepository userBossRepository;
     @Autowired
     private UserVipRepository userVipRepository;
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 注入执行器-start
@@ -284,14 +291,21 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
             UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
             if (userDTO != null) {
                 userDTO.setLatestLogoutTime(currTime);
-                userDTO.setOnlineServerId(0);
+                if(isRealSave){
+                    userDTO.setOnlineServerId(0);
+                }
+                userDTO.setOnline(false);
                 try{
                     userRepository.update(userDTO);
                 }catch (Exception e){
-                    userRepository.updateOnlineServerIdById(userId,0);
+                    if(isRealSave){
+                        userRepository.updateOnlineServerIdById(userId,0);
+                    }
+                    userRepository.updateIsOnlineById(userId,false);
                     log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},userDTO = {},message = {},t_user数据保存失败", userId,userDTO,e.getMessage());
                 }
                 if(!isRealSave){
+                    // 不是真正保存，保留用户数据在内存中
                     return;
                 }
                 UserManagerSingleton.getInstance().removeUserInCache(userId);
@@ -302,14 +316,14 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
                 userAttributeRepository.update(userAttributeDTO);
                 UserManagerSingleton.getInstance().removeUserAttributeInCache(userId);
             }
-            /** save t_user_vehicle **/
-            Map<Integer, UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
-            if (userVehicleDTOMap != null) {
-                for (Map.Entry<Integer, UserVehicleDTO> entryVehicle : userVehicleDTOMap.entrySet()) {
-                    userVehicleRepository.update(entryVehicle.getValue());
-                }
-                UserManagerSingleton.getInstance().removeUserVehicleMapInCache(userId);
-            }
+            /** save t_user_vehicle：已废弃 **/
+            //Map<Integer, UserVehicleDTO> userVehicleDTOMap = UserManagerSingleton.getInstance().getUserVehicleMapByIdFromCache(userId);
+            //if (userVehicleDTOMap != null) {
+                //for (Map.Entry<Integer, UserVehicleDTO> entryVehicle : userVehicleDTOMap.entrySet()) {
+                    //userVehicleRepository.update(entryVehicle.getValue());
+                //}
+                //UserManagerSingleton.getInstance().removeUserVehicleMapInCache(userId);
+            //}
             /** save t_user_vehicle_new **/
             Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = UserManagerSingleton.getInstance().getUserVehicleNewMapByIdFromCache(userId);
             if (userVehicleNewDTOMap != null) {
@@ -360,6 +374,48 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
         } catch (Exception e) {
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败", userId, e.getMessage());
         }
+    }
+
+    @Override
+    public void checkSaveDataFromCacheToDB(){
+        Date startTime = new Date();
+        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:startTime = {},定时检测保存角色数据开始",startTime);
+
+        String lockKey = "checkSaveDataFromCacheToDB-" + CfgManagerSingleton.getInstance().getServerId();
+        RLock lock = redissonClient.getLock(lockKey);
+        try{
+            // 尝试获取锁，等待5秒，如果获取不到锁则放弃
+            boolean locked = lock.tryLock(5, TimeUnit.SECONDS);
+            if (locked) {
+                Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
+                for(Map.Entry<Long, UserDTO> entry : userDTOMap.entrySet()){
+                    UserDTO userDTO = entry.getValue();
+                    Date currTime = new Date();
+                    long timeDiff = (currTime.getTime() - userDTO.getLatestLogoutTime().getTime())/1000L;
+                    if(!userDTO.isOnline() && timeDiff > 60){
+                        try{
+                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据开始", userDTO.getId());
+                            // 当前不在线，并且离线已超1分钟，保存用户数据
+                            saveDataFromCacheToDB(userDTO.getId(),true);
+                        }catch (Exception e){
+                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据异常", userDTO.getId());
+                            continue;
+                        }
+                        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据结束", userDTO.getId());
+                    }
+                }
+            } else {
+                log.info("UserServiceImpl::checkSaveDataFromCacheToDB:获取分布式锁失败");
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:释放分布式锁");
+        }
+
+        Date endTime = new Date();
+        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:endTime = {},costTime = {}s,定时检测保存角色数据结束",endTime,(endTime.getTime()-startTime.getTime())/1000L);
     }
 
     @Override

@@ -55,9 +55,14 @@ public class UserPO extends BaseEntity{
     private String openid;
 
     /**
-     * 当前所在逻辑服id:0 表示当前不在线
+     * 用户内存数据所在逻辑服id：0 表示用户当前无内存数据
      */
     private int onlineServerId;
+
+    /**
+     * 当前是否在线：0 不在线 1 在线
+     */
+    private boolean isOnline;
 
     /**
      * 金钱数量

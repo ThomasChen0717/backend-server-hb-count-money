@@ -58,4 +58,8 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateOnlineServerIdById(long userId,int onlineServerId){
         userMapper.updateOnlineServerIdById(userId,onlineServerId);
     }
+    @Override
+    public void updateIsOnlineById(long userId,boolean isOnline){
+        userMapper.updateIsOnlineById(userId,isOnline);
+    }
 }

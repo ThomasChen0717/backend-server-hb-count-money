@@ -18,4 +18,7 @@ public interface UserMapper extends BaseMapper<UserPO> {
 
     @Update("update t_user set `online_server_id` = #{onlineServerId} where `id` = #{userId}")
     Integer updateOnlineServerIdById(@Param("userId") long userId,@Param("onlineServerId") int onlineServerId);
+
+    @Update("update t_user set `is_online` = #{isOnline} where `id` = #{userId}")
+    Integer updateIsOnlineById(@Param("userId") long userId,@Param("isOnline") boolean isOnline);
 }
