@@ -800,13 +800,17 @@ public class LoginServiceImpl implements ILoginService {
 
     @Override
     public void Logout(MyFlowContext myFlowContext) {
+        Date currTime = new Date();
         long userId = myFlowContext.getUserId();
+        log.info("LoginServiceImpl::Logout:userId = {},time = {}",userId,currTime);
+
 
         // 经测试：此处执行保存用户数据，如短时间内用户下线较多，会造成新用户无法登录（对外服和网关服不工作，一直在等待所有用户保存完毕，可能框架问题）
         userService.saveDataFromCacheToDB(userId,false);
         // 修改为抛出用户下线事件方式
         //eventPublisher.publish(new UserLogoutEvent(this, userId));
 
-        log.info("LoginServiceImpl::Logout:userId = {},用户登出", userId);
+        Date currTime1 = new Date();
+        log.info("LoginServiceImpl::Logout:userId = {},time = {},costTime = {},用户登出", userId,currTime1,(currTime1.getTime() - currTime.getTime())*1000L);
     }
 }
