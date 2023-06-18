@@ -9,7 +9,6 @@ import com.iohao.game.bolt.broker.client.kit.ExternalCommunicationKit;
 import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
 import common.pb.enums.ErrorCodeEnum;
-import common.pb.enums.LoginPlatformEnum;
 import common.pb.pb.BossInfoPb;
 import common.pb.pb.BuffToolInfoPb;
 import common.pb.pb.EffectAttributeInfoPb;
@@ -39,8 +38,6 @@ import logic.server.dto.UserVehicleDTO;
 import logic.server.dto.UserVehicleNewDTO;
 import logic.server.dto.UserVipDTO;
 import logic.server.enums.AttributeEnum;
-import logic.server.event.name.UserLogoutEvent;
-import logic.server.event.publisher.EventPublisher;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
 import logic.server.service.ILoginService;
 import logic.server.service.IUserService;
@@ -50,6 +47,9 @@ import logic.server.singleton.UserManagerSingleton;
 import logic.server.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -67,13 +67,11 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class LoginServiceImpl implements ILoginService {
+public class LoginServiceImpl implements ILoginService{
     @Autowired
     private NacosConfiguration nacosConfiguration;
     @Autowired
     private IUserService userService;
-    @Autowired
-    private EventPublisher eventPublisher;
     @Autowired
     private SettlementExecutor settlementExecutor;
 
@@ -804,11 +802,8 @@ public class LoginServiceImpl implements ILoginService {
         long userId = myFlowContext.getUserId();
         log.info("LoginServiceImpl::Logout:userId = {},time = {}",userId,currTime);
 
-
-        // 经测试：此处执行保存用户数据，如短时间内用户下线较多，会造成新用户无法登录（对外服和网关服不工作，一直在等待所有用户保存完毕，可能框架问题）
-        //userService.saveDataFromCacheToDB(userId,true);
-        // 修改为抛出用户下线事件方式
-        eventPublisher.publish(new UserLogoutEvent(this, userId));
+        // 异步保存用户数据
+        userService.asyncSaveDataOnLogoutEvent(userId);
 
         Date currTime1 = new Date();
         log.info("LoginServiceImpl::Logout:userId = {},time = {},costTime = {}ms,用户登出", userId,currTime1,(currTime1.getTime() - currTime.getTime()));

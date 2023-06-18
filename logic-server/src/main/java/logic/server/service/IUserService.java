@@ -88,6 +88,8 @@ public interface IUserService {
 
     UserVipDTO getUserVipByIdFromDB(long userId);
 
+    // 异步保存用户数据
+    void asyncSaveDataOnLogoutEvent(long userId);
     /**
      * 角色下线数据处理
      **/

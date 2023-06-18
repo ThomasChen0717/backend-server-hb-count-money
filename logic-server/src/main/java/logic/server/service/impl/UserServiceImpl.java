@@ -42,6 +42,9 @@ import logic.server.service.impl.action.WatchedAdExecutor;
 import logic.server.singleton.UserManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,7 +54,8 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements IUserService,ApplicationEventPublisherAware {
+    private ApplicationEventPublisher publisher;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -112,6 +116,11 @@ public class UserServiceImpl implements IUserService {
     private LotteryTicketBonusGetExecutor lotteryTicketBonusGetExecutor;
 
     /** 注入执行器-end **/
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
 
     /**
      * t_user start
@@ -261,6 +270,11 @@ public class UserServiceImpl implements IUserService {
     /**
      * t_user_vip end
      **/
+
+    @Async("asyncExecutor")
+    public void asyncSaveDataOnLogoutEvent(long userId) {
+        saveDataFromCacheToDB(userId,true);
+    }
 
     @Override
     public void saveDataFromCacheToDB(long userId,boolean isRealSave) {
