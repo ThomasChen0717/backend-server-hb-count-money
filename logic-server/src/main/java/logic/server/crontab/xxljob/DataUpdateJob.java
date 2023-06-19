@@ -18,7 +18,7 @@ public class DataUpdateJob {
         log.info("DataUpdateJob::saveUserDataJobHandler:param = {},定时任务开始",param);
 
         try {
-            userService.checkSaveDataFromCacheToDB();
+            userService.checkSaveDataFromCacheToDB(0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

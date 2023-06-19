@@ -91,7 +91,7 @@ public interface IUserService {
 
     void asyncSaveDataOnLogoutEvent(long userId);// 异步保存用户数据
     void saveDataFromCacheToDB(long userId,boolean isRealSave);// 保存指定角色数据
-    void checkSaveDataFromCacheToDB();// 定时检测保存符合条件角色的数据
+    void checkSaveDataFromCacheToDB(int index);// 定时检测保存符合条件角色的数据
     void saveDataFromCacheToDB();// 保存所有角色数据
 
     /**

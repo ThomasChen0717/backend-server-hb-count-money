@@ -377,45 +377,50 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     }
 
     @Override
-    public void checkSaveDataFromCacheToDB(){
+    public void checkSaveDataFromCacheToDB(int index){
         Date startTime = new Date();
-        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:startTime = {},定时检测保存角色数据开始",startTime);
+        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},startTime = {},定时检测保存角色数据开始",index,startTime);
 
         String lockKey = "checkSaveDataFromCacheToDB-" + CfgManagerSingleton.getInstance().getServerId();
         RLock lock = redissonClient.getLock(lockKey);
+        int saveSuccessCount = 0;
         try{
             // 尝试获取锁，等待5秒，如果获取不到锁则放弃
             boolean locked = lock.tryLock(5, TimeUnit.SECONDS);
             if (locked) {
                 Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
-                for(Map.Entry<Long, UserDTO> entry : userDTOMap.entrySet()){
-                    UserDTO userDTO = entry.getValue();
-                    Date currTime = new Date();
-                    long timeDiff = (currTime.getTime() - userDTO.getLatestLogoutTime().getTime())/1000L;
-                    if(!userDTO.isOnline() && timeDiff > (5 * 60) ){
-                        try{
-                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据开始", userDTO.getId());
+                List<Long> userIdList = new ArrayList<>(userDTOMap.keySet());
+                log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},定时检测保存角色数量 = {}", index,userIdList.size());
+
+                for(Long userId : userIdList){
+                    try{
+                        UserDTO userDTO = userDTOMap.get(userId);
+                        Date currTime = new Date();
+                        long timeDiff = (currTime.getTime() - userDTO.getLatestLogoutTime().getTime())/1000L;
+                        if(!userDTO.isOnline() && timeDiff > (1 * 60) ){
+                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},userId = {},定时检测保存角色数据开始", index,userId);
                             // 当前不在线，并且离线已超5分钟，保存用户数据
                             saveDataFromCacheToDB(userDTO.getId(),true);
-                        }catch (Exception e){
-                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据异常", userDTO.getId());
-                            continue;
+                            saveSuccessCount++;
+                            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},userId = {},定时检测保存角色数据结束",index,userId);
                         }
-                        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据结束", userDTO.getId());
+                    }catch (Exception e){
+                        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},userId = {},定时检测保存角色数据异常",index, userId);
                     }
                 }
             } else {
-                log.info("UserServiceImpl::checkSaveDataFromCacheToDB:获取分布式锁失败");
+                log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},获取分布式锁失败",index);
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
             lock.unlock();
-            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:释放分布式锁");
+            log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},释放分布式锁",index);
         }
 
         Date endTime = new Date();
-        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:endTime = {},costTime = {}s,定时检测保存角色数据结束",endTime,(endTime.getTime()-startTime.getTime())/1000L);
+        log.info("UserServiceImpl::checkSaveDataFromCacheToDB:index = {},endTime = {},costTime = {}s,定时检测保存角色数据数量 = {},定时检测保存角色数据结束",
+                index,endTime,(endTime.getTime()-startTime.getTime())/1000L,saveSuccessCount);
     }
 
     @Override
