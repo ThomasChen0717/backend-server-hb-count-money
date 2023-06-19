@@ -79,10 +79,14 @@ public class LoginServiceImpl implements ILoginService{
 
     @Override
     public JSONObject preLogin(JSONObject jsonPreLogin){
+        log.info("LoginServiceImpl::jsonPreLogin = {}",jsonPreLogin);
+
         LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
         UserDTO userDTO = dyLogin(loginReqPb);
         JSONObject jsonResult = new JSONObject();
         jsonResult.put("token",userDTO.getToken());
+
+        log.info("LoginServiceImpl::jsonResult = {}",jsonResult);
         return jsonResult;
     }
 
