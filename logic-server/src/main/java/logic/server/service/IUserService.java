@@ -85,15 +85,14 @@ public interface IUserService {
      * t_user_vip
      **/
     int addUserVipToDB(UserVipDTO userVipDTO);
-
     UserVipDTO getUserVipByIdFromDB(long userId);
-
 
     void asyncSaveDataOnLogoutEvent(long userId);// 异步保存用户数据
     void saveDataFromCacheToDB(long userId,boolean isRealSave);// 保存指定角色数据
     void checkSaveDataFromCacheToDB(int index);// 定时检测保存符合条件角色的数据
     void saveDataFromCacheToDB();// 保存所有角色数据
 
+    void onlineUserCount();// 统计当前逻辑服用户数量
     /**
      * 获取指定执行器
      **/

@@ -5,6 +5,7 @@ import common.pb.cmd.UserCmdModule;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
+import logic.server.dto.UserCountDTO;
 import logic.server.dto.UserDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
@@ -14,6 +15,7 @@ import logic.server.dto.UserVipDTO;
 import logic.server.repository.UserAttributeRepository;
 import logic.server.repository.UserBossRepository;
 import logic.server.repository.UserBuffToolRepository;
+import logic.server.repository.UserCountRepository;
 import logic.server.repository.UserEquipmentRepository;
 import logic.server.repository.UserMagnateRepository;
 import logic.server.repository.UserRepository;
@@ -56,6 +58,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -79,6 +82,8 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     private UserBossRepository userBossRepository;
     @Autowired
     private UserVipRepository userVipRepository;
+    @Autowired
+    private UserCountRepository userCountRepository;
     @Autowired
     private RedissonClient redissonClient;
 
@@ -445,6 +450,19 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
         }
 
         log.info("UserServiceImpl::saveDataFromCacheToDB:优雅关闭已保存数据角色数量 = {}", saveSuccessCount);
+    }
+
+    @Override
+    public void onlineUserCount(){
+        Map<Long, UserDTO> userDTOMap = UserManagerSingleton.getInstance().getAllUserDTOMapFromCache();
+        List<UserDTO> userDTOList = new ArrayList<>(userDTOMap.values());
+        userDTOList = userDTOList.stream().filter(u -> u.isOnline()).collect(Collectors.toList());
+        log.info("UserServiceImpl::onlineUserCount:逻辑服id = {},当前在线用户数量 = {},当前内存用户数量 = {}",
+                CfgManagerSingleton.getInstance().getServerId(),userDTOList.size(),userDTOMap.size());
+
+        UserCountDTO userCountDTO = new UserCountDTO();
+        userCountDTO.setLogicServerId(CfgManagerSingleton.getInstance().getServerId()).setOnlineUserCount(userDTOList.size()).setCacheUserCount(userDTOMap.size());
+        userCountRepository.add(userCountDTO);
     }
 
     @Override

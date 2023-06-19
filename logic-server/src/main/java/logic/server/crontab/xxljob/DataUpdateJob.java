@@ -26,4 +26,18 @@ public class DataUpdateJob {
         log.info("DataUpdateJob::saveUserDataJobHandler:param = {},定时任务结束",param);
         return ReturnT.SUCCESS;
     }
+
+    @XxlJob("onlineUserCountJobHandler")
+    public ReturnT<String> onlineUserCountJobHandler(String param){
+        log.info("DataUpdateJob::onlineUserCountJobHandler:param = {},定时任务开始",param);
+
+        try {
+            userService.onlineUserCount();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        log.info("DataUpdateJob::onlineUserCountJobHandler:param = {},定时任务结束",param);
+        return ReturnT.SUCCESS;
+    }
 }
