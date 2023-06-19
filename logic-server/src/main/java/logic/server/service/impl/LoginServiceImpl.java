@@ -83,12 +83,39 @@ public class LoginServiceImpl implements ILoginService{
 
         LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
         UserDTO userDTO = dyLogin(loginReqPb);
+        // 更新下预登录用户的最近一次登出时间，防止用户数据不在内存中，processUserDataFromDBToCache添加后，会被定时检测任务又处理下线保存数据。
+        userDTO.setLatestLogoutTime(new Date());
+        boolean isProcessSuccess = processUserDataFromDBToCache(userDTO);
         JSONObject jsonResult = new JSONObject();
         jsonResult.put("token",userDTO.getToken());
+        jsonResult.put("isProcessSuccess",isProcessSuccess);
 
         log.info("LoginServiceImpl::jsonResult = {}",jsonResult);
         return jsonResult;
     }
+
+    /** 用户数据从数据库加载到内存 **/
+    private boolean processUserDataFromDBToCache(UserDTO userDTO){
+        long userId = userDTO.getId();
+        UserDTO userDTOFromCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
+        if(userDTOFromCache == null){
+            // 从数据库获取的角色数据存储到内存中
+            UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
+            Map<Integer, UserVehicleDTO> userVehicleDTOMap = new HashMap<>();// 已废弃 userService.getUserVehicleMapByIdFromDB(userId);
+            Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
+            Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
+            Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
+            Map<Integer, UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
+            Map<Integer, UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
+            UserVipDTO userVipDTO = userService.getUserVipByIdFromDB(userId);
+            boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId, userDTO, userAttributeDTO, userVehicleDTOMap, userVehicleNewDTOMap, userEquipmentDTOMap, userBuffToolDTOMap, userMagnateDTOMap, userBossDTOMap, userVipDTO);
+            if (!isAddSuccess) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public LoginResPb login(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException {
@@ -157,17 +184,7 @@ public class LoginServiceImpl implements ILoginService{
         /** 检测角色此逻辑服内存中是否存在数据 **/
         UserDTO userDTOFromCache = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);
         if(userDTOFromCache == null){
-            // 从数据库获取的角色数据存储到内存中
-            UserAttributeDTO userAttributeDTO = userService.getUserAttributeByIdFromDB(userId);
-            Map<Integer, UserVehicleDTO> userVehicleDTOMap = new HashMap<>();// 已废弃 userService.getUserVehicleMapByIdFromDB(userId);
-            Map<Integer, UserVehicleNewDTO> userVehicleNewDTOMap = userService.getUserVehicleNewMapByIdFromDB(userId);
-            Map<Integer, UserEquipmentDTO> userEquipmentDTOMap = userService.getUserEquipmentMapByIdFromDB(userId);
-            Map<Integer, UserBuffToolDTO> userBuffToolDTOMap = userService.getUserBuffToolMapByIdFromDB(userId);
-            Map<Integer, UserMagnateDTO> userMagnateDTOMap = userService.getUserMagnateMapByIdFromDB(userId);
-            Map<Integer, UserBossDTO> userBossDTOMap = userService.getUserBossMapByIdFromDB(userId);
-            UserVipDTO userVipDTO = userService.getUserVipByIdFromDB(userId);
-            boolean isAddSuccess = UserManagerSingleton.getInstance().addUserDataToCache(userId, userDTO, userAttributeDTO, userVehicleDTOMap, userVehicleNewDTOMap, userEquipmentDTOMap, userBuffToolDTOMap, userMagnateDTOMap, userBossDTOMap, userVipDTO);
-            if (!isAddSuccess) {
+            if(!processUserDataFromDBToCache(userDTO)){
                 log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},end", userId, ErrorCodeEnum.addUserDataToCacheFailed.getCode(), ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
                 return new LoginResPb().setCode(ErrorCodeEnum.addUserDataToCacheFailed.getCode()).setMessage(ErrorCodeEnum.addUserDataToCacheFailed.getMsg());
             }
@@ -218,8 +235,7 @@ public class LoginServiceImpl implements ILoginService{
                     userDTO = createUser(loginReqPb.getLoginPlatform(), unionId, openid, newToken, currTime, loginReqPb.clientVersion);
                     isNewUser = true;
                 } else {
-                    // 刷新token（非必要）
-                    userDTO.setToken(newToken).setLatestLoginTime(currTime);
+                    userDTO.setLatestLoginTime(currTime);
                     userDTO.setClientVersion(loginReqPb.clientVersion);
                     //userService.updateUserToDB(userDTO);
                 }
