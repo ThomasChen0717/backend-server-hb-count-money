@@ -1,5 +1,6 @@
 package logic.server.service;
 
+import com.alibaba.fastjson.JSONObject;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
@@ -9,7 +10,8 @@ import logic.server.parent.action.skeleton.core.flow.MyFlowContext;
  * @date 2023-04-14
  */
 public interface ILoginService {
-    LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext);
+    JSONObject preLogin(JSONObject jsonPreLogin);
+    LoginResPb login(LoginReqPb loginReqPb, MyFlowContext myFlowContext);
 
-    void Logout(MyFlowContext myFlowContext);
+    void logout(MyFlowContext myFlowContext);
 }

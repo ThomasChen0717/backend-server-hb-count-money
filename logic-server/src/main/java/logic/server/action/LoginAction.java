@@ -33,7 +33,7 @@ public class LoginAction {
      */
     @ActionMethod(LoginCmdModule.loginVerify)
     public LoginResPb loginVerify(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException{
-        return loginService.Login(loginReqPb,myFlowContext);
+        return loginService.login(loginReqPb,myFlowContext);
     }
 
     /**
@@ -44,6 +44,6 @@ public class LoginAction {
      */
     @ActionMethod(LoginCmdModule.logout)
     public void logout(MyFlowContext myFlowContext) throws MsgException{
-        loginService.Logout(myFlowContext);
+        loginService.logout(myFlowContext);
     }
 }

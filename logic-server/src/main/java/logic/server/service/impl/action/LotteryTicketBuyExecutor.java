@@ -148,7 +148,7 @@ public class LotteryTicketBuyExecutor implements BaseExecutor<LotteryTicketBuyRe
                                 String range = jsonWinningBonusFormula.getString("range");
                                 Float winningBonusMin = Float.valueOf(range.substring(0,range.indexOf("-")));
                                 Float winningBonusMax = Float.valueOf(range.substring(range.indexOf("-")+1));
-                                float randomWinningBaseBonus = winningBonusMin + r.nextFloat() * winningBonusMax;
+                                float randomWinningBaseBonus = winningBonusMin + r.nextFloat() * (winningBonusMax - winningBonusMin);
                                 randomWinningBaseBonus = Math.round(randomWinningBaseBonus * 10) / 10f;
                                 long bonus = (long)(randomWinningBaseBonus * cfgLotteryTicketDTO.getFaceValue());
                                 jsonMyNumber.put("bonus",bonus);

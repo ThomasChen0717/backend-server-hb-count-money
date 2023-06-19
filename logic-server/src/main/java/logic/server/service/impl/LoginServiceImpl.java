@@ -1,5 +1,6 @@
 package logic.server.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iohao.game.action.skeleton.core.commumication.ProcessorContext;
@@ -77,7 +78,16 @@ public class LoginServiceImpl implements ILoginService{
     private SettlementExecutor settlementExecutor;
 
     @Override
-    public LoginResPb Login(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException {
+    public JSONObject preLogin(JSONObject jsonPreLogin){
+        LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
+        UserDTO userDTO = dyLogin(loginReqPb);
+        JSONObject jsonResult = new JSONObject();
+        jsonResult.put("token",userDTO.getToken());
+        return jsonResult;
+    }
+
+    @Override
+    public LoginResPb login(LoginReqPb loginReqPb, MyFlowContext myFlowContext) throws MsgException {
         log.info("LoginServiceImpl::Login:loginReqPb = {},start", loginReqPb);
         // isForcedOffline：true 顶号流程 false 不能重复登录 （默认不能重复登录）
         boolean isForcedOffline = false;
@@ -798,7 +808,7 @@ public class LoginServiceImpl implements ILoginService{
     }
 
     @Override
-    public void Logout(MyFlowContext myFlowContext) {
+    public void logout(MyFlowContext myFlowContext) {
         Date currTime = new Date();
         long userId = myFlowContext.getUserId();
         log.info("LoginServiceImpl::Logout:userId = {},time = {}",userId,currTime);
