@@ -392,10 +392,10 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
                     UserDTO userDTO = entry.getValue();
                     Date currTime = new Date();
                     long timeDiff = (currTime.getTime() - userDTO.getLatestLogoutTime().getTime())/1000L;
-                    if(!userDTO.isOnline() && timeDiff > 60){
+                    if(!userDTO.isOnline() && timeDiff > (5 * 60) ){
                         try{
                             log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据开始", userDTO.getId());
-                            // 当前不在线，并且离线已超1分钟，保存用户数据
+                            // 当前不在线，并且离线已超5分钟，保存用户数据
                             saveDataFromCacheToDB(userDTO.getId(),true);
                         }catch (Exception e){
                             log.info("UserServiceImpl::checkSaveDataFromCacheToDB:userId = {},定时检测保存角色数据异常", userDTO.getId());
