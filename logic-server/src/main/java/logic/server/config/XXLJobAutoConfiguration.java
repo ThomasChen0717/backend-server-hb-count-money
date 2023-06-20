@@ -29,10 +29,13 @@ public class XXLJobAutoConfiguration {
         xxlJobSpringExecutor.setAccessToken(nacosConfiguration.getXxlJobAccessToken());
         xxlJobSpringExecutor.setLogPath(nacosConfiguration.getXxlJobExecutorLogPath());
         xxlJobSpringExecutor.setLogRetentionDays(nacosConfiguration.getXxlJobExecutorLogRetentionDays());
-        xxlJobSpringExecutor.setAppname(applicationName);
-        log.info("XXLJobAutoConfiguration::xxlJobExecutor:adminAddress = {},port = {},accessToken = {},appName = {}",
+
+        String profilesActive = nacosConfiguration.getSpringProfilesActive();
+        String registerAppName = applicationName + "-" + profilesActive;
+        xxlJobSpringExecutor.setAppname(registerAppName);
+        log.info("XXLJobAutoConfiguration::xxlJobExecutor:adminAddress = {},port = {},accessToken = {},appName = {},registerAppName = {}",
                 nacosConfiguration.getXxlJobAdminAddresses(),nacosConfiguration.getXxlJobExecutorPort(),
-                nacosConfiguration.getXxlJobAccessToken(),applicationName);
+                nacosConfiguration.getXxlJobAccessToken(),applicationName,registerAppName);
         return xxlJobSpringExecutor;
     }
 }
