@@ -3,6 +3,8 @@ package logic.server.action;
 import com.iohao.game.action.skeleton.annotation.ActionController;
 import com.iohao.game.action.skeleton.annotation.ActionMethod;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
+import com.iohao.game.action.skeleton.protocol.HeadMetadata;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
 import common.pb.cmd.UserCmdModule;
 import common.pb.pb.AddClickCountReqPb;
 import common.pb.pb.AddClickCountResPb;
@@ -36,6 +38,8 @@ import common.pb.pb.UnlockVehicleOrEquipmentReqPb;
 import common.pb.pb.UnlockVehicleOrEquipmentResPb;
 import common.pb.pb.UseEquipmentReqPb;
 import common.pb.pb.UseEquipmentResPb;
+import common.pb.pb.UserDataFromCacheToDBReqPb;
+import common.pb.pb.UserDataFromCacheToDBResPb;
 import common.pb.pb.VehicleNewLevelUpReqPb;
 import common.pb.pb.VehicleNewLevelUpResPb;
 import common.pb.pb.WatchedAdReqPb;
@@ -146,5 +150,10 @@ public class UserAction {
     @ActionMethod(UserCmdModule.lotteryTicketBonusGet)
     public LotteryTicketBonusGetResPb lotteryTicketBonusGet(LotteryTicketBonusGetReqPb lotteryTicketBonusGetReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (LotteryTicketBonusGetResPb)userService.getExecutor(UserCmdModule.lotteryTicketBonusGetExecutorName).executor(lotteryTicketBonusGetReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.userDataFromCacheToDB)
+    public UserDataFromCacheToDBResPb userDataFromCacheToDB(UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (UserDataFromCacheToDBResPb)userService.userDataFromCacheToDBByNotify(userDataFromCacheToDBReqPb,myFlowContext.getUserId());
     }
 }

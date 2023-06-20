@@ -3,12 +3,21 @@ package logic.server.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.iohao.game.action.skeleton.core.BarMessageKit;
+import com.iohao.game.action.skeleton.core.CmdInfo;
+import com.iohao.game.action.skeleton.core.CmdKit;
+import com.iohao.game.action.skeleton.core.commumication.InvokeModuleContext;
 import com.iohao.game.action.skeleton.core.commumication.ProcessorContext;
 import com.iohao.game.action.skeleton.core.exception.MsgException;
+import com.iohao.game.action.skeleton.protocol.RequestMessage;
+import com.iohao.game.action.skeleton.protocol.collect.ResponseCollectMessage;
 import com.iohao.game.action.skeleton.protocol.processor.EndPointLogicServerMessage;
+import com.iohao.game.bolt.broker.client.external.bootstrap.ExternalKit;
 import com.iohao.game.bolt.broker.client.kit.ExternalCommunicationKit;
 import com.iohao.game.bolt.broker.client.kit.UserIdSettingKit;
 import com.iohao.game.bolt.broker.core.client.BrokerClientHelper;
+import common.pb.cmd.LoginCmdModule;
+import common.pb.cmd.UserCmdModule;
 import common.pb.enums.ErrorCodeEnum;
 import common.pb.pb.BossInfoPb;
 import common.pb.pb.BuffToolInfoPb;
@@ -17,6 +26,7 @@ import common.pb.pb.EquipmentInfoPb;
 import common.pb.pb.LoginReqPb;
 import common.pb.pb.LoginResPb;
 import common.pb.pb.MagnateInfoPb;
+import common.pb.pb.UserDataFromCacheToDBReqPb;
 import common.pb.pb.VehicleInfoNewPb;
 import common.pb.pb.VehicleInfoPb;
 import common.pb.pb.VipInfoPb;
@@ -79,19 +89,48 @@ public class LoginServiceImpl implements ILoginService{
 
     @Override
     public JSONObject preLogin(JSONObject jsonPreLogin){
-        log.info("LoginServiceImpl::jsonPreLogin = {}",jsonPreLogin);
+        log.info("LoginServiceImpl::preLogin:jsonPreLogin = {}",jsonPreLogin);
 
+        JSONObject jsonResult = new JSONObject();
         LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
         UserDTO userDTO = dyLogin(loginReqPb);
-        // 更新下预登录用户的最近一次登出时间，防止用户数据不在内存中，processUserDataFromDBToCache添加后，会被定时检测任务又处理下线保存数据。
+
+        // 数据库中用户OnlineServerId不等于0（说明当前用户内存数据在某个逻辑服中），并且用户内存数据所在逻辑服不是本逻辑服，通知用户内存数据所在逻辑服保存
+        if (userDTO.getOnlineServerId() > 0 && userDTO.getOnlineServerId() != CfgManagerSingleton.getInstance().getServerId()){
+            // 通知用户内存数据所在逻辑服保存
+            try{
+                notifyUserDataFromCacheToDB(userDTO.getId());
+            }catch (Exception e){
+                log.error("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},message = {},notifyUserDataFromCacheToDB 异常",
+                        jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId(),e.getMessage());
+            }
+            jsonResult.put("token",userDTO.getToken());
+            log.info("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},通知其他逻辑服将用户数据从内存保存至数据库",
+                    jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId());
+            return jsonResult;
+        }
+
+        // 更新下预登录用户的最近一次登出时间，防止用户数据不在内存中，processUserDataFromDBToCache添加后，又被定时检测任务处理为下线保存数据。
         userDTO.setLatestLogoutTime(new Date());
         boolean isProcessSuccess = processUserDataFromDBToCache(userDTO);
-        JSONObject jsonResult = new JSONObject();
+
         jsonResult.put("token",userDTO.getToken());
         jsonResult.put("isProcessSuccess",isProcessSuccess);
 
         log.info("LoginServiceImpl::jsonResult = {}",jsonResult);
         return jsonResult;
+    }
+
+    /** 通知其他游戏逻辑服将用户数据从内存保存至数据库 **/
+    private void notifyUserDataFromCacheToDB(long userId) {
+        // 模块通讯上下文
+        InvokeModuleContext invokeModuleContext = BrokerClientHelper.getInvokeModuleContext();
+        CmdInfo cmdInfo = CmdInfo.getCmdInfo(UserCmdModule.cmd, UserCmdModule.userDataFromCacheToDB);
+        // 通知其他游戏逻辑服某个用户数据从内存保存至数据库
+        UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb = new UserDataFromCacheToDBReqPb();
+        userDataFromCacheToDBReqPb.setTargetUserId(userId);userDataFromCacheToDBReqPb.setSendMessageServerId(CfgManagerSingleton.getInstance().getServerId());
+        RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo,userDataFromCacheToDBReqPb);
+        ResponseCollectMessage responseCollectMessage = invokeModuleContext.invokeModuleCollectMessage(requestMessage);
     }
 
     /** 用户数据从数据库加载到内存 **/
@@ -152,7 +191,13 @@ public class LoginServiceImpl implements ILoginService{
         if (true) {
             // 数据库中用户OnlineServerId不等于0（说明当前用户内存数据在某个逻辑服中），并且用户内存数据所在逻辑服不是本逻辑服，通知用户内存数据所在逻辑服保存
             if (userDTO.getOnlineServerId() > 0 && userDTO.getOnlineServerId() != CfgManagerSingleton.getInstance().getServerId()) {
-                // TODO:通知用户内存数据所在逻辑服保存
+                // 通知用户内存数据所在逻辑服保存
+                try{
+                    notifyUserDataFromCacheToDB(userDTO.getId());
+                }catch (Exception e){
+                    log.error("LoginServiceImpl::login:onlineServerId = {},serverId = {},message = {},notifyUserDataFromCacheToDB 异常",
+                            userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId(),e.getMessage());
+                }
 
                 log.info("LoginServiceImpl::Login:userId = {},code = {},message = {},onlineServerId = {},currServerId = {},end",
                         userId, ErrorCodeEnum.userStillOnline.getCode(), ErrorCodeEnum.userStillOnline.getMsg(),

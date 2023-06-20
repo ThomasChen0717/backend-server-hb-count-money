@@ -57,6 +57,9 @@ public interface UserCmdModule {
     /** 领取彩金 */
     int lotteryTicketBonusGet = 18;
     String lotteryTicketBonusGetExecutorName = "lotteryTicketBonusGet";// 执行器名称
+    /** 用户数据从内存保存到数据库 */
+    int userDataFromCacheToDB = 19;
+    String userDataFromCacheToDBExecutorName = "userDataFromCacheToDB";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

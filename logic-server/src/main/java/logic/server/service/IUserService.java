@@ -1,5 +1,7 @@
 package logic.server.service;
 
+import common.pb.pb.UserDataFromCacheToDBReqPb;
+import common.pb.pb.UserDataFromCacheToDBResPb;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -91,8 +93,9 @@ public interface IUserService {
     void saveDataFromCacheToDB(long userId,boolean isRealSave);// 保存指定角色数据
     void checkSaveDataFromCacheToDB(int index);// 定时检测保存符合条件角色的数据
     void saveDataFromCacheToDB();// 保存所有角色数据
-
     void onlineUserCount();// 统计当前逻辑服用户数量
+    // 其他逻辑服通知：将用户内存数据保存至数据库
+    UserDataFromCacheToDBResPb userDataFromCacheToDBByNotify(UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb, long userId);
     /**
      * 获取指定执行器
      **/

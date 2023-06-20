@@ -2,6 +2,8 @@ package logic.server.service.impl;
 
 import com.baida.countmoney.client.command.ClientCommand;
 import common.pb.cmd.UserCmdModule;
+import common.pb.pb.UserDataFromCacheToDBReqPb;
+import common.pb.pb.UserDataFromCacheToDBResPb;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
@@ -126,7 +128,6 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     private LotteryTicketBuyExecutor lotteryTicketBuyExecutor;
     @Autowired
     private LotteryTicketBonusGetExecutor lotteryTicketBonusGetExecutor;
-
     /** 注入执行器-end **/
 
     @Override
@@ -463,6 +464,23 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
         UserCountDTO userCountDTO = new UserCountDTO();
         userCountDTO.setLogicServerId(CfgManagerSingleton.getInstance().getServerId()).setOnlineUserCount(userDTOList.size()).setCacheUserCount(userDTOMap.size());
         userCountRepository.add(userCountDTO);
+    }
+
+    @Override
+    public UserDataFromCacheToDBResPb userDataFromCacheToDBByNotify(UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb, long userId){
+        log.info("UserServiceImpl::userDataFromCacheToDBByNotify:userDataFromCacheToDBReqPb = {},userId = {}",userDataFromCacheToDBReqPb,userId);
+
+        UserDataFromCacheToDBResPb userDataFromCacheToDBResPb = new UserDataFromCacheToDBResPb();
+        // 1.userId 必须为0：可以排除是客户端发送的 2.本逻辑服和发送通知的逻辑服是同一个，过滤
+        if(userId == 0 && userDataFromCacheToDBReqPb.getSendMessageServerId() != CfgManagerSingleton.getInstance().getServerId()){
+            UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userDataFromCacheToDBReqPb.getTargetUserId());
+            if(userDTO != null){
+                saveDataFromCacheToDB(userDataFromCacheToDBReqPb.getTargetUserId(),true);
+            }
+        }
+
+        log.info("UserServiceImpl::userDataFromCacheToDBByNotify:userDataFromCacheToDBResPb = {}",userDataFromCacheToDBResPb);
+        return userDataFromCacheToDBResPb;
     }
 
     @Override
