@@ -16,6 +16,12 @@ public class ClientVersionController {
 
     @RequestMapping(value = "getServerUrl", method = RequestMethod.POST)
     public String getServerUrl(@RequestBody JSONObject jsonBody) {
+        /** 1.2.1（含） 之前的版本 **/
         return clientVersionService.getServerUrl(jsonBody.getString ("version"));
+    }
+
+    @RequestMapping(value = "getServerUrlNew", method = RequestMethod.POST)
+    public JSONObject getServerUrlNew(@RequestBody JSONObject jsonBody) {
+        return clientVersionService.getServerUrlNew(jsonBody.getString ("version"));
     }
 }

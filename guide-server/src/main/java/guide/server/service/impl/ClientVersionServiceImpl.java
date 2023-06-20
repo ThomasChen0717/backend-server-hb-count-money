@@ -1,5 +1,6 @@
 package guide.server.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import guide.server.dto.ClientVersionDTO;
 import guide.server.repository.ClientVersionRepository;
 import guide.server.service.IClientVersionService;
@@ -26,5 +27,23 @@ public class ClientVersionServiceImpl implements IClientVersionService {
 
         log.info("ClientVersionServiceImpl::getServerUrl:serverUrl = {},clientVersionDTO = {}",serverUrl,clientVersionDTO);
         return serverUrl;
+    }
+
+    @Override
+    public JSONObject getServerUrlNew(String clientVersion){
+        log.info("ClientVersionServiceImpl::getServerUrlNew:clientVersion = {}",clientVersion);
+
+        JSONObject jsonServerUrl = new JSONObject();
+
+        ClientVersionDTO clientVersionDTO = clientVersionRepository.get(clientVersion);
+        if(clientVersionDTO != null){
+            String externalServer = clientVersionDTO.isVerified() == true ? clientVersionDTO.getReleaseServer() : clientVersionDTO.getVerificationServer();
+            String preLoginServer = clientVersionDTO.isVerified() == true ? clientVersionDTO.getReleasePreLoginServer() : clientVersionDTO.getVerificationPreLoginServer();
+            jsonServerUrl.put("externalServer",externalServer);
+            jsonServerUrl.put("preLoginServer",preLoginServer);
+        }
+
+        log.info("ClientVersionServiceImpl::getServerUrlNew:jsonServerUrl = {},clientVersionDTO = {}",jsonServerUrl,clientVersionDTO);
+        return jsonServerUrl;
     }
 }

@@ -13,4 +13,6 @@ public class ClientVersionDTO implements DTO{
     private boolean isVerified;
     private String verificationServer;
     private String releaseServer;
+    private String verificationPreLoginServer;
+    private String releasePreLoginServer;
 }

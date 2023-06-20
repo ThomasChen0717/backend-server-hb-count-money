@@ -37,4 +37,14 @@ public class ClientVersionPO extends BaseEntity{
      * 正式服域名
      */
     private String releaseServer;
+
+    /**
+     * 审核服预登录域名
+     */
+    private String verificationPreLoginServer;
+
+    /**
+     * 正式服预登录域名
+     */
+    private String releasePreLoginServer;
 }
