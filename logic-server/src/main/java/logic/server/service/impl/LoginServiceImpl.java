@@ -92,29 +92,34 @@ public class LoginServiceImpl implements ILoginService{
         log.info("LoginServiceImpl::preLogin:jsonPreLogin = {}",jsonPreLogin);
 
         JSONObject jsonResult = new JSONObject();
-        LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
-        UserDTO userDTO = dyLogin(loginReqPb);
-
-        // 数据库中用户OnlineServerId不等于0（说明当前用户内存数据在某个逻辑服中），并且用户内存数据所在逻辑服不是本逻辑服，通知用户内存数据所在逻辑服保存
-        if (userDTO.getOnlineServerId() > 0 && userDTO.getOnlineServerId() != CfgManagerSingleton.getInstance().getServerId()){
-            // 通知用户内存数据所在逻辑服保存
-            try{
-                notifyUserDataFromCacheToDB(userDTO.getId());
-            }catch (Exception e){
-                log.error("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},message = {},notifyUserDataFromCacheToDB 异常",
-                        jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId(),e.getMessage());
+        boolean isProcessSuccess = false;
+        String token = "";
+        try{
+            LoginReqPb loginReqPb = JSON.toJavaObject(jsonPreLogin, LoginReqPb.class);
+            UserDTO userDTO = dyLogin(loginReqPb);
+            token = userDTO.getToken();
+            // 数据库中用户OnlineServerId不等于0（说明当前用户内存数据在某个逻辑服中），并且用户内存数据所在逻辑服不是本逻辑服，通知用户内存数据所在逻辑服保存
+            if (userDTO.getOnlineServerId() > 0 && userDTO.getOnlineServerId() != CfgManagerSingleton.getInstance().getServerId()){
+                // 通知用户内存数据所在逻辑服保存
+                try{
+                    notifyUserDataFromCacheToDB(userDTO.getId());
+                }catch (Exception e){
+                    log.error("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},message = {},notifyUserDataFromCacheToDB 异常",
+                            jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId(),e.getMessage());
+                }
+                jsonResult.put("token",token);
+                log.info("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},通知其他逻辑服将用户数据从内存保存至数据库",
+                        jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId());
+                return jsonResult;
             }
-            jsonResult.put("token",userDTO.getToken());
-            log.info("LoginServiceImpl::preLogin:jsonResult = {},onlineServerId = {},serverId = {},通知其他逻辑服将用户数据从内存保存至数据库",
-                    jsonResult,userDTO.getOnlineServerId(),CfgManagerSingleton.getInstance().getServerId());
-            return jsonResult;
+            // 更新下预登录用户的最近一次登出时间，防止用户数据不在内存中，processUserDataFromDBToCache添加后，又被定时检测任务处理为下线保存数据。
+            userDTO.setLatestLogoutTime(new Date());
+            isProcessSuccess = processUserDataFromDBToCache(userDTO);
+        }catch (Exception e){
+            log.info("LoginServiceImpl::preLogin:message = {},异常",e.getMessage());
         }
 
-        // 更新下预登录用户的最近一次登出时间，防止用户数据不在内存中，processUserDataFromDBToCache添加后，又被定时检测任务处理为下线保存数据。
-        userDTO.setLatestLogoutTime(new Date());
-        boolean isProcessSuccess = processUserDataFromDBToCache(userDTO);
-
-        jsonResult.put("token",userDTO.getToken());
+        jsonResult.put("token",token);
         jsonResult.put("isProcessSuccess",isProcessSuccess);
 
         log.info("LoginServiceImpl::preLogin:jsonResult = {}",jsonResult);
