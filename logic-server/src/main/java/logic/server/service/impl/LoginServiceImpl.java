@@ -117,7 +117,7 @@ public class LoginServiceImpl implements ILoginService{
         jsonResult.put("token",userDTO.getToken());
         jsonResult.put("isProcessSuccess",isProcessSuccess);
 
-        log.info("LoginServiceImpl::jsonResult = {}",jsonResult);
+        log.info("LoginServiceImpl::preLogin:jsonResult = {}",jsonResult);
         return jsonResult;
     }
 
