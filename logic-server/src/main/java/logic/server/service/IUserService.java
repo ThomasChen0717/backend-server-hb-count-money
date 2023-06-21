@@ -96,6 +96,7 @@ public interface IUserService {
     void onlineUserCount();// 统计当前逻辑服用户数量
     // 其他逻辑服通知：将用户内存数据保存至数据库
     UserDataFromCacheToDBResPb userDataFromCacheToDBByNotify(UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb, long userId);
+    void checkDeleteHistoryUserData();
     /**
      * 获取指定执行器
      **/

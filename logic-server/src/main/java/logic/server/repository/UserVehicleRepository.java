@@ -8,4 +8,5 @@ public interface UserVehicleRepository {
     int add(UserVehicleDTO dto);
     int update(UserVehicleDTO dto);
     Map<Integer,UserVehicleDTO> getMap(long userId);
+    void deleteByUserId(long userId);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserAttributeDTO;
 import logic.server.mapper.UserAttributeMapper;
 import logic.server.po.UserAttributePO;
+import logic.server.po.UserPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -33,5 +34,12 @@ public class UserAttributeRepositoryImpl implements UserAttributeRepository{
         UserAttributePO po = userAttributeMapper.selectOne(new QueryWrapper<UserAttributePO>()
                 .lambda().eq(UserAttributePO::getUserId, userId));
         return Convertor.convert(UserAttributeDTO.class, po);
+    }
+    @Override
+    public void deleteByUserId(long userId){
+        userAttributeMapper.delete(new QueryWrapper<UserAttributePO>()
+                .lambda()
+                .eq(UserAttributePO::getUserId, userId)
+        );
     }
 }

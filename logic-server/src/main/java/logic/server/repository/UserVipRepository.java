@@ -6,4 +6,5 @@ public interface UserVipRepository {
     int add(UserVipDTO dto);
     int update(UserVipDTO dto);
     UserVipDTO get(long userId);
+    void deleteByUserId(long userId);
 }

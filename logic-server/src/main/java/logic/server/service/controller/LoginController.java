@@ -29,6 +29,7 @@ public class LoginController {
     public String test(@RequestBody JSONObject jsonTest) {
         try{
             //userService.checkSaveDataFromCacheToDB(jsonTest.getInteger("index"));
+            userService.checkDeleteHistoryUserData();
         }catch (Exception e){
 
         }

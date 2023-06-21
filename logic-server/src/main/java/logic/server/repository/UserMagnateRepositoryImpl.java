@@ -3,6 +3,7 @@ package logic.server.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.mapper.UserMagnateMapper;
+import logic.server.po.UserBossPO;
 import logic.server.po.UserMagnatePO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +42,13 @@ public class UserMagnateRepositoryImpl implements UserMagnateRepository{
         List<UserMagnateDTO> magnateDTOList = Convertor.convert(cfgMagnatePOList, UserMagnateDTO.class);
         Map<Integer, UserMagnateDTO> cfgMagnateDTOmap = magnateDTOList.stream().collect(Collectors.toMap(UserMagnateDTO::getMagnateId, UserMagnateDTO -> UserMagnateDTO));
         return cfgMagnateDTOmap;
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userMagnateMapper.delete(new QueryWrapper<UserMagnatePO>()
+                .lambda()
+                .eq(UserMagnatePO::getUserId, userId)
+        );
     }
 }

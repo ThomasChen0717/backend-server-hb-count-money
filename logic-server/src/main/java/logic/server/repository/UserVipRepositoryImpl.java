@@ -3,6 +3,7 @@ package logic.server.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserVipDTO;
 import logic.server.mapper.UserVipMapper;
+import logic.server.po.UserMagnatePO;
 import logic.server.po.UserVipPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +34,13 @@ public class UserVipRepositoryImpl implements UserVipRepository{
         UserVipPO po = userVipMapper.selectOne(new QueryWrapper<UserVipPO>()
                 .lambda().eq(UserVipPO::getUserId, userId));
         return Convertor.convert(UserVipDTO.class, po);
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userVipMapper.delete(new QueryWrapper<UserVipPO>()
+                .lambda()
+                .eq(UserVipPO::getUserId, userId)
+        );
     }
 }

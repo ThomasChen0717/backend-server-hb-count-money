@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserVehicleDTO;
 import logic.server.mapper.UserEquipmentMapper;
+import logic.server.po.UserBossPO;
 import logic.server.po.UserEquipmentPO;
 import logic.server.po.UserVehiclePO;
 import lombok.AllArgsConstructor;
@@ -44,5 +45,13 @@ public class UserEquipmentRepositoryImpl implements UserEquipmentRepository{
         List<UserEquipmentDTO> equipmentDTOList = Convertor.convert(cfgEquipmentPOList, UserEquipmentDTO.class);
         Map<Integer, UserEquipmentDTO> cfgEquipmentDTOmap = equipmentDTOList.stream().collect(Collectors.toMap(UserEquipmentDTO::getEquipmentId, UserEquipmentDTO -> UserEquipmentDTO));
         return cfgEquipmentDTOmap;
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userEquipmentMapper.delete(new QueryWrapper<UserEquipmentPO>()
+                .lambda()
+                .eq(UserEquipmentPO::getUserId, userId)
+        );
     }
 }

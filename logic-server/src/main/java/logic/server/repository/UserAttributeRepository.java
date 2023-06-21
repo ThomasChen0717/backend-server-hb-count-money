@@ -6,4 +6,5 @@ public interface UserAttributeRepository {
     int add(UserAttributeDTO dto);
     int update(UserAttributeDTO dto);
     UserAttributeDTO get(long userId);
+    void deleteByUserId(long userId);
 }

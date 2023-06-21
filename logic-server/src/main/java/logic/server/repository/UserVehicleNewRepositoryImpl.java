@@ -3,6 +3,7 @@ package logic.server.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserVehicleNewDTO;
 import logic.server.mapper.UserVehicleNewMapper;
+import logic.server.po.UserMagnatePO;
 import logic.server.po.UserVehicleNewPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +43,13 @@ public class UserVehicleNewRepositoryImpl implements UserVehicleNewRepository{
         List<UserVehicleNewDTO> vehicleNewDTOList = Convertor.convert(cfgVehicleNewPOList, UserVehicleNewDTO.class);
         Map<Integer, UserVehicleNewDTO> cfgVehicleNewDTOmap = vehicleNewDTOList.stream().collect(Collectors.toMap(UserVehicleNewDTO::getVehicleId, UserVehicleNewDTO -> UserVehicleNewDTO));
         return cfgVehicleNewDTOmap;
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userVehicleNewMapper.delete(new QueryWrapper<UserVehicleNewPO>()
+                .lambda()
+                .eq(UserVehicleNewPO::getUserId, userId)
+        );
     }
 }

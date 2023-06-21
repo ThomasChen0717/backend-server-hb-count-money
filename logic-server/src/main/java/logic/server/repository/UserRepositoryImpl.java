@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Slf4j
 @Repository
 @AllArgsConstructor
@@ -51,6 +55,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<UserDTO> getUserListByLatestLogoutTime(){
+        // 上次退出时间距离当前时间已超过30天
+        Date currTime = new Date();
+        Long longTime = currTime.getTime() - 30 * (24 * 60 * 60) * 1000L;
+        Date compareTime = new Date(longTime);
+
+        List<UserPO> list = userMapper.selectList(new QueryWrapper<UserPO>()
+                .lambda()
+                .le(UserPO::getLatestLogoutTime,compareTime)
+                .eq(UserPO::getOnlineServerId,0)
+        );
+        return Convertor.convert(list, UserDTO.class);
+    }
+
+    @Override
     public void checkUserOnlineServerId(int onlineServerId){
         userMapper.updateOnlineServerId(onlineServerId);
     }
@@ -61,5 +80,13 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void updateIsOnlineById(long userId,boolean isOnline){
         userMapper.updateIsOnlineById(userId,isOnline);
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userMapper.delete(new QueryWrapper<UserPO>()
+                .lambda()
+                .eq(UserPO::getId, userId)
+        );
     }
 }

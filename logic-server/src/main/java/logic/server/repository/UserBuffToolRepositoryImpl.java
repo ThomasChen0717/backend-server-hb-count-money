@@ -3,6 +3,7 @@ package logic.server.repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.mapper.UserBuffToolMapper;
+import logic.server.po.UserBossPO;
 import logic.server.po.UserBuffToolPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +43,13 @@ public class UserBuffToolRepositoryImpl implements UserBuffToolRepository{
         List<UserBuffToolDTO> buffToolDTOList = Convertor.convert(cfgBuffToolPOList, UserBuffToolDTO.class);
         Map<Integer, UserBuffToolDTO> cfgBuffToolDTOmap = buffToolDTOList.stream().collect(Collectors.toMap(UserBuffToolDTO::getBuffToolId, UserBuffToolDTO -> UserBuffToolDTO));
         return cfgBuffToolDTOmap;
+    }
+
+    @Override
+    public void deleteByUserId(long userId){
+        userBuffToolMapper.delete(new QueryWrapper<UserBuffToolPO>()
+                .lambda()
+                .eq(UserBuffToolPO::getUserId, userId)
+        );
     }
 }

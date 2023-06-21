@@ -8,4 +8,5 @@ public interface UserMagnateRepository {
     int add(UserMagnateDTO dto);
     int update(UserMagnateDTO dto);
     Map<Integer, UserMagnateDTO> getMap(long userId);
+    void deleteByUserId(long userId);
 }

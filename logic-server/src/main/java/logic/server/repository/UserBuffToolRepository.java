@@ -8,4 +8,5 @@ public interface UserBuffToolRepository {
     int add(UserBuffToolDTO dto);
     int update(UserBuffToolDTO dto);
     Map<Integer, UserBuffToolDTO> getMap(long userId);
+    void deleteByUserId(long userId);
 }

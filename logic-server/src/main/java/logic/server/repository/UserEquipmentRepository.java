@@ -7,4 +7,5 @@ public interface UserEquipmentRepository {
     int add(UserEquipmentDTO dto);
     int update(UserEquipmentDTO dto);
     Map<Integer, UserEquipmentDTO> getMap(long userId);
+    void deleteByUserId(long userId);
 }

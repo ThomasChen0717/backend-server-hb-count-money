@@ -484,6 +484,34 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     }
 
     @Override
+    public void checkDeleteHistoryUserData(){
+        List<UserDTO> userDTOList = userRepository.getUserListByLatestLogoutTime();
+        Date startTime = new Date();
+        log.info("UserServiceImpl::checkDeleteHistoryUserData:userCount = {},startTime = {},开始",userDTOList.size(),startTime);
+        int deleteCount = 0;
+        for(UserDTO userDTO : userDTOList){
+            long userId = userDTO.getId();
+            try{
+                userRepository.deleteByUserId(userId);
+                userAttributeRepository.deleteByUserId(userId);
+                userBossRepository.deleteByUserId(userId);
+                userBuffToolRepository.deleteByUserId(userId);
+                userEquipmentRepository.deleteByUserId(userId);
+                userMagnateRepository.deleteByUserId(userId);
+                userVehicleRepository.deleteByUserId(userId);
+                userVehicleNewRepository.deleteByUserId(userId);
+                userVipRepository.deleteByUserId(userId);
+                deleteCount++;
+            }catch (Exception e){
+                log.info("UserServiceImpl::checkDeleteHistoryUserData:userId = {},异常",userId);
+            }
+        }
+        Date endTime = new Date();
+        log.info("UserServiceImpl::checkDeleteHistoryUserData:userCount = {},deleteCount = {},costTime = {}s,结束",
+                userDTOList.size(),deleteCount,(endTime.getTime() - startTime.getTime())/1000L);
+    }
+
+    @Override
     public BaseExecutor getExecutor(String executorName) {
         if (executorName.compareTo(UserCmdModule.settlementExecutorName) == 0) {
             return settlementExecutor;
