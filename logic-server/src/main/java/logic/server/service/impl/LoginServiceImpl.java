@@ -136,6 +136,8 @@ public class LoginServiceImpl implements ILoginService{
         userDataFromCacheToDBReqPb.setTargetUserId(userId);userDataFromCacheToDBReqPb.setSendMessageServerId(CfgManagerSingleton.getInstance().getServerId());
         RequestMessage requestMessage = BarMessageKit.createRequestMessage(cmdInfo,userDataFromCacheToDBReqPb);
         ResponseCollectMessage responseCollectMessage = invokeModuleContext.invokeModuleCollectMessage(requestMessage);
+
+        log.info("LoginServiceImpl::notifyUserDataFromCacheToDB:userId = {},通知完成",userId);
     }
 
     /** 用户数据从数据库加载到内存 **/
