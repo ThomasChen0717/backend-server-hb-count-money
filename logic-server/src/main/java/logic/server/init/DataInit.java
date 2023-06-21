@@ -41,5 +41,7 @@ public class DataInit implements CommandLineRunner {
         CfgManagerSingleton.getInstance().setCfgLotteryTicketDTOMap(cfgService.getCfgLotteryTicketMap());
 
         userService.checkUserOnlineServerId(cfgService.getServerId());
+
+        CfgManagerSingleton.getInstance().serverStartNotify();
     }
 }

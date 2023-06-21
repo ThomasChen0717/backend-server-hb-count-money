@@ -68,6 +68,10 @@ public class CfgManagerSingleton {
         log.info("CfgManagerSingleton::setServerId:serverIdFromNacos = {}",serverIdFromNacos);
     }
 
+    public void serverStartNotify(){
+        log.info("CfgManagerSingleton::serverId = {},逻辑服启动",serverId);
+    }
+
     /** t_cfg_global **/
     public CfgGlobalDTO getCfgGlobalByKeyFromCache(String key){
         return cfgGlobalDTOMap.get(key);
