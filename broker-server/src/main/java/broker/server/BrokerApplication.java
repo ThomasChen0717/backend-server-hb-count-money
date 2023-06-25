@@ -70,16 +70,31 @@ public class BrokerApplication {
          *     127.0.0.1:30058
          * </pre>
          */
-        NacisDiscoveryService nacisDiscoveryService = BeanUtils.getBean(NacisDiscoveryService.class);
-        List<JSONObject> serverList = nacisDiscoveryService.getServerList();
+
+        // nacos服务发现模式无法使用，因为服务每次启动ip都会动态变化
+        boolean isNacosDiscovery = false;
         int clusterPort = 30056;
         List<String> seedAddress = new ArrayList<>();
-        for(JSONObject jsonServer : serverList){
-            String hostAndPort = jsonServer.getString("host") + ":" + clusterPort;
-            seedAddress.add(hostAndPort);
+        if(isNacosDiscovery){
+            NacisDiscoveryService nacisDiscoveryService = BeanUtils.getBean(NacisDiscoveryService.class);
+            List<JSONObject> serverList = nacisDiscoveryService.getServerList();
+            for(JSONObject jsonServer : serverList){
+                String hostAndPort = jsonServer.getString("host") + ":" + clusterPort;
+                seedAddress.add(hostAndPort);
+            }
+        }else{
+            NacisDiscoveryService nacisDiscoveryService = BeanUtils.getBean(NacisDiscoveryService.class);
+            if(nacisDiscoveryService.isDevEnv()){
+                String hostAndPort = "127.0.0.1" + ":" + clusterPort;
+                seedAddress.add(hostAndPort);
+            }else{
+                // 第1台网关域名:countmoney-broker-server-0.countmoney-broker-server-hs:10200
+                // 第2台网关域名:countmoney-broker-server-1.countmoney-broker-server-hs:10200
+                // 第3台网关域名:countmoney-broker-server-2.countmoney-broker-server-hs:10200
+                String hostAndPort = "countmoney-broker-server-0.countmoney-broker-server-hs" + ":" + clusterPort;
+                seedAddress.add(hostAndPort);
+            }
         }
-        //String hostAndPort = "127.0.0.1" + ":" + clusterPort;
-        //seedAddress.add(hostAndPort);
 
         /*
          * 第 1 台集群 游戏网关: 【集群端口 - 30056】、【游戏网关端口 - 10200】
@@ -92,7 +107,7 @@ public class BrokerApplication {
         // broker 端口（游戏网关端口）
         int port = gossipPortAndBrokerPort[1];
         // ---- 第1台 broker ----
-        log.info("BrokerApplication::clusterModeStart:serverList = {},seedAddress = {},gossipListenPort = {},port = {}",serverList,seedAddress,gossipListenPort,port);
+        log.info("BrokerApplication::clusterModeStart:seedAddress = {},gossipListenPort = {},port = {}",seedAddress,gossipListenPort,port);
         BrokerServer brokerServer = ClusterSimpleHelper.createBrokerServer(seedAddress, gossipListenPort, port);
         // 启动游戏网关
         brokerServer.startup();

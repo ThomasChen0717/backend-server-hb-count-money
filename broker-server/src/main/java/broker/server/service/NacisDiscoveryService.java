@@ -1,5 +1,6 @@
 package broker.server.service;
 
+import broker.server.config.NacosConfiguration;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import java.util.List;
 public class NacisDiscoveryService {
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private NacosConfiguration nacosConfiguration;
 
     public List<JSONObject> getServerList(){
         List<JSONObject> jsonServerList = new ArrayList<>();
@@ -33,5 +37,9 @@ public class NacisDiscoveryService {
 
         log.info("NacisDiscoveryService::getServerList:jsonServerList = {}",jsonServerList);
         return jsonServerList;
+    }
+
+    public boolean isDevEnv(){
+        return nacosConfiguration.getSpringProfilesActive().compareTo("dev") == 0 ? true : false;
     }
 }
