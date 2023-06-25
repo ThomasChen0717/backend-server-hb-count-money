@@ -93,6 +93,8 @@ public class BrokerApplication {
                 // 第3台网关域名:countmoney-broker-server-2.countmoney-broker-server-hs:10200
                 String hostAndPort = "countmoney-broker-server-0.countmoney-broker-server-hs" + ":" + clusterPort;
                 seedAddress.add(hostAndPort);
+                hostAndPort = "countmoney-broker-server-1.countmoney-broker-server-hs" + ":" + clusterPort;
+                seedAddress.add(hostAndPort);
             }
         }
 
