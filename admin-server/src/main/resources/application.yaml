@@ -1,0 +1,9 @@
+# 服务器配置
+server:
+  port: 8404
+
+spring:
+  application:
+    name: admin-server
+  profiles:
+    active: @activated@
