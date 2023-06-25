@@ -32,10 +32,10 @@ public class BrokerApplication {
         SpringApplication.run(BrokerApplication.class, args);
 
         /** 单个网关服 **/
-        singleModeStart();
+        //singleModeStart();
 
         /** 集群方式网关服 **/
-        //clusterModeStart();
+        clusterModeStart();
     }
 
     /** 单个网关服 **/
