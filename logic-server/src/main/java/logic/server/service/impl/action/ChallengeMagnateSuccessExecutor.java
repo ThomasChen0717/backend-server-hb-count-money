@@ -61,7 +61,7 @@ public class ChallengeMagnateSuccessExecutor implements BaseExecutor<ChallengeMa
             // 新载具解锁并且使用
             UserVehicleDTO unlockedUserVehicleDTO = UserManagerSingleton.getInstance().getUserVehicleByIdFromCache(userId,cfgMagnateDTO.getUnlockVehicleId());
             // 如是已解锁正常流程来说，当前使用的载具比解锁的还要高级
-            if(!unlockedUserVehicleDTO.isUnlocked()){
+            if(unlockedUserVehicleDTO != null && !unlockedUserVehicleDTO.isUnlocked()){
                 unlockedUserVehicleDTO.setInUse(true).setUnlocked(true);
                 challengeMagnateSuccessResPb.setUnlockedVehicleId(cfgMagnateDTO.getUnlockVehicleId());
 
