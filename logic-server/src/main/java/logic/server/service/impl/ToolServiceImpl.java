@@ -1,17 +1,17 @@
 package logic.server.service.impl;
 
-import logic.server.dto.*;
-import logic.server.repository.*;
-import logic.server.service.IToolService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import logic.server.dto.*;
+import logic.server.repository.*;
+import logic.server.service.IToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,17 +38,18 @@ public class ToolServiceImpl implements IToolService {
     private CfgBossRepository cfgBossRepository;
     @Autowired
     private CfgVipRepository cfgVipRepository;
+    @Autowired
+    private CfgLotteryTicketRepository cfgLotteryTicketRepository;
 
 
     @Override
-    public List<String> updateFromExcel(String path, List<String> fileNames) {
+    public List<String> updateFromExcel(List<MultipartFile> files) {
         List<String> errorFiles = new ArrayList<String>();
-        for (String fileName : fileNames) {
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
             try {
-                //本地excel文档转化为File
-                File file = new File(path + fileName);
                 //读取本地excel文档
-                FileInputStream inputStream = new FileInputStream(file);
+                InputStream inputStream = file.getInputStream();
                 Workbook workBook = new XSSFWorkbook(inputStream);
                 //默认单页excel文档
                 Sheet sheet = workBook.getSheetAt(0);
@@ -119,6 +120,13 @@ public class ToolServiceImpl implements IToolService {
                             log.error("ToolServiceImpl::Update Failed:更新失败");
                         }
                         break;
+                    case "t_cfg_lottery_ticket.xlsx":
+                        success = updateCfgLotteryTicket(sheet, firstRow, lastRow);
+                        if (success == -1) {
+                            errorFiles.add(fileName + ":更新失败！");
+                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                        }
+                        break;
                     default:
                         //未找到文件
                         errorFiles.add(fileName + ":未找到对应SQL表格");
@@ -147,9 +155,9 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgAttributeDTO cfgAttributeDTO = new CfgAttributeDTO();
                 cfgAttributeDTO.setAttributeType((int) row.getCell(0).getNumericCellValue())
-                                .setAttributeName(row.getCell(1).getStringCellValue())
-                                .setAttributeLevelUpFormula(row.getCell(2).getStringCellValue())
-                                .setAttributeEffectFormula(row.getCell(3).getStringCellValue());
+                        .setAttributeName(row.getCell(1).getStringCellValue())
+                        .setAttributeLevelUpFormula(row.getCell(2).getStringCellValue())
+                        .setAttributeEffectFormula(row.getCell(3).getStringCellValue());
                 cfgAttributeRepository.add(cfgAttributeDTO);
             }
         } catch (Exception e) {
@@ -170,16 +178,16 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgBossDTO cfgBossDTO = new CfgBossDTO();
                 cfgBossDTO.setBossId((int) row.getCell(0).getNumericCellValue())
-                          .setBossName(row.getCell(1).getStringCellValue())
-                          .setSpeed((int) row.getCell(2).getNumericCellValue())
-                          .setTargetMoneyAmount((int) row.getCell(3).getNumericCellValue())
-                          .setRewardMoneyAmount((int) row.getCell(4).getNumericCellValue())
-                          .setChallengeTime((int) row.getCell(5).getNumericCellValue())
-                          .setPreBossId((int) row.getCell(6).getNumericCellValue())
-                          .setShowIndex((int) row.getCell(7).getNumericCellValue())
-                          .setResourceName(Integer.toString((int) row.getCell(8).getNumericCellValue()))
-                          .setBossWord(row.getCell(9).getStringCellValue())
-                          .setFixed((int) row.getCell(10).getNumericCellValue());
+                        .setBossName(row.getCell(1).getStringCellValue())
+                        .setSpeed((int) row.getCell(2).getNumericCellValue())
+                        .setTargetMoneyAmount((int) row.getCell(3).getNumericCellValue())
+                        .setRewardMoneyAmount((int) row.getCell(4).getNumericCellValue())
+                        .setChallengeTime((int) row.getCell(5).getNumericCellValue())
+                        .setPreBossId((int) row.getCell(6).getNumericCellValue())
+                        .setShowIndex((int) row.getCell(7).getNumericCellValue())
+                        .setResourceName(Integer.toString((int) row.getCell(8).getNumericCellValue()))
+                        .setBossWord(row.getCell(9).getStringCellValue())
+                        .setFixed((int) row.getCell(10).getNumericCellValue());
                 cfgBossRepository.add(cfgBossDTO);
             }
         } catch (Exception e) {
@@ -200,9 +208,9 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgBuffToolDTO cfgBuffToolDTO = new CfgBuffToolDTO();
                 cfgBuffToolDTO.setBuffToolId((int) row.getCell(0).getNumericCellValue())
-                              .setName(row.getCell(1).getStringCellValue())
-                              .setEffectAttributeInfo(row.getCell(2).getStringCellValue())
-                              .setDurations((int) row.getCell(3).getNumericCellValue());
+                        .setName(row.getCell(1).getStringCellValue())
+                        .setEffectAttributeInfo(row.getCell(2).getStringCellValue())
+                        .setDurations((int) row.getCell(3).getNumericCellValue());
                 cfgBuffToolRepository.add(cfgBuffToolDTO);
             }
         } catch (Exception e) {
@@ -223,17 +231,17 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgEquipmentDTO cfgEquipmentDTO = new CfgEquipmentDTO();
                 cfgEquipmentDTO.setEquipmentId((int) row.getCell(0).getNumericCellValue())
-                               .setEquipmentName(row.getCell(1).getStringCellValue())
-                               .setUnlockConditionType((int) row.getCell(2).getNumericCellValue())
-                               .setUnlockConditionCount((int) row.getCell(3).getNumericCellValue())
-                               .setEffectAttributeType((int) row.getCell(4).getNumericCellValue())
-                               .setEffectAttributeMultiple((int) row.getCell(5).getNumericCellValue())
-                               .setEffectAttributeRemark(row.getCell(6).getStringCellValue())
-                               .setShowIndex((int) row.getCell(7).getNumericCellValue())
-                               .setPreEquipmentId((int) row.getCell(8).getNumericCellValue())
-                               .setResourceName(Integer.toString((int) row.getCell(9).getNumericCellValue()))
-                               .setPreConditionChallengeType((int) row.getCell(10).getNumericCellValue())
-                               .setPreConditionChallengeId((int) row.getCell(11).getNumericCellValue());
+                        .setEquipmentName(row.getCell(1).getStringCellValue())
+                        .setUnlockConditionType((int) row.getCell(2).getNumericCellValue())
+                        .setUnlockConditionCount((int) row.getCell(3).getNumericCellValue())
+                        .setEffectAttributeType((int) row.getCell(4).getNumericCellValue())
+                        .setEffectAttributeMultiple((int) row.getCell(5).getNumericCellValue())
+                        .setEffectAttributeRemark(row.getCell(6).getStringCellValue())
+                        .setShowIndex((int) row.getCell(7).getNumericCellValue())
+                        .setPreEquipmentId((int) row.getCell(8).getNumericCellValue())
+                        .setResourceName(Integer.toString((int) row.getCell(9).getNumericCellValue()))
+                        .setPreConditionChallengeType((int) row.getCell(10).getNumericCellValue())
+                        .setPreConditionChallengeId((int) row.getCell(11).getNumericCellValue());
                 cfgEquipmentRepository.add(cfgEquipmentDTO);
             }
         } catch (Exception e) {
@@ -255,8 +263,8 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgGlobalDTO cfgGlobalDTO = new CfgGlobalDTO();
                 cfgGlobalDTO.setKeyName(row.getCell(0).getStringCellValue())
-                            .setValueName(new DataFormatter().formatCellValue(row.getCell(1)))
-                            .setRemark(row.getCell(2).getStringCellValue());
+                        .setValueName(new DataFormatter().formatCellValue(row.getCell(1)))
+                        .setRemark(row.getCell(2).getStringCellValue());
                 cfgGlobalRepository.add(cfgGlobalDTO);
             }
         } catch (Exception e) {
@@ -277,18 +285,18 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgMagnateDTO cfgMagnateDTO = new CfgMagnateDTO();
                 cfgMagnateDTO.setMagnateId((int) row.getCell(0).getNumericCellValue())
-                             .setMagnateName(row.getCell(1).getStringCellValue())
-                             .setSpeed((int) row.getCell(2).getNumericCellValue())
-                             .setTargetMoneyAmount((int) row.getCell(3).getNumericCellValue())
-                             .setRewardMoneyAmount((int) row.getCell(4).getNumericCellValue())
-                             .setUnlockVehicleId((int) row.getCell(5).getNumericCellValue())
-                             .setCdTime((int) row.getCell(6).getNumericCellValue())
-                             .setChallengeTime((int) row.getCell(7).getNumericCellValue())
-                             .setPreMagnateId((int) row.getCell(8).getNumericCellValue())
-                             .setShowIndex((int) row.getCell(9).getNumericCellValue())
-                             .setResourceName(Integer.toString((int) row.getCell(10).getNumericCellValue()))
-                             .setBossWord(row.getCell(11).getStringCellValue())
-                             .setFixed((int) row.getCell(12).getNumericCellValue());
+                        .setMagnateName(row.getCell(1).getStringCellValue())
+                        .setSpeed((int) row.getCell(2).getNumericCellValue())
+                        .setTargetMoneyAmount((int) row.getCell(3).getNumericCellValue())
+                        .setRewardMoneyAmount((int) row.getCell(4).getNumericCellValue())
+                        .setUnlockVehicleId((int) row.getCell(5).getNumericCellValue())
+                        .setCdTime((int) row.getCell(6).getNumericCellValue())
+                        .setChallengeTime((int) row.getCell(7).getNumericCellValue())
+                        .setPreMagnateId((int) row.getCell(8).getNumericCellValue())
+                        .setShowIndex((int) row.getCell(9).getNumericCellValue())
+                        .setResourceName(Integer.toString((int) row.getCell(10).getNumericCellValue()))
+                        .setBossWord(row.getCell(11).getStringCellValue())
+                        .setFixed((int) row.getCell(12).getNumericCellValue());
                 cfgMagnateRepository.add(cfgMagnateDTO);
             }
         } catch (Exception e) {
@@ -309,13 +317,13 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgVehicleDTO cfgVehicleDTO = new CfgVehicleDTO();
                 cfgVehicleDTO.setVehicleId((int) row.getCell(0).getNumericCellValue())
-                             .setVehicleName(row.getCell(1).getStringCellValue())
-                             .setUnlockConditionType((int) row.getCell(2).getNumericCellValue())
-                             .setUnlockConditionCount((int) row.getCell(3).getNumericCellValue())
-                             .setVehicleCapacity((int) row.getCell(4).getNumericCellValue())
-                             .setExtraRewardValue((int) row.getCell(5).getNumericCellValue())
-                             .setShowIndex((int) row.getCell(6).getNumericCellValue())
-                             .setResourceName(Integer.toString((int) row.getCell(7).getNumericCellValue()));
+                        .setVehicleName(row.getCell(1).getStringCellValue())
+                        .setUnlockConditionType((int) row.getCell(2).getNumericCellValue())
+                        .setUnlockConditionCount((int) row.getCell(3).getNumericCellValue())
+                        .setVehicleCapacity((int) row.getCell(4).getNumericCellValue())
+                        .setExtraRewardValue((int) row.getCell(5).getNumericCellValue())
+                        .setShowIndex((int) row.getCell(6).getNumericCellValue())
+                        .setResourceName(Integer.toString((int) row.getCell(7).getNumericCellValue()));
                 cfgVehicleRepository.add(cfgVehicleDTO);
             }
         } catch (Exception e) {
@@ -336,16 +344,16 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgVehicleNewDTO cfgVehicleNewDTO = new CfgVehicleNewDTO();
                 cfgVehicleNewDTO.setVehicleId((int) row.getCell(0).getNumericCellValue())
-                                .setVehicleName(row.getCell(1).getStringCellValue())
-                                .setPreConditionChallengeType((int) row.getCell(2).getNumericCellValue())
-                                .setPreConditionChallengeId((int) row.getCell(3).getNumericCellValue())
-                                .setUnlockConditionType((int) row.getCell(4).getNumericCellValue())
-                                .setUnlockConditionCount((int) row.getCell(5).getNumericCellValue())
-                                .setShowIndex((int) row.getCell(6).getNumericCellValue())
-                                .setLevelMax((int) row.getCell(7).getNumericCellValue())
-                                .setLevelUpFormula(row.getCell(8).getStringCellValue())
-                                .setIncomeFormula(row.getCell(9).getStringCellValue())
-                                .setResourceName(row.getCell(10).getStringCellValue());
+                        .setVehicleName(row.getCell(1).getStringCellValue())
+                        .setPreConditionChallengeType((int) row.getCell(2).getNumericCellValue())
+                        .setPreConditionChallengeId((int) row.getCell(3).getNumericCellValue())
+                        .setUnlockConditionType((int) row.getCell(4).getNumericCellValue())
+                        .setUnlockConditionCount((int) row.getCell(5).getNumericCellValue())
+                        .setShowIndex((int) row.getCell(6).getNumericCellValue())
+                        .setLevelMax((int) row.getCell(7).getNumericCellValue())
+                        .setLevelUpFormula(row.getCell(8).getStringCellValue())
+                        .setIncomeFormula(row.getCell(9).getStringCellValue())
+                        .setResourceName(row.getCell(10).getStringCellValue());
                 cfgVehicleNewRepository.add(cfgVehicleNewDTO);
             }
         } catch (Exception e) {
@@ -366,8 +374,8 @@ public class ToolServiceImpl implements IToolService {
                 }
                 CfgVipDTO cfgVipDTO = new CfgVipDTO();
                 cfgVipDTO.setVipLevel((int) row.getCell(0).getNumericCellValue())
-                         .setConditionCount((int) row.getCell(1).getNumericCellValue())
-                         .setEffectAttributeInfo(row.getCell(2).getStringCellValue());
+                        .setConditionCount((int) row.getCell(1).getNumericCellValue())
+                        .setEffectAttributeInfo(row.getCell(2).getStringCellValue());
                 cfgVipRepository.add(cfgVipDTO);
             }
         } catch (Exception e) {
@@ -375,6 +383,31 @@ public class ToolServiceImpl implements IToolService {
         }
         return 1;
     }
+
+    public int updateCfgLotteryTicket(Sheet sheet, int firstRow, int lastRow) {
+        try {
+            //清除原表
+            cfgLotteryTicketRepository.delete();
+            //循环excel表并存入
+            for (int index = firstRow + 1; index <= lastRow; index++) {
+                Row row = sheet.getRow(index);
+                if (row.getCell(0).getCellType() == CellType.BLANK) {
+                    continue;
+                }
+                CfgLotteryTicketDTO cfgLotteryTicketDTO = new CfgLotteryTicketDTO();
+                cfgLotteryTicketDTO.setFaceValue((int) row.getCell(0).getNumericCellValue())
+                        .setWinningNumberFormula(row.getCell(1).getStringCellValue())
+                        .setFirstTimeBonusFormula(row.getCell(2).getStringCellValue())
+                        .setWinningBonusFormula(row.getCell(3).getStringCellValue())
+                        .setLosingBonusFormula(row.getCell(4).getStringCellValue());
+                cfgLotteryTicketRepository.add(cfgLotteryTicketDTO);
+            }
+        } catch (Exception e) {
+            return -1;
+        }
+        return 1;
+    }
+
 
 
 }

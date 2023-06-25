@@ -1,8 +1,10 @@
 package logic.server.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgLotteryTicketDTO;
 import logic.server.mapper.CfgLotteryTicketMapper;
+import logic.server.po.CfgGlobalPO;
 import logic.server.po.CfgLotteryTicketPO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +27,18 @@ public class CfgLotteryTicketRepositoryImpl implements CfgLotteryTicketRepositor
         List<CfgLotteryTicketDTO> cfgLotteryTicketDTOList = Convertor.convert(cfgLotteryTicketPOList, CfgLotteryTicketDTO.class);
         Map<Integer, CfgLotteryTicketDTO> cfgLotteryTicketDTOMap = cfgLotteryTicketDTOList.stream().collect(Collectors.toMap(CfgLotteryTicketDTO::getFaceValue, CfgLotteryTicketDTO -> CfgLotteryTicketDTO));
         return cfgLotteryTicketDTOMap;
+    }
+
+    @Override
+    public int add(CfgLotteryTicketDTO dto) {
+        CfgLotteryTicketPO po = Convertor.convert(CfgLotteryTicketPO.class, dto);
+        int result = cfgLotteryTicketMapper.insert(po);
+        dto.setId(po.getId());
+        return result;
+    }
+
+    @Override
+    public int delete(){
+        return cfgLotteryTicketMapper.delete(new QueryWrapper<CfgLotteryTicketPO>().lambda());
     }
 }
