@@ -24,7 +24,7 @@ public class DrawRoundReadyExecutor implements BaseExecutor<DrawRoundReadyReqPb,
         CfgDrawDTO cfgDrawDTO = CfgManagerSingleton.getInstance().getCfgDrawByRoundNumberFromCache(arg.getRoundNumber());
         if(cfgDrawDTO != null){
             drawRoundReadyResPb.setRoundNumber(arg.getRoundNumber()).setRemainDrawCount(cfgDrawDTO.getDrawCount()).setSsqCount(0)
-                    .setSsqTargetCount(cfgDrawDTO.getSsqTargetCount()).setBagUsable(true);
+                    .setSsqTargetCount(cfgDrawDTO.getSsqTargetCount()).setBagUsable(false);
 
             UserDrawDTO userDrawDTO = UserManagerSingleton.getInstance().getUserDrawFromCache(userId);
             if(userDrawDTO == null) userDrawDTO = new UserDrawDTO();
