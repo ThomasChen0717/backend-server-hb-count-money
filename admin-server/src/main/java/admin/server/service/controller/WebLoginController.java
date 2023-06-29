@@ -9,8 +9,9 @@ import admin.server.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("web")
+@RequestMapping("webLogin")
 public class WebLoginController {
     @Autowired
     private IWebLoginService webLoginService;
@@ -26,7 +27,6 @@ public class WebLoginController {
         res.setMessage("登出成功");
         res.setData("logout success");
         res.setCode(1);
-
         return res;
     }
 
@@ -35,7 +35,6 @@ public class WebLoginController {
     @GetMapping("/info")
     public APIResponse info(@RequestParam("token") String token){
         APIResponse res = new APIResponse();
-
         // 验证token的合法和有效性
         String tokenValue = JwtUtil.verify(token);
         if(tokenValue != null && tokenValue.startsWith(JwtUtil.TOKEN_SUCCESS)) {
@@ -76,6 +75,23 @@ public class WebLoginController {
             res.setMessage("用户名和密码不匹配");
             res.setData("Fail");
             e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping("/register")
+    public APIResponse register(@RequestBody WebUserDTO user){
+        APIResponse res = new APIResponse();
+        boolean success = this.webLoginService.registerUser(user);
+        if(success) {
+            res.setCode(1);
+            res.setMessage("注册成功");
+            res.setData("注册成功");
+        }
+        else{
+            res.setCode(-1);
+            res.setMessage("注册失败");
+            res.setData("注册失败");
         }
         return res;
     }

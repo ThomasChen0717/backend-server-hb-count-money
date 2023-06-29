@@ -6,12 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
 
 @Data
 @Accessors(chain = true)
-@TableName("t_web_user")
-public class WebUserPO extends BaseEntity {
+@TableName("t_web_router")
+public class WebRouterPO extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -21,27 +20,13 @@ public class WebUserPO extends BaseEntity {
     private Long id;
 
     /**
-     * 用户名
+     * 路由名
      */
-    private String username;
+    private String routeName;
 
     /**
-     * 密码
+     * 权限
      */
-    private String password;
+    private String roles;
 
-    /**
-     * 用户权限: admin 管理员 Editor 编辑 Visitor 访客
-     */
-    private String role;
-
-    /**
-     * 昵称
-     */
-    private String name;
-
-    /**
-     * 头像
-     */
-    private String avatar;
 }

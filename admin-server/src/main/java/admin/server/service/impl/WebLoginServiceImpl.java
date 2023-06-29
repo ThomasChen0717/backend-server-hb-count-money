@@ -6,13 +6,18 @@ import admin.server.repository.WebUserRepository;
 import admin.server.service.IWebLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+
+import static admin.server.util.Base64Utils.convertToBase64;
+
 @Slf4j
 @Service
 public class WebLoginServiceImpl implements IWebLoginService {
     @Autowired
     WebUserRepository webUserRepository;
+
     @Override
     public WebUserDTO checkCredentials(WebUserDTO user){
         Map<String, WebUserDTO> webUserDTOMap = webUserRepository.getMap();
@@ -32,7 +37,23 @@ public class WebLoginServiceImpl implements IWebLoginService {
         dto.setAvatar(webUserDTOMap.get(username).getAvatar());
         dto.setName(webUserDTOMap.get(username).getName());
         dto.setRole(webUserDTOMap.get(username).getRole());
+        dto.setId(webUserDTOMap.get(username).getId());
         return dto;
     }
+
+    @Override
+    public boolean registerUser(WebUserDTO user){
+        try {
+            String defaultAvatar = "https://th.bing.com/th/id/OIP.0siT9Vkwx8tb_kFTi-KV1wHaHa?pid=ImgDet&rs=1";
+            defaultAvatar = "data:image/png;base64," + convertToBase64(defaultAvatar);
+            String defaultRole = "editor";
+            user.setRole(defaultRole).setAvatar(defaultAvatar);
+            webUserRepository.add(user);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
 
 }
