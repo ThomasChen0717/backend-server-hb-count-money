@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PUBLIC)
 @ProtoFileMerge(fileName = ProtoFile.COMMON_FILE_NAME, filePackage = ProtoFile.COMMON_FILE_PACKAGE)
 public class LoginReqPb {
-    /** 登录平台：dy 抖音,ty 合作方,hb 自平台 */
+    /** 登录平台：dy 抖音,ty 途悦-抖音,hb 自平台,ty_wx 途悦-微信 */
     @NotNull
     String loginPlatform;
     /** code */
