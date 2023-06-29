@@ -54,6 +54,12 @@ public class NacosConfiguration {
     @Value("${ty.secret}")
     private String tySecret;
     public String getTySecret() { return tySecret; }
+    @Value("${ty.wxAppId}")
+    private String tyWxAppId;
+    public String getTyWxAppId() { return tyWxAppId; }
+    @Value("${ty.wxSecret}")
+    private String tyWxSecret;
+    public String getTyWxSecret() { return tyWxSecret; }
 
     /** brokerServer **/
     @Value("${brokerServer.url}")

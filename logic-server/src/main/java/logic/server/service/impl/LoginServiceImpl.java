@@ -319,19 +319,21 @@ public class LoginServiceImpl implements ILoginService{
             String openid = jsonRes.getString("openid");
             jsonPlatformUserInfo.put("unionId", unionId);
             jsonPlatformUserInfo.put("openid", openid);
-        } else if (platform.compareTo("ty") == 0) {
+        } else if (platform.compareTo("ty") == 0 || platform.compareTo("ty_wx") == 0) {
             String url = String.format("%s/plat/v1/account/token-info", nacosConfiguration.getTyUrl());
             log.info("LoginService::getPlatformUserInfo:url = {},platform = {}", url, platform);
+            String gameId = platform.compareTo("ty") == 0 ? nacosConfiguration.getTyAppId() : nacosConfiguration.getTyWxAppId();
+            String secret = platform.compareTo("ty") == 0 ? nacosConfiguration.getTySecret() : nacosConfiguration.getTyWxSecret();
 
             JSONObject jsonParam = new JSONObject();
-            jsonParam.put("game_id", nacosConfiguration.getTyAppId());
+            jsonParam.put("game_id", gameId);
             jsonParam.put("user_token", code);
             int timestamp = (int) (currTime.getTime() / 1000L);
             String nonce = createToken();
             jsonParam.put("timestamp", timestamp);
             jsonParam.put("nonce", nonce);
             // 签名
-            String signParam = String.format("nonce=%s&secret=%s&timestamp=%d", nonce, nacosConfiguration.getTySecret(), timestamp);
+            String signParam = String.format("nonce=%s&secret=%s&timestamp=%d", nonce, secret, timestamp);
             String sign = "";
             try {
                 MessageDigest digest = MessageDigest.getInstance("SHA-1");
