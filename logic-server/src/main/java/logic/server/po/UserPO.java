@@ -113,4 +113,9 @@ public class UserPO extends BaseEntity{
      * 购买彩票次数
      */
     private int boughtLotteryTicketCount;
+
+    /**
+     * 最近一次使用抽签时间
+     */
+    private Date latestDrawTime;
 }

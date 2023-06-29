@@ -60,6 +60,21 @@ public interface UserCmdModule {
     /** 用户数据从内存保存到数据库 */
     int userDataFromCacheToDB = 19;
     String userDataFromCacheToDBExecutorName = "userDataFromCacheToDB";// 执行器名称
+    /** 抽签-回合准备 */
+    int drawRoundReady = 20;
+    String drawRoundReadyExecutorName = "drawRoundReady";// 执行器名称
+    /** 抽签 */
+    int draw = 21;
+    String drawExecutorName = "draw";// 执行器名称
+    /** 抽签-使用锦囊 */
+    int drawUseBag = 22;
+    String drawUseBagExecutorName = "drawUseBag";// 执行器名称
+    /** 抽签-回合结算 */
+    int drawSettlement = 23;
+    String drawSettlementExecutorName = "drawSettlement";// 执行器名称
+    /** 抽签-开启buff */
+    int drawBuffOpen = 24;
+    String drawBuffOpenExecutorName = "drawBuffOpen";// 执行器名称
 
     /** 同步金钱（推送） */
     int moneySyncPush = 100;

@@ -5,6 +5,16 @@ import com.baida.countmoney.client.command.WebsocketClientKit;
 import com.iohao.game.bolt.broker.client.external.bootstrap.message.ExternalMessage;
 import common.pb.cmd.LoginCmdModule;
 import common.pb.cmd.UserCmdModule;
+import common.pb.pb.DrawBuffOpenReqPb;
+import common.pb.pb.DrawBuffOpenResPb;
+import common.pb.pb.DrawReqPb;
+import common.pb.pb.DrawResPb;
+import common.pb.pb.DrawRoundReadyReqPb;
+import common.pb.pb.DrawRoundReadyResPb;
+import common.pb.pb.DrawSettlementReqPb;
+import common.pb.pb.DrawSettlementResPb;
+import common.pb.pb.DrawUseBagReqPb;
+import common.pb.pb.DrawUseBagResPb;
 import common.pb.pb.LotteryTicketBonusGetReqPb;
 import common.pb.pb.LotteryTicketBonusGetResPb;
 import common.pb.pb.LotteryTicketBuyReqPb;
@@ -164,18 +174,64 @@ public class WebSocketClient {
             clientCommandKit.createClientCommandForRobot(externalMessageHere, LogicHeartbeatResPb.class,3000);
         }
 
-        if(false)
+        // 抽签
         {
-            LotteryTicketBuyReqPb lotteryTicketBuyReqPb = new LotteryTicketBuyReqPb();
-            lotteryTicketBuyReqPb.setFaceValue(1000);
-            lotteryTicketBuyReqPb.setAmount(1);
-            lotteryTicketBuyReqPb.setBoughtByAd(true);
-            ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
-                    UserCmdModule.cmd,
-                    UserCmdModule.lotteryTicketBuy,
-                    lotteryTicketBuyReqPb
-            );
-            clientCommandKit.createClientCommandForRobot(externalMessageHere, LotteryTicketBuyResPb.class,10000);
+            // 准备
+            if(false){
+                DrawRoundReadyReqPb drawRoundReadyReqPb = new DrawRoundReadyReqPb();
+                drawRoundReadyReqPb.setRoundNumber(1);
+                ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                        UserCmdModule.cmd,
+                        UserCmdModule.drawRoundReady,
+                        drawRoundReadyReqPb
+                );
+                clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawRoundReadyResPb.class,10000);
+            }
+            // 抽签
+            if(false)
+            {
+                DrawReqPb drawReqPb = new DrawReqPb();
+                ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                        UserCmdModule.cmd,
+                        UserCmdModule.draw,
+                        drawReqPb
+                );
+                clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawResPb.class,10000);
+            }
+            // 结算
+            if(false)
+            {
+                DrawSettlementReqPb drawSettlementReqPb = new DrawSettlementReqPb();
+                drawSettlementReqPb.setWatchedAd(true);
+                ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                        UserCmdModule.cmd,
+                        UserCmdModule.drawSettlement,
+                        drawSettlementReqPb
+                );
+                clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawSettlementResPb.class,10000);
+            }
+            // 福神
+            if(false)
+            {
+                DrawBuffOpenReqPb drawBuffOpenReqPb = new DrawBuffOpenReqPb();
+                ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                        UserCmdModule.cmd,
+                        UserCmdModule.drawBuffOpen,
+                        drawBuffOpenReqPb
+                );
+                clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawBuffOpenResPb.class,10000);
+            }
+            // 锦囊
+            if(true)
+            {
+                DrawUseBagReqPb drawUseBagReqPb = new DrawUseBagReqPb();
+                ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
+                        UserCmdModule.cmd,
+                        UserCmdModule.drawUseBag,
+                        drawUseBagReqPb
+                );
+                clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawUseBagResPb.class,10000);
+            }
         }
 
         /**

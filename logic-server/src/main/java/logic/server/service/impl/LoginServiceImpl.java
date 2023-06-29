@@ -64,6 +64,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -641,6 +642,16 @@ public class LoginServiceImpl implements ILoginService{
         loginResPb.setClickCount(userDTO.getClickCount());
         /** 创建角色时版本号 **/
         loginResPb.setFirstClientVersion(userDTO.getFirstClientVersion());
+        /** 今日抽签是否免费 **/
+        {
+            Date currTime = new Date();
+            if(userDTO.getLatestDrawTime() == null) {
+                loginResPb.setTodayDrawFree(true);
+            }else{
+                var fmt = new SimpleDateFormat("yyyyMMdd");
+                loginResPb.setTodayDrawFree(!fmt.format(userDTO.getLatestDrawTime()).equals(fmt.format(currTime)));
+            }
+        }
 
         return loginResPb;
     }

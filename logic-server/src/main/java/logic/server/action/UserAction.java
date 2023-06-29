@@ -10,6 +10,16 @@ import common.pb.pb.AddClickCountReqPb;
 import common.pb.pb.AddClickCountResPb;
 import common.pb.pb.AttributeLevelUpReqPb;
 import common.pb.pb.AttributeLevelUpResPb;
+import common.pb.pb.DrawBuffOpenReqPb;
+import common.pb.pb.DrawBuffOpenResPb;
+import common.pb.pb.DrawReqPb;
+import common.pb.pb.DrawResPb;
+import common.pb.pb.DrawRoundReadyReqPb;
+import common.pb.pb.DrawRoundReadyResPb;
+import common.pb.pb.DrawSettlementReqPb;
+import common.pb.pb.DrawSettlementResPb;
+import common.pb.pb.DrawUseBagReqPb;
+import common.pb.pb.DrawUseBagResPb;
 import common.pb.pb.LotteryTicketBonusGetReqPb;
 import common.pb.pb.LotteryTicketBonusGetResPb;
 import common.pb.pb.LotteryTicketBuyReqPb;
@@ -155,5 +165,30 @@ public class UserAction {
     @ActionMethod(UserCmdModule.userDataFromCacheToDB)
     public UserDataFromCacheToDBResPb userDataFromCacheToDB(UserDataFromCacheToDBReqPb userDataFromCacheToDBReqPb, MyFlowContext myFlowContext) throws MsgException{
         return (UserDataFromCacheToDBResPb)userService.userDataFromCacheToDBByNotify(userDataFromCacheToDBReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.drawRoundReady)
+    public DrawRoundReadyResPb drawRoundReady(DrawRoundReadyReqPb drawRoundReadyReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (DrawRoundReadyResPb)userService.getExecutor(UserCmdModule.drawRoundReadyExecutorName).executor(drawRoundReadyReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.draw)
+    public DrawResPb draw(DrawReqPb drawReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (DrawResPb)userService.getExecutor(UserCmdModule.drawExecutorName).executor(drawReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.drawUseBag)
+    public DrawUseBagResPb drawUseBag(DrawUseBagReqPb drawUseBagReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (DrawUseBagResPb)userService.getExecutor(UserCmdModule.drawUseBagExecutorName).executor(drawUseBagReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.drawSettlement)
+    public DrawSettlementResPb drawSettlement(DrawSettlementReqPb drawSettlementReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (DrawSettlementResPb)userService.getExecutor(UserCmdModule.drawSettlementExecutorName).executor(drawSettlementReqPb,myFlowContext.getUserId());
+    }
+
+    @ActionMethod(UserCmdModule.drawBuffOpen)
+    public DrawBuffOpenResPb drawBuffOpen(DrawBuffOpenReqPb drawBuffOpenReqPb, MyFlowContext myFlowContext) throws MsgException{
+        return (DrawBuffOpenResPb)userService.getExecutor(UserCmdModule.drawBuffOpenExecutorName).executor(drawBuffOpenReqPb,myFlowContext.getUserId());
     }
 }

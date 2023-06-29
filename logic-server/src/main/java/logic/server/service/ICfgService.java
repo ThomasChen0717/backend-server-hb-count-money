@@ -3,6 +3,7 @@ package logic.server.service;
 import logic.server.dto.CfgAttributeDTO;
 import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
+import logic.server.dto.CfgDrawDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgLotteryTicketDTO;
@@ -34,4 +35,5 @@ public interface ICfgService {
 
     Map<Integer, CfgVipDTO> getCfgVipMap();
     Map<Integer, CfgLotteryTicketDTO> getCfgLotteryTicketMap();
+    Map<Integer, CfgDrawDTO> getCfgDrawMap();
 }

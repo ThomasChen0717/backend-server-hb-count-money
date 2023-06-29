@@ -24,7 +24,7 @@ public class LogicHeartbeatExecutor implements BaseExecutor<LogicHeartbeatReqPb,
             ExternalCommunicationKit.forcedOffline(userId);
         }
 
-        log.info("GetRedPacketExecutor::executor:userId = {},logicHeartbeatResPb = {},end",userId,logicHeartbeatResPb);
+        log.info("LogicHeartbeatExecutor::executor:userId = {},logicHeartbeatResPb = {},end",userId,logicHeartbeatResPb);
         return logicHeartbeatResPb;
     }
 }

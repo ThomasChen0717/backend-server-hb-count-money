@@ -13,100 +13,125 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  
 
 ==================== UserAction  ====================
-路由: 2 - 1  --- 【】 --- 【UserAction:66】【settlement】
+路由: 2 - 1  --- 【】 --- 【UserAction:76】【settlement】
     触发异常: (方法有可能会触发异常)
     方法参数: SettlementReqPb
     方法返回值: SettlementResPb
  
-路由: 2 - 2  --- 【】 --- 【UserAction:71】【attributeLevelUp】
+路由: 2 - 2  --- 【】 --- 【UserAction:81】【attributeLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: AttributeLevelUpReqPb
     方法返回值: AttributeLevelUpResPb
  
-路由: 2 - 3  --- 【】 --- 【UserAction:76】【changeVehicle】
+路由: 2 - 3  --- 【】 --- 【UserAction:86】【changeVehicle】
     触发异常: (方法有可能会触发异常)
     方法参数: ChangeVehicleReqPb
     方法返回值: ChangeVehicleResPb
  
-路由: 2 - 4  --- 【】 --- 【UserAction:81】【useEquipment】
+路由: 2 - 4  --- 【】 --- 【UserAction:91】【useEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: UseEquipmentReqPb
     方法返回值: UseEquipmentResPb
  
-路由: 2 - 5  --- 【】 --- 【UserAction:86】【startOrEndBuffTool】
+路由: 2 - 5  --- 【】 --- 【UserAction:96】【startOrEndBuffTool】
     触发异常: (方法有可能会触发异常)
     方法参数: StartOrEndBuffToolReqPb
     方法返回值: StartOrEndBuffToolResPb
  
-路由: 2 - 6  --- 【】 --- 【UserAction:91】【getRedPacket】
+路由: 2 - 6  --- 【】 --- 【UserAction:101】【getRedPacket】
     触发异常: (方法有可能会触发异常)
     方法参数: GetRedPacketReqPb
     方法返回值: GetRedPacketResPb
  
-路由: 2 - 7  --- 【】 --- 【UserAction:96】【challengeMagnateSuccess】
+路由: 2 - 7  --- 【】 --- 【UserAction:106】【challengeMagnateSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: ChallengeMagnateSuccessReqPb
     方法返回值: ChallengeMagnateSuccessResPb
  
-路由: 2 - 8  --- 【】 --- 【UserAction:101】【challengeBossSuccess】
+路由: 2 - 8  --- 【】 --- 【UserAction:111】【challengeBossSuccess】
     触发异常: (方法有可能会触发异常)
     方法参数: ChallengeBossSuccessReqPb
     方法返回值: ChallengeBossSuccessResPb
  
-路由: 2 - 9  --- 【】 --- 【UserAction:106】【unlockVehicleOrEquipment】
+路由: 2 - 9  --- 【】 --- 【UserAction:116】【unlockVehicleOrEquipment】
     触发异常: (方法有可能会触发异常)
     方法参数: UnlockVehicleOrEquipmentReqPb
     方法返回值: UnlockVehicleOrEquipmentResPb
  
-路由: 2 - 10  --- 【】 --- 【UserAction:111】【logicHeartbeat】
+路由: 2 - 10  --- 【】 --- 【UserAction:121】【logicHeartbeat】
     触发异常: (方法有可能会触发异常)
     方法参数: LogicHeartbeatReqPb
     方法返回值: LogicHeartbeatResPb
  
-路由: 2 - 11  --- 【】 --- 【UserAction:116】【gmCommand】
+路由: 2 - 11  --- 【】 --- 【UserAction:126】【gmCommand】
     触发异常: (方法有可能会触发异常)
     方法参数: GmCommandReqPb
     方法返回值: GmCommandResPb
  
-路由: 2 - 12  --- 【】 --- 【UserAction:121】【watchedAd】
+路由: 2 - 12  --- 【】 --- 【UserAction:131】【watchedAd】
     触发异常: (方法有可能会触发异常)
     方法参数: WatchedAdReqPb
     方法返回值: WatchedAdResPb
  
-路由: 2 - 13  --- 【】 --- 【UserAction:126】【selectStone】
+路由: 2 - 13  --- 【】 --- 【UserAction:136】【selectStone】
     触发异常: (方法有可能会触发异常)
     方法参数: SelectStoneReqPb
     方法返回值: SelectStoneResPb
  
-路由: 2 - 14  --- 【】 --- 【UserAction:131】【sellStone】
+路由: 2 - 14  --- 【】 --- 【UserAction:141】【sellStone】
     触发异常: (方法有可能会触发异常)
     方法参数: SellStoneReqPb
     方法返回值: SellStoneResPb
  
-路由: 2 - 15  --- 【】 --- 【UserAction:136】【addClick】
+路由: 2 - 15  --- 【】 --- 【UserAction:146】【addClick】
     触发异常: (方法有可能会触发异常)
     方法参数: AddClickCountReqPb
     方法返回值: AddClickCountResPb
  
-路由: 2 - 16  --- 【】 --- 【UserAction:141】【vehicleNewLevelUp】
+路由: 2 - 16  --- 【】 --- 【UserAction:151】【vehicleNewLevelUp】
     触发异常: (方法有可能会触发异常)
     方法参数: VehicleNewLevelUpReqPb
     方法返回值: VehicleNewLevelUpResPb
  
-路由: 2 - 17  --- 【】 --- 【UserAction:146】【lotteryTicketBuy】
+路由: 2 - 17  --- 【】 --- 【UserAction:156】【lotteryTicketBuy】
     触发异常: (方法有可能会触发异常)
     方法参数: LotteryTicketBuyReqPb
     方法返回值: LotteryTicketBuyResPb
  
-路由: 2 - 18  --- 【】 --- 【UserAction:151】【lotteryTicketBonusGet】
+路由: 2 - 18  --- 【】 --- 【UserAction:161】【lotteryTicketBonusGet】
     触发异常: (方法有可能会触发异常)
     方法参数: LotteryTicketBonusGetReqPb
     方法返回值: LotteryTicketBonusGetResPb
  
-路由: 2 - 19  --- 【】 --- 【UserAction:156】【userDataFromCacheToDB】
+路由: 2 - 19  --- 【】 --- 【UserAction:166】【userDataFromCacheToDB】
     触发异常: (方法有可能会触发异常)
     方法参数: UserDataFromCacheToDBReqPb
     方法返回值: UserDataFromCacheToDBResPb
+ 
+路由: 2 - 20  --- 【】 --- 【UserAction:171】【drawRoundReady】
+    触发异常: (方法有可能会触发异常)
+    方法参数: DrawRoundReadyReqPb
+    方法返回值: DrawRoundReadyResPb
+ 
+路由: 2 - 21  --- 【】 --- 【UserAction:176】【draw】
+    触发异常: (方法有可能会触发异常)
+    方法参数: DrawReqPb
+    方法返回值: DrawResPb
+ 
+路由: 2 - 22  --- 【】 --- 【UserAction:181】【drawUseBag】
+    触发异常: (方法有可能会触发异常)
+    方法参数: DrawUseBagReqPb
+    方法返回值: DrawUseBagResPb
+ 
+路由: 2 - 23  --- 【】 --- 【UserAction:186】【drawSettlement】
+    触发异常: (方法有可能会触发异常)
+    方法参数: DrawSettlementReqPb
+    方法返回值: DrawSettlementResPb
+ 
+路由: 2 - 24  --- 【】 --- 【UserAction:191】【drawBuffOpen】
+    触发异常: (方法有可能会触发异常)
+    方法参数: DrawBuffOpenReqPb
+    方法返回值: DrawBuffOpenResPb
  
 
 ==================== 其它广播推送 ====================
@@ -149,3 +174,4 @@ https://www.yuque.com/iohao/game/irth38#cJLdC
  10025 : 解锁类型不存在 
  10026 : 权限不足 
  10027 : 参数非法 
+ 10028 : 抽签通用错误码 

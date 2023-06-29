@@ -66,6 +66,8 @@ public enum ErrorCodeEnum implements MsgExceptionInfo {
     permissionDenied(10026, "权限不足"),
     /** 参数非法 */
     paramError(10027, "参数非法"),
+    /** 抽签通用错误码 */
+    drawCommonError(10028, "抽签通用错误码"),
     ;
 
     /** 消息码 */

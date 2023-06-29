@@ -28,6 +28,11 @@ import logic.server.service.IUserService;
 import logic.server.service.impl.action.AddClickCountExecutor;
 import logic.server.service.impl.action.AttributeLevelUpExecutor;
 import logic.server.service.impl.action.BaseExecutor;
+import logic.server.service.impl.action.DrawBuffOpenExecutor;
+import logic.server.service.impl.action.DrawExecutor;
+import logic.server.service.impl.action.DrawRoundReadyExecutor;
+import logic.server.service.impl.action.DrawSettlementExecutor;
+import logic.server.service.impl.action.DrawUseBagExecutor;
 import logic.server.service.impl.action.LotteryTicketBonusGetExecutor;
 import logic.server.service.impl.action.LotteryTicketBuyExecutor;
 import logic.server.service.impl.action.ChallengeBossSuccessExecutor;
@@ -128,6 +133,16 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
     private LotteryTicketBuyExecutor lotteryTicketBuyExecutor;
     @Autowired
     private LotteryTicketBonusGetExecutor lotteryTicketBonusGetExecutor;
+    @Autowired
+    private DrawRoundReadyExecutor drawRoundReadyExecutor;
+    @Autowired
+    private DrawExecutor drawExecutor;
+    @Autowired
+    private DrawSettlementExecutor drawSettlementExecutor;
+    @Autowired
+    private DrawUseBagExecutor drawUseBagExecutor;
+    @Autowired
+    private DrawBuffOpenExecutor drawBuffOpenExecutor;
     /** 注入执行器-end **/
 
     @Override
@@ -376,6 +391,8 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
                 userVipRepository.update(userVipDTO);
                 UserManagerSingleton.getInstance().removeUserVipInCache(userId);
             }
+            /** 用户抽签数据不需要保存 **/
+            UserManagerSingleton.getInstance().removeUserDrawInCache(userId);
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功", userId);
         } catch (Exception e) {
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败", userId, e.getMessage());
@@ -549,8 +566,17 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
             return lotteryTicketBuyExecutor;
         } else if (executorName.compareTo(UserCmdModule.lotteryTicketBonusGetExecutorName) == 0) {
             return lotteryTicketBonusGetExecutor;
+        } else if (executorName.compareTo(UserCmdModule.drawRoundReadyExecutorName) == 0) {
+            return drawRoundReadyExecutor;
+        } else if (executorName.compareTo(UserCmdModule.drawExecutorName) == 0) {
+            return drawExecutor;
+        } else if (executorName.compareTo(UserCmdModule.drawSettlementExecutorName) == 0) {
+            return drawSettlementExecutor;
+        } else if (executorName.compareTo(UserCmdModule.drawUseBagExecutorName) == 0) {
+            return drawUseBagExecutor;
+        } else if (executorName.compareTo(UserCmdModule.drawBuffOpenExecutorName) == 0) {
+            return drawBuffOpenExecutor;
         }
-
         return null;
     }
 }

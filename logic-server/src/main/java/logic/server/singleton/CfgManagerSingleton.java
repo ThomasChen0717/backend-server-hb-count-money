@@ -3,6 +3,7 @@ package logic.server.singleton;
 import logic.server.dto.CfgAttributeDTO;
 import logic.server.dto.CfgBossDTO;
 import logic.server.dto.CfgBuffToolDTO;
+import logic.server.dto.CfgDrawDTO;
 import logic.server.dto.CfgEquipmentDTO;
 import logic.server.dto.CfgGlobalDTO;
 import logic.server.dto.CfgLotteryTicketDTO;
@@ -33,6 +34,7 @@ public class CfgManagerSingleton {
     private Map<Integer, CfgBossDTO> cfgBossDTOMap;
     private Map<Integer, CfgVipDTO> cfgVipDTOMap;
     private Map<Integer, CfgLotteryTicketDTO> cfgLotteryTicketDTOMap;
+    private Map<Integer, CfgDrawDTO> cfgDrawDTOMap;
 
     /** 模版数据是否使用redisson再议
     @Autowired
@@ -61,6 +63,7 @@ public class CfgManagerSingleton {
         cfgBossDTOMap = new HashMap();
         cfgVipDTOMap = new HashMap();
         cfgLotteryTicketDTOMap = new HashMap<>();
+        cfgDrawDTOMap = new HashMap<>();
     }
 
     public void setServerId(int serverIdFromNacos){
@@ -136,5 +139,10 @@ public class CfgManagerSingleton {
     /** t_cfg_lottery_ticket **/
     public CfgLotteryTicketDTO getCfgLotteryTicketByFaceValueFromCache(int faceValue){
         return cfgLotteryTicketDTOMap.get(faceValue);
+    }
+
+    /** t_cfg_draw **/
+    public CfgDrawDTO getCfgDrawByRoundNumberFromCache(int roundNumber){
+        return cfgDrawDTOMap.get(roundNumber);
     }
 }

@@ -35,4 +35,5 @@ public class UserDTO implements DTO{
     private int selectStoneCount = 0;
     private int clickCount;
     private int boughtLotteryTicketCount;
+    private Date latestDrawTime;
 }

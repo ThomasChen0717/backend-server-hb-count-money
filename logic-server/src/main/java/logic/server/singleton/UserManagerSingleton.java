@@ -9,6 +9,7 @@ import logic.server.dto.UserAttributeDTO;
 import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserDrawDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
@@ -37,6 +38,7 @@ public class UserManagerSingleton {
     private Map<Long,Map<Integer, UserMagnateDTO> > allUserMagnateDTOMap;
     private Map<Long,Map<Integer, UserBossDTO> > allUserBossDTOMap;
     private Map<Long, UserVipDTO> allUserVipDTOMap;
+    private Map<Long, UserDrawDTO> allUserDrawDTOMap;
 
     public static synchronized UserManagerSingleton getInstance() {
         if (instance == null) {
@@ -54,6 +56,7 @@ public class UserManagerSingleton {
         allUserMagnateDTOMap = new HashMap<>();
         allUserBossDTOMap = new HashMap<>();
         allUserVipDTOMap = new HashMap<>();
+        allUserDrawDTOMap = new HashMap<>();
     }
 
     /** userDTO start **/
@@ -348,4 +351,16 @@ public class UserManagerSingleton {
         allUserVipDTOMap.remove(userId);
     }
     /** UserVipDTO end **/
+
+    /** UserDrawDTO start **/
+    public void addUserDrawToCache(long userId,UserDrawDTO userDrawDTO){
+        allUserDrawDTOMap.put(userId,userDrawDTO);
+    }
+    public UserDrawDTO getUserDrawFromCache(long userId){
+        return allUserDrawDTOMap.get(userId);
+    }
+    public void removeUserDrawInCache(long userId){
+        allUserDrawDTOMap.remove(userId);
+    }
+    /** UserDrawDTO end **/
 }

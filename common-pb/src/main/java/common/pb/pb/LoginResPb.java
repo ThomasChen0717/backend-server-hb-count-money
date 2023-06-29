@@ -123,4 +123,7 @@ public class LoginResPb{
 
     /** 创建角色时客户端版本号 **/
     String firstClientVersion;
+
+    /** 今日抽签是否免费 **/
+    boolean isTodayDrawFree;
 }
