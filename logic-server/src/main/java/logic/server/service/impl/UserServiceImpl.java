@@ -9,6 +9,7 @@ import logic.server.dto.UserBossDTO;
 import logic.server.dto.UserBuffToolDTO;
 import logic.server.dto.UserCountDTO;
 import logic.server.dto.UserDTO;
+import logic.server.dto.UserDrawDTO;
 import logic.server.dto.UserEquipmentDTO;
 import logic.server.dto.UserMagnateDTO;
 import logic.server.dto.UserVehicleDTO;
@@ -392,7 +393,15 @@ public class UserServiceImpl implements IUserService,ApplicationEventPublisherAw
                 UserManagerSingleton.getInstance().removeUserVipInCache(userId);
             }
             /** 用户抽签数据不需要保存 **/
-            UserManagerSingleton.getInstance().removeUserDrawInCache(userId);
+            {
+                UserDrawDTO userDrawDTO = UserManagerSingleton.getInstance().getUserDrawFromCache(userId);
+                if(userDrawDTO != null){
+                    // 如客户端离线前界面停留在抽签界面，如保存数据时直接删除抽签数据，会导致无法抽签（因为没有再次点击抽签页面准备的接口）
+                    if( ((currTime.getTime() - userDrawDTO.getCreateTime().getTime())/1000) >  (60 * 60) ){
+                        UserManagerSingleton.getInstance().removeUserDrawInCache(userId);
+                    }
+                }
+            }
             log.info("UserServiceImpl::saveDataFromCacheToDB:userId = {},用户数据缓存至数据库保存成功", userId);
         } catch (Exception e) {
             log.error("UserServiceImpl::saveDataFromCacheToDB:userId = {},message = {},用户数据缓存至数据库保存失败", userId, e.getMessage());

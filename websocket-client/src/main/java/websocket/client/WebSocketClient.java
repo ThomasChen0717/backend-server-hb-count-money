@@ -188,7 +188,7 @@ public class WebSocketClient {
                 clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawRoundReadyResPb.class,10000);
             }
             // 抽签
-            if(false)
+            if(true)
             {
                 DrawReqPb drawReqPb = new DrawReqPb();
                 ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(
@@ -222,7 +222,7 @@ public class WebSocketClient {
                 clientCommandKit.createClientCommandForRobot(externalMessageHere, DrawBuffOpenResPb.class,10000);
             }
             // 锦囊
-            if(true)
+            if(false)
             {
                 DrawUseBagReqPb drawUseBagReqPb = new DrawUseBagReqPb();
                 ExternalMessage externalMessageHere = clientCommandKit.createExternalMessage(

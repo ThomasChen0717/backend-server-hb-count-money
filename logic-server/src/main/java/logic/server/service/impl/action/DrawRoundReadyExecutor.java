@@ -29,7 +29,7 @@ public class DrawRoundReadyExecutor implements BaseExecutor<DrawRoundReadyReqPb,
             UserManagerSingleton.getInstance().removeUserDrawInCache(userId);
             UserDrawDTO userDrawDTO = new UserDrawDTO();
             userDrawDTO.setUserId(userId).setRoundNumber(arg.getRoundNumber()).setRemainDrawCount(cfgDrawDTO.getDrawCount())
-                    .setSsqTargetCount(cfgDrawDTO.getSsqTargetCount());
+                    .setSsqTargetCount(cfgDrawDTO.getSsqTargetCount()).setCreateTime(new Date());
             UserManagerSingleton.getInstance().addUserDrawToCache(userId,userDrawDTO);
         }
         UserDTO userDTO = UserManagerSingleton.getInstance().getUserByIdFromCache(userId);

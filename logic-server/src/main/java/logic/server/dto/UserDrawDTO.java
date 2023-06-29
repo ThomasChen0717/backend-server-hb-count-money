@@ -3,6 +3,8 @@ package logic.server.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 @Data
 @Accessors(chain = true)
 public class UserDrawDTO implements DTO{
@@ -23,4 +25,6 @@ public class UserDrawDTO implements DTO{
     private int stickCount = 1;
     /** 累计抽签次数：抽到上上签后重置为0 **/
     private int drewCount = 0;
+    /** 创建时间 **/
+    private Date createTime;
 }
