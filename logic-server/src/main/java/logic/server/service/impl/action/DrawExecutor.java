@@ -32,12 +32,12 @@ public class DrawExecutor implements BaseExecutor<DrawReqPb, DrawResPb,Long>{
             return drawResPb;
         }
         if(userDrawDTO.getSsqCount() >= userDrawDTO.getSsqTargetCount()){
-            log.info("DrawExecutor::executor:userId = {},上上签数量已达标",userId);
+            log.info("DrawExecutor::executor:userId = {},ssqCount = {},ssqTargetCount = {},上上签数量已达标",userId,userDrawDTO.getSsqCount(),userDrawDTO.getSsqTargetCount());
             drawResPb.setCode(ErrorCodeEnum.drawCommonError.getCode()).setMessage(ErrorCodeEnum.drawCommonError.getMsg());
             return drawResPb;
         }
         if(userDrawDTO.getRemainDrawCount() <= 0){
-            log.info("DrawExecutor::executor:userId = {},剩余轮数小于等于0",userId);
+            log.info("DrawExecutor::executor:userId = {},remainDrawCount = {},剩余轮数小于等于0",userId,userDrawDTO.getRemainDrawCount());
             drawResPb.setCode(ErrorCodeEnum.drawCommonError.getCode()).setMessage(ErrorCodeEnum.drawCommonError.getMsg());
             return drawResPb;
         }

@@ -27,12 +27,12 @@ public class DrawUseBagExecutor implements BaseExecutor<DrawUseBagReqPb, DrawUse
             return drawUseBagResPb;
         }
         if(userDrawDTO.getSsqCount() >= userDrawDTO.getSsqTargetCount()){
-            log.info("DrawUseBagExecutor::executor:userId = {},上上签数量已达标",userId);
+            log.info("DrawUseBagExecutor::executor:userId = {},ssqCount = {},ssqTargetCount = {},上上签数量已达标",userId,userDrawDTO.getSsqCount(),userDrawDTO.getSsqTargetCount());
             drawUseBagResPb.setCode(ErrorCodeEnum.drawCommonError.getCode()).setMessage(ErrorCodeEnum.drawCommonError.getMsg());
             return drawUseBagResPb;
         }
         if(userDrawDTO.getRemainDrawCount() <= 0){
-            log.info("DrawUseBagExecutor::executor:userId = {},剩余轮数小于等于0",userId);
+            log.info("DrawUseBagExecutor::executor:userId = {},remainDrawCount = {},剩余轮数小于等于0",userId,userDrawDTO.getRemainDrawCount());
             drawUseBagResPb.setCode(ErrorCodeEnum.drawCommonError.getCode()).setMessage(ErrorCodeEnum.drawCommonError.getMsg());
             return drawUseBagResPb;
         }
