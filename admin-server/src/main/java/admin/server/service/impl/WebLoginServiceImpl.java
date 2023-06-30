@@ -6,8 +6,9 @@ import admin.server.repository.WebUserRepository;
 import admin.server.service.IWebLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.Map;
 
 import static admin.server.util.Base64Utils.convertToBase64;
@@ -16,7 +17,7 @@ import static admin.server.util.Base64Utils.convertToBase64;
 @Service
 public class WebLoginServiceImpl implements IWebLoginService {
     @Autowired
-    WebUserRepository webUserRepository;
+    private WebUserRepository webUserRepository;
 
     @Override
     public WebUserDTO checkCredentials(WebUserDTO user){
@@ -42,17 +43,12 @@ public class WebLoginServiceImpl implements IWebLoginService {
     }
 
     @Override
-    public boolean registerUser(WebUserDTO user){
-        try {
-            String defaultAvatar = "https://th.bing.com/th/id/OIP.0siT9Vkwx8tb_kFTi-KV1wHaHa?pid=ImgDet&rs=1";
-            defaultAvatar = "data:image/png;base64," + convertToBase64(defaultAvatar);
-            String defaultRole = "editor";
-            user.setRole(defaultRole).setAvatar(defaultAvatar);
-            webUserRepository.add(user);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+    public void registerUser(WebUserDTO user) throws IOException {
+        String defaultAvatar = "https://th.bing.com/th/id/OIP.0siT9Vkwx8tb_kFTi-KV1wHaHa?pid=ImgDet&rs=1";
+        defaultAvatar = "data:image/png;base64," + convertToBase64(defaultAvatar);
+        String defaultRole = "editor";
+        user.setRole(defaultRole).setAvatar(defaultAvatar);
+        webUserRepository.add(user);
     }
 
 

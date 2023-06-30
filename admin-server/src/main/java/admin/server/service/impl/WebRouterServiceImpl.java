@@ -1,10 +1,10 @@
 package admin.server.service.impl;
 
 
-import admin.server.entity.Role;
+import admin.server.dto.RoleDTO;
 import admin.server.entity.RouteData;
 import admin.server.repository.WebRouterRepository;
-import admin.server.service.WebRouterService;
+import admin.server.service.IWebRouterService;
 import admin.server.dto.WebRouterDTO;
 
 import static admin.server.util.rolesUtil.convertListToString;
@@ -18,9 +18,9 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class WebRouterServiceImpl implements WebRouterService {
+public class WebRouterServiceImpl implements IWebRouterService {
     @Autowired
-    WebRouterRepository webRouterRepository;
+    private WebRouterRepository webRouterRepository;
 
     @Override
     public List<String> getRoles(WebRouterDTO dto) {
@@ -47,16 +47,16 @@ public class WebRouterServiceImpl implements WebRouterService {
     }
 
     @Override
-    public boolean addRole(Role role){
+    public boolean addRole(RoleDTO roleDTO){
         Map<String, WebRouterDTO> webRouterDTOMap = webRouterRepository.getMap();
 
-        List<RouteData> routes = role.getRoutes();
-        role.setName("\'" + role.getName() + "\'");
+        List<RouteData> routes = roleDTO.getRoutes();
+        roleDTO.setName("\'" + roleDTO.getName() + "\'");
 
         String allRoles = webRouterDTOMap.get("AllRoles").getRoles();
         List<String> allRoleList = convertRoles(allRoles);
-        if(!allRoleList.contains(role.getName())) {
-            allRoleList.add(role.getName());
+        if(!allRoleList.contains(roleDTO.getName())) {
+            allRoleList.add(roleDTO.getName());
             String res = convertListToString(allRoleList);
             WebRouterDTO dto = webRouterDTOMap.get("AllRoles").setRoles(res);
             webRouterRepository.update(dto);
@@ -70,23 +70,23 @@ public class WebRouterServiceImpl implements WebRouterService {
             if (webRouterDTOMap.containsKey(routeName)) {
                 String roles = webRouterDTOMap.get(routeName).getRoles();
                 List<String> roleList = convertRoles(roles);
-                roleList.add(role.getName());
-
+                roleList.add(roleDTO.getName());
+                String res = convertListToString(roleList);
+                WebRouterDTO dto = webRouterDTOMap.get(routeName).setRoles(res);
+                webRouterRepository.update(dto);
             }
         }
-
         return true;
     }
 
     @Override
-    public void updateRole(Role role) {
+    public void updateRole(RoleDTO roleDTO) {
         Map<String, WebRouterDTO> webRouterDTOMap = webRouterRepository.getMap();
-        List<RouteData> routes = role.getRoutes();
-        role.setName("\'" + role.getName() + "\'");
+        List<RouteData> routes = roleDTO.getRoutes();
+        roleDTO.setName("\'" + roleDTO.getName() + "\'");
         for (String key : webRouterDTOMap.keySet()) {
             boolean hasRoute = false;
             if(key.equals("AllRoles")){
-                hasRoute = true;
                 continue;
             }
             for (int i = 0; i < routes.size(); i++) {
@@ -95,8 +95,8 @@ public class WebRouterServiceImpl implements WebRouterService {
                     hasRoute = true;
                     String roles = webRouterDTOMap.get(key).getRoles();
                     List<String> roleList = convertRoles(roles);
-                    if (!roleList.contains(role.getName())) {
-                        roleList.add(role.getName());
+                    if (!roleList.contains(roleDTO.getName())) {
+                        roleList.add(roleDTO.getName());
                         String res = convertListToString(roleList);
                         WebRouterDTO dto = webRouterDTOMap.get(key).setRoles(res);
                         webRouterRepository.update(dto);
@@ -107,8 +107,8 @@ public class WebRouterServiceImpl implements WebRouterService {
             if(!hasRoute){
                 String roles = webRouterDTOMap.get(key).getRoles();
                 List<String> roleList = convertRoles(roles);
-                if(roleList.contains(role.getName())) {
-                    roleList.remove(role.getName());
+                if(roleList.contains(roleDTO.getName())) {
+                    roleList.remove(roleDTO.getName());
                     String res = convertListToString(roleList);
                     WebRouterDTO dto = webRouterDTOMap.get(key).setRoles(res);
                     webRouterRepository.update(dto);

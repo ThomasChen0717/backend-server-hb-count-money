@@ -9,6 +9,8 @@ import admin.server.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("webLogin")
@@ -19,14 +21,20 @@ public class WebLoginController {
     @PostMapping("/logout")
     public APIResponse logout(@RequestHeader("X-Token") String token){
         APIResponse res = new APIResponse();
-        // 验证token的合法和有效性
-        String tokenValue = JwtUtil.verify(token);
-        // 获取token中的用户名
-        String username = tokenValue.replaceFirst(JwtUtil.TOKEN_SUCCESS, "");
-        // 移除session中的登录标记（或者redis中的登录标记）
-        res.setMessage("登出成功");
-        res.setData("logout success");
-        res.setCode(1);
+        try {
+            // 验证token的合法和有效性
+            String tokenValue = JwtUtil.verify(token);
+            // 获取token中的用户名
+            String username = tokenValue.replaceFirst(JwtUtil.TOKEN_SUCCESS, "");
+            // 移除session中的登录标记（或者redis中的登录标记）
+            res.setMessage("登出成功");
+            res.setData("登出成功");
+            res.setCode(1);
+        } catch(Exception e){
+            res.setMessage("登出失败");
+            res.setData("登出失败");
+            res.setCode(-1);
+        }
         return res;
     }
 
@@ -35,18 +43,24 @@ public class WebLoginController {
     @GetMapping("/info")
     public APIResponse info(@RequestParam("token") String token){
         APIResponse res = new APIResponse();
-        // 验证token的合法和有效性
-        String tokenValue = JwtUtil.verify(token);
-        if(tokenValue != null && tokenValue.startsWith(JwtUtil.TOKEN_SUCCESS)) {
-            String username = tokenValue.replaceFirst(JwtUtil.TOKEN_SUCCESS, "");
-            dtoUserInfo info = new dtoUserInfo();
-            info = this.webLoginService.getInfo(username, info);
-            res.setData(info);
-            res.setMessage("成功");
-            res.setCode(1);
-        }else {
-            res.setCode(50008);
-            res.setMessage("失败");
+        try {
+            // 验证token的合法和有效性
+            String tokenValue = JwtUtil.verify(token);
+            if (tokenValue != null && tokenValue.startsWith(JwtUtil.TOKEN_SUCCESS)) {
+                String username = tokenValue.replaceFirst(JwtUtil.TOKEN_SUCCESS, "");
+                dtoUserInfo info = new dtoUserInfo();
+                info = this.webLoginService.getInfo(username, info);
+                res.setData(info);
+                res.setMessage("获取用户信息成功");
+                res.setCode(1);
+            } else {
+                res.setCode(50008);
+                res.setMessage("获取用户信息失败");
+            }
+        } catch(Exception e){
+            res.setMessage("获取用户信息失败");
+            res.setData("获取用户信息失败");
+            res.setCode(-1);
         }
 
         return res;
@@ -80,15 +94,14 @@ public class WebLoginController {
     }
 
     @PostMapping("/register")
-    public APIResponse register(@RequestBody WebUserDTO user){
+    public APIResponse register(@RequestBody WebUserDTO user) throws IOException {
         APIResponse res = new APIResponse();
-        boolean success = this.webLoginService.registerUser(user);
-        if(success) {
+        try {
+            this.webLoginService.registerUser(user);
             res.setCode(1);
             res.setMessage("注册成功");
             res.setData("注册成功");
-        }
-        else{
+        } catch(Exception e){
             res.setCode(-1);
             res.setMessage("注册失败");
             res.setData("注册失败");

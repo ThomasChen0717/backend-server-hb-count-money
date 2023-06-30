@@ -1,16 +1,16 @@
 package admin.server.service;
 
 import admin.server.dto.WebRouterDTO;
-import admin.server.entity.Role;
+import admin.server.dto.RoleDTO;
 
 import java.util.List;
 
-public interface WebRouterService {
+public interface IWebRouterService {
     List<String> getRoles(WebRouterDTO dto);
 
     void deleteRole(String role);
 
-    boolean addRole(Role role);
+    boolean addRole(RoleDTO roleDTO);
 
-    void updateRole(Role role);
+    void updateRole(RoleDTO roleDTO);
 }

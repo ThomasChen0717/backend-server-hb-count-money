@@ -16,27 +16,45 @@ public class WebValidateController {
     @PostMapping("/checkUsername")
     public APIResponse checkUsername(@RequestBody String Username){
         APIResponse res = new APIResponse();
-        res.setCode(1);
-        res.setMessage("成功");
-        res.setData(this.webValidateService.checkUniqueUsername(Username));
+        try {
+            res.setCode(1);
+            res.setMessage("用户名匹配");
+            res.setData(this.webValidateService.checkUniqueUsername(Username));
+        } catch(Exception e){
+            res.setCode(-1);
+            res.setMessage("检查用户名失败");
+            res.setData("检查用户名失败");
+        }
         return res;
     }
 
     @PostMapping("/checkDisplayName")
     public APIResponse checkDisplayName(@RequestBody String DisplayName){
         APIResponse res = new APIResponse();
-        res.setCode(1);
-        res.setMessage("成功");
-        res.setData(this.webValidateService.checkUniqueDisplayName(DisplayName));
+        try {
+            res.setCode(1);
+            res.setMessage("昵称匹配");
+            res.setData(this.webValidateService.checkUniqueDisplayName(DisplayName));
+        } catch(Exception e){
+            res.setCode(-1);
+            res.setMessage("检查昵称失败");
+            res.setData("检查昵称失败");
+        }
         return res;
     }
 
     @PostMapping("/checkOldPassword")
     public APIResponse checkOldPassword(@RequestBody WebUserDTO dto){
         APIResponse res = new APIResponse();
-        res.setCode(1);
-        res.setMessage("密码匹配");
-        res.setData(this.webValidateService.checkOldPassword(dto.getPassword(), dto.getId()));
+        try {
+            res.setCode(1);
+            res.setMessage("密码匹配");
+            res.setData(this.webValidateService.checkOldPassword(dto.getPassword(), dto.getId()));
+        } catch(Exception e){
+            res.setCode(-1);
+            res.setMessage("检查密码失败");
+            res.setData("检查密码失败");
+        }
         return res;
     }
 }

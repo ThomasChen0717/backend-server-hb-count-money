@@ -2,8 +2,8 @@ package admin.server.service.controller;
 
 import admin.server.dto.WebRouterDTO;
 import admin.server.entity.APIResponse;
-import admin.server.entity.Role;
-import admin.server.service.WebRouterService;
+import admin.server.dto.RoleDTO;
+import admin.server.service.IWebRouterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +17,7 @@ import java.util.List;
 public class WebRouterController {
 
     @Autowired
-    WebRouterService webRouterService;
+    IWebRouterService webRouterService;
     @PostMapping("/getRoles")
     public APIResponse getRoles(@RequestBody WebRouterDTO dto){
         APIResponse res = new APIResponse();
@@ -51,10 +51,10 @@ public class WebRouterController {
     }
 
     @PostMapping("/addRole")
-    public APIResponse addRole(@RequestBody Role role){
+    public APIResponse addRole(@RequestBody RoleDTO roleDTO){
         APIResponse res = new APIResponse();
         try{
-            boolean success = this.webRouterService.addRole(role);
+            boolean success = this.webRouterService.addRole(roleDTO);
             res.setCode(1);
             res.setData("添加成功!");
             res.setMessage("添加成功!");
@@ -72,17 +72,17 @@ public class WebRouterController {
     }
 
     @PostMapping("/updateRole")
-    public APIResponse updateRole(@RequestBody Role role){
+    public APIResponse updateRole(@RequestBody RoleDTO roleDTO){
         APIResponse res = new APIResponse();
         try{
-            this.webRouterService.updateRole(role);
+            this.webRouterService.updateRole(roleDTO);
             res.setCode(1);
-            res.setData("删除成功!");
-            res.setMessage("删除成功!");
+            res.setData("更新成功!");
+            res.setMessage("更新成功!");
         }catch(Exception e){
             res.setCode(-1);
-            res.setData("删除失败!");
-            res.setMessage("删除失败!");
+            res.setData("更新失败!");
+            res.setMessage("更新失败!");
         }
         return res;
     }

@@ -6,19 +6,21 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import admin.server.dto.*;
 import admin.server.repository.*;
-import admin.server.service.IToolService;
+import admin.server.service.IWebDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Slf4j
 @Service
-public class ToolServiceImpl implements IToolService {
+public class WebDatabaseServiceImpl implements IWebDatabaseService {
 
     @Autowired
     private CfgGlobalRepository cfgGlobalRepository;
@@ -41,6 +43,8 @@ public class ToolServiceImpl implements IToolService {
     @Autowired
     private CfgLotteryTicketRepository cfgLotteryTicketRepository;
 
+    @Autowired
+    private UserCountRepository userCountRepository;
 
     @Override
     public List<String> updateFromExcel(List<MultipartFile> files) {
@@ -142,6 +146,39 @@ public class ToolServiceImpl implements IToolService {
         }
         return errorFiles;
     }
+
+
+    public List<UserCountDTO> getUserCount(LocalDateTime date, String hour){
+        Map<Long, UserCountDTO> userCountDTOMap = userCountRepository.getMap();
+        List<UserCountDTO> resList = new ArrayList<>();
+        for(long key: userCountDTOMap.keySet()){
+            LocalDateTime createTime = userCountDTOMap.get(key).getCreateTime();
+            if(createTime.getYear() == date.getYear() && createTime.getDayOfYear() == date.getDayOfYear()) {
+                if(hour == null){
+                    UserCountDTO userCountDTO = new UserCountDTO();
+                    userCountDTO.setId(key)
+                            .setLogicServerId(userCountDTOMap.get(key).getLogicServerId())
+                            .setOnlineUserCount(userCountDTOMap.get(key).getOnlineUserCount())
+                            .setCacheUserCount(userCountDTOMap.get(key).getCacheUserCount())
+                            .setCreateTimeString(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(userCountDTOMap.get(key).getCreateTime()));
+                    resList.add(userCountDTO);
+                }
+                else{
+                    if(createTime.getHour() == Integer.parseInt(hour)){
+                        UserCountDTO userCountDTO = new UserCountDTO();
+                        userCountDTO.setId(key)
+                                .setLogicServerId(userCountDTOMap.get(key).getLogicServerId())
+                                .setOnlineUserCount(userCountDTOMap.get(key).getOnlineUserCount())
+                                .setCacheUserCount(userCountDTOMap.get(key).getCacheUserCount())
+                                .setCreateTimeString(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(userCountDTOMap.get(key).getCreateTime()));
+                        resList.add(userCountDTO);
+                    }
+                }
+            }
+        }
+        return resList;
+    }
+
 
     public int updateCfgAttribute(Sheet sheet, int firstRow, int lastRow) {
         try {

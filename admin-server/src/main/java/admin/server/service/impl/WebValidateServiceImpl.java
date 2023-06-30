@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class WebValidateServiceImpl implements IWebValidateService {
     @Autowired
-    WebUserRepository webUserRepository;
+    private WebUserRepository webUserRepository;
 
     @Override
     public boolean checkUniqueUsername(String Username){
