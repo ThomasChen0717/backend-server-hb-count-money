@@ -15,12 +15,12 @@ public class LogServiceImpl implements ILogService {
     private LogCollectRepository logCollectRepository;
 
     @Override
-    public void logCollect(JSONObject jsonLog){
+    public int logCollect(JSONObject jsonLog){
         LogCollectDTO logCollectDTO = new LogCollectDTO();
         logCollectDTO.setUserId(jsonLog.getLongValue("userId"))
                 .setClientVersion(jsonLog.getString("clientVersion"))
                 .setLogInfo(jsonLog.getString("logInfo"));
 
-        logCollectRepository.add(logCollectDTO);
+        return logCollectRepository.add(logCollectDTO);
     }
 }

@@ -15,7 +15,7 @@ public class LogController {
     private ILogService logService;
 
     @RequestMapping(value = "logCollect", method = RequestMethod.POST)
-    public void logCollect(@RequestBody JSONObject jsonLog) {
-        logService.logCollect(jsonLog);
+    public int logCollect(@RequestBody JSONObject jsonLog) {
+        return logService.logCollect(jsonLog);
     }
 }
