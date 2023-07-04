@@ -355,7 +355,12 @@ public class LoginServiceImpl implements ILoginService{
             JSONObject jsonRes = JSONObject.parseObject(stringRes);
             JSONObject jsonData = jsonRes.getJSONObject("data");
             if (jsonData != null) {
-                jsonPlatformUserInfo.put("unionId", jsonData.getString("union_id"));
+                if(platform.compareTo("ty_wx") == 0){
+                    // 如是微信平台，途悦平台返回的union_id为空，使用open_id代替
+                    jsonPlatformUserInfo.put("unionId", jsonData.getString("open_id"));
+                }else{
+                    jsonPlatformUserInfo.put("unionId", jsonData.getString("union_id"));
+                }
                 jsonPlatformUserInfo.put("openid", jsonData.getString("open_id"));
             }
         } else {
