@@ -5,11 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.HashMap;
 
-
+@Slf4j
 public class JwtUtil {
     public static final String TOKEN_LOGIN_NAME = "loginName";
     public static final String TOKEN_LOGIN_ID = "userId";
@@ -18,7 +19,7 @@ public class JwtUtil {
     /**
      * 过期时间15分钟
      */
-    private static final long EXPIRE_TIME = 15*60*1000;
+    private static final long EXPIRE_TIME = 15*60*60*1000;
 
     /**
      * token私钥
@@ -55,10 +56,13 @@ public class JwtUtil {
             result += jwt.getClaims().get(TOKEN_LOGIN_NAME).asString();
             return result; // success:username
         } catch (IllegalArgumentException e) {
+            log.error("JwtUtil::Verify Failure(Illegal Argument):验证失败(非法参数)");
             return TOKEN_FAIL+e.getMessage();
         } catch (JWTVerificationException e) {
+            log.error("JwtUtil::Verify Failure:验证失败");
             return TOKEN_FAIL+e.getMessage();
         }catch (Exception e){
+            log.error("JwtUtil::Verify Failure:验证失败");
             return TOKEN_FAIL+e.getMessage();
         }
 

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -42,6 +41,8 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
     private CfgVipRepository cfgVipRepository;
     @Autowired
     private CfgLotteryTicketRepository cfgLotteryTicketRepository;
+    @Autowired
+    private CfgDrawRepository cfgDrawRepository;
 
     @Autowired
     private UserCountRepository userCountRepository;
@@ -65,83 +66,90 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
                         success = updateCfgAttribute(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_boss.xlsx":
                         success = updateCfgBoss(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_buff_tool.xlsx":
                         success = updateCfgBuffTool(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_equipment.xlsx":
                         success = updateCfgEquipment(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_global.xlsx":
                         success = updateCfgGlobal(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_magnate.xlsx":
                         success = updateCfgMagnate(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_vehicle.xlsx":
                         success = updateCfgVehicle(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_vehicle_new.xlsx":
                         success = updateCfgVehicleNew(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_vip.xlsx":
                         success = updateCfgVip(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     case "t_cfg_lottery_ticket.xlsx":
                         success = updateCfgLotteryTicket(sheet, firstRow, lastRow);
                         if (success == -1) {
                             errorFiles.add(fileName + ":更新失败！");
-                            log.error("ToolServiceImpl::Update Failed:更新失败");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
+                        }
+                        break;
+                    case "t_cfg_draw.xlsx":
+                        success = updateCfgDraw(sheet, firstRow, lastRow);
+                        if (success == -1) {
+                            errorFiles.add(fileName + ":更新失败！");
+                            log.error("WebDatabaseServiceImpl::Update Failed:更新失败");
                         }
                         break;
                     default:
                         //未找到文件
                         errorFiles.add(fileName + ":未找到对应SQL表格");
-                        log.error("ToolServiceImpl::NoSQLTableFound:未找到对应SQL表格");
+                        log.error("WebDatabaseServiceImpl::NoSQLTableFound:未找到对应SQL表格");
                 }
                 //结束并停止读取文件
                 inputStream.close();
                 //处理报错
             } catch (Exception e) {
                 errorFiles.add(fileName + ":未找到Excel文件");
-                log.error("ToolServiceImpl::NoExcelFileFound:未找到Excel文件");
+                log.error("WebDatabaseServiceImpl::NoExcelFileFound:未找到Excel文件");
             }
         }
         return errorFiles;
@@ -174,6 +182,24 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
                         resList.add(userCountDTO);
                     }
                 }
+            }
+        }
+        return resList;
+    }
+
+    public List<UserCountDTO> getUserCountGraph(LocalDateTime date, String hour, int logicServerId){
+        Map<Long, UserCountDTO> userCountDTOMap = userCountRepository.getMap();
+        List<UserCountDTO> resList = new ArrayList<>();
+        for(long key: userCountDTOMap.keySet()) {
+            LocalDateTime createTime = userCountDTOMap.get(key).getCreateTime();
+            if (createTime.getYear() == date.getYear() && createTime.getDayOfYear() == date.getDayOfYear() && userCountDTOMap.get(key).getLogicServerId() == logicServerId && createTime.getHour() == Integer.parseInt(hour)) {
+                UserCountDTO userCountDTO = new UserCountDTO();
+                userCountDTO.setId(key)
+                        .setLogicServerId(userCountDTOMap.get(key).getLogicServerId())
+                        .setOnlineUserCount(userCountDTOMap.get(key).getOnlineUserCount())
+                        .setCacheUserCount(userCountDTOMap.get(key).getCacheUserCount())
+                        .setCreateTimeString(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(userCountDTOMap.get(key).getCreateTime()));
+                resList.add(userCountDTO);
             }
         }
         return resList;
@@ -438,6 +464,34 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
                         .setWinningBonusFormula(row.getCell(3).getStringCellValue())
                         .setLosingBonusFormula(row.getCell(4).getStringCellValue());
                 cfgLotteryTicketRepository.add(cfgLotteryTicketDTO);
+            }
+        } catch (Exception e) {
+            return -1;
+        }
+        return 1;
+    }
+
+    public int updateCfgDraw(Sheet sheet, int firstRow, int lastRow) {
+        try {
+            //清除原表
+            cfgDrawRepository.delete();
+            //循环excel表并存入
+            for (int index = firstRow + 1; index <= lastRow; index++) {
+                Row row = sheet.getRow(index);
+                if (row.getCell(0).getCellType() == CellType.BLANK) {
+                    continue;
+                }
+                CfgDrawDTO cfgDrawDTO = new CfgDrawDTO();
+                cfgDrawDTO.setRoundNumber((int) row.getCell(0).getNumericCellValue())
+                        .setDrawCount((int)row.getCell(1).getNumericCellValue())
+                        .setSsqTargetCount((int)row.getCell(2).getNumericCellValue())
+                        .setReward((float)row.getCell(3).getNumericCellValue())
+                        .setIncludeExtraReward((float)row.getCell(4).getNumericCellValue())
+                        .setPunish((float)row.getCell(5).getNumericCellValue())
+                        .setBagProbability((float)row.getCell(6).getNumericCellValue())
+                        .setSingleDrawProbability(row.getCell(7).getStringCellValue())
+                        .setMultipleDrawProbability(row.getCell(8).getStringCellValue());
+                cfgDrawRepository.add(cfgDrawDTO);
             }
         } catch (Exception e) {
             return -1;

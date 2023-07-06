@@ -1,19 +1,23 @@
 package admin.server.service.controller;
 
 import admin.server.config.NacosConfiguration;
-import admin.server.dto.UserCountDTO;
 import admin.server.dto.UserCountFilterDTO;
 import admin.server.entity.APIResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import admin.server.service.IWebDatabaseService;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * 后端接口RestController: 数据库操作
+ *
+ * @author Thomas
+ * @date 2023-07-06
+ */
+@Slf4j
 @RestController
 @RequestMapping("database")
 public class WebDatabaseController {
@@ -23,15 +27,14 @@ public class WebDatabaseController {
     @Autowired
     private NacosConfiguration nacosConfiguration;
 
-    /*
-    * 使用 "端口/database/updateFromExcel进行读取
-    * 在Body中以以下格式加入path和excelList
-    * {
-            "path": "excel文档的父路径",
-            "excelList":["excel文档1.xlsx"， "excel文档2.xlsx",...]
-        }
-    */
-    @RequestMapping(value = "/updateFile", method = RequestMethod.POST)
+    /**
+     * 将前端上传的Excel表格存入数据库
+     *
+     * @Param List<MultipartFile> 前端上传的单个或多个Excel 表格
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
+    @PostMapping("/updateFile")
     public APIResponse handleFileUpload(@RequestParam("file") List<MultipartFile> files) {
         int allowed = nacosConfiguration.getSpringProfilesActive().compareTo("dev") == 0 || nacosConfiguration.getSpringProfilesActive().compareTo("test") == 0 ? 1 : 0;
         APIResponse res = new APIResponse();
@@ -58,6 +61,13 @@ public class WebDatabaseController {
         return res;
     }
 
+    /**
+     * 将前端指定时间范围内的t_user_count 表传输回前端（以表的形式显示）
+     *
+     * @Param UserCountFilterDTO dto 前端所需的时间段
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
     @PostMapping("/getUserCount")
     public APIResponse getUserCount(@RequestBody UserCountFilterDTO dto){
         APIResponse res = new APIResponse();
@@ -69,6 +79,29 @@ public class WebDatabaseController {
             res.setMessage("获取表格失败");
             res.setCode(-1);
             res.setData("获取表格失败");
+            log.error("WebDatabaseServiceImpl::getUserCount Failure:获取表格失败");
+        }
+        return res;
+    }
+    /**
+     * 将前端指定时间范围内的t_user_count 表传输回前端（以图的形式显示）
+     *
+     * @Param UserCountFilterDTO dto 前端所需的时间段
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
+    @PostMapping("/getUserCountGraph")
+    public APIResponse getUserCountGraph(@RequestBody UserCountFilterDTO dto){
+        APIResponse res = new APIResponse();
+        try {
+            res.setMessage("获取表格成功");
+            res.setCode(1);
+            res.setData(webDatabaseService.getUserCountGraph(dto.getDate(), dto.getHour(), dto.getLogicServerId()));
+        } catch(Exception e){
+            res.setMessage("获取表格失败");
+            res.setCode(-1);
+            res.setData("获取表格失败");
+            log.error("WebDatabaseServiceImpl::getUserCount Failure:获取图失败");
         }
         return res;
     }

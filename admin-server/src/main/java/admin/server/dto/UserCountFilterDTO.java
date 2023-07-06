@@ -10,4 +10,5 @@ public class UserCountFilterDTO {
     private static final long serialVersionUID = 1L;
     private LocalDateTime date;
     private String hour;
+    private int logicServerId;
 }

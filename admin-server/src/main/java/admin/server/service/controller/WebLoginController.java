@@ -6,18 +6,32 @@ import admin.server.dto.dtoUserInfo;
 import admin.server.entity.APIResponse;
 import admin.server.service.IWebLoginService;
 import admin.server.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-
+/**
+ * 后端接口RestController: 登录登出操作
+ *
+ * @author Thomas
+ * @date 2023-07-06
+ */
+@Slf4j
 @RestController
 @RequestMapping("webLogin")
 public class WebLoginController {
     @Autowired
     private IWebLoginService webLoginService;
 
+    /**
+     * 登出
+     *
+     * @Param String token 在线用户的token
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
     @PostMapping("/logout")
     public APIResponse logout(@RequestHeader("X-Token") String token){
         APIResponse res = new APIResponse();
@@ -39,7 +53,13 @@ public class WebLoginController {
     }
 
 
-
+    /**
+     * 获取用户信息
+     *
+     * @Param String token 在线用户的token
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
     @GetMapping("/info")
     public APIResponse info(@RequestParam("token") String token){
         APIResponse res = new APIResponse();
@@ -61,11 +81,19 @@ public class WebLoginController {
             res.setMessage("获取用户信息失败");
             res.setData("获取用户信息失败");
             res.setCode(-1);
+            log.error("WebLoginServiceImpl::getInfo Failure:获取用户信息失败");
         }
 
         return res;
     }
 
+    /**
+     * 登录
+     *
+     * @Param WebUserDTO user 用于检查用户的账号密码
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
     @PostMapping("/login")
     public APIResponse login(@RequestBody WebUserDTO user){
         APIResponse res = new APIResponse();
@@ -83,16 +111,24 @@ public class WebLoginController {
                 res.setCode(-1);
                 res.setMessage("用户名和密码不匹配");
                 res.setData("Fail");
+                log.error("WebLoginServiceImpl::login Failure:登录失败");
             }
         } catch (Exception e) {
             res.setCode(-1);
             res.setMessage("用户名和密码不匹配");
             res.setData("Fail");
-            e.printStackTrace();
+            log.error("JwtUtil::login Failure:登录失败");
         }
         return res;
     }
 
+    /**
+     * 注册
+     *
+     * @Param WebUserDTO user 注册时的用户信息
+     * @Retyrn APIResponse 传回前端的回复
+     *
+     */
     @PostMapping("/register")
     public APIResponse register(@RequestBody WebUserDTO user) throws IOException {
         APIResponse res = new APIResponse();
@@ -105,6 +141,7 @@ public class WebLoginController {
             res.setCode(-1);
             res.setMessage("注册失败");
             res.setData("注册失败");
+            log.error("WebLoginServiceImpl::register Failure:注册失败");
         }
         return res;
     }

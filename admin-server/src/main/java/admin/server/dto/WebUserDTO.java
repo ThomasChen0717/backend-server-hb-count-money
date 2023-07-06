@@ -1,7 +1,5 @@
 package admin.server.dto;
 
-
-import admin.server.dto.Model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
