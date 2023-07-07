@@ -31,7 +31,7 @@ public class WebRouterController {
      * 获取路由的权限列表
      *
      * @Param WebRouterDTO dto 路由
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/getRoles")
@@ -55,7 +55,7 @@ public class WebRouterController {
      * 删除权限
      *
      * @Param String role 需要删除的权限
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/deleteRole")
@@ -79,7 +79,7 @@ public class WebRouterController {
      * 添加权限
      *
      * @Param RoleDTO roleDTO 需要添加的权限
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/addRole")
@@ -109,7 +109,7 @@ public class WebRouterController {
      * 更新权限
      *
      * @Param RoleDTO roleDTO 需要更新的权限
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/updateRole")

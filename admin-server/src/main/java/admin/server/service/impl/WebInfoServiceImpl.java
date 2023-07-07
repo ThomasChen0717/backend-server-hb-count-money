@@ -22,15 +22,15 @@ public class WebInfoServiceImpl implements IWebInfoService {
     @Override
     public void changePassword(String password, long id) {
         Map<Long, WebUserDTO> webUserDTOMap = webUserRepository.getMapById();
-        WebUserDTO dto = webUserDTOMap.get(id).setPassword(password);
-        webUserRepository.update(dto);
+        WebUserDTO webUserDTO = webUserDTOMap.get(id).setPassword(password);
+        webUserRepository.update(webUserDTO);
     }
 
     @Override
     public void changeName(String name, long id) {
         Map<Long, WebUserDTO> webUserDTOMap = webUserRepository.getMapById();
-        WebUserDTO dto = webUserDTOMap.get(id).setName(name);
-        webUserRepository.update(dto);
+        WebUserDTO webUserDTO = webUserDTOMap.get(id).setName(name);
+        webUserRepository.update(webUserDTO);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class WebInfoServiceImpl implements IWebInfoService {
         else if(file.getOriginalFilename().contains(".png")) {
             avatarUrl = "data:image/png;base64," + avatarUrl;
         }
-        WebUserDTO dto = webUserDTOMap.get(id).setAvatar(avatarUrl);
-        int bool = webUserRepository.update(dto);
+        WebUserDTO webUserDTO = webUserDTOMap.get(id).setAvatar(avatarUrl);
+        int bool = webUserRepository.update(webUserDTO);
     }
 
 }

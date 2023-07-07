@@ -1,6 +1,7 @@
 package admin.server.service.controller;
 
 import admin.server.config.NacosConfiguration;
+import admin.server.dto.ClientVersionDTO;
 import admin.server.dto.UserCountFilterDTO;
 import admin.server.entity.APIResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,44 +29,10 @@ public class WebDatabaseController {
     private NacosConfiguration nacosConfiguration;
 
     /**
-     * 将前端上传的Excel表格存入数据库
-     *
-     * @Param List<MultipartFile> 前端上传的单个或多个Excel 表格
-     * @Retyrn APIResponse 传回前端的回复
-     *
-     */
-    @PostMapping("/updateFile")
-    public APIResponse handleFileUpload(@RequestParam("file") List<MultipartFile> files) {
-        int allowed = nacosConfiguration.getSpringProfilesActive().compareTo("dev") == 0 || nacosConfiguration.getSpringProfilesActive().compareTo("test") == 0 ? 1 : 0;
-        APIResponse res = new APIResponse();
-        if(allowed == 1) {
-            List<String> errorFiles = webDatabaseService.updateFromExcel(files);
-            if (errorFiles.isEmpty()) {
-                res.setCode(1);
-                res.setData("更新成功！");
-                res.setMessage("更新成功！");
-            } else {
-                String err = "";
-                for (int i = 0; i < errorFiles.size(); i++) {
-                    err += errorFiles.get(i) + "\n";
-                }
-                res.setCode(-1);
-                res.setData(err);
-                res.setMessage(err);
-            }
-            return res;
-        }
-        res.setCode(-1);
-        res.setData("权限受限！");
-        res.setMessage("权限受限！");
-        return res;
-    }
-
-    /**
      * 将前端指定时间范围内的t_user_count 表传输回前端（以表的形式显示）
      *
      * @Param UserCountFilterDTO dto 前端所需的时间段
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/getUserCount")
@@ -87,7 +54,7 @@ public class WebDatabaseController {
      * 将前端指定时间范围内的t_user_count 表传输回前端（以图的形式显示）
      *
      * @Param UserCountFilterDTO dto 前端所需的时间段
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/getUserCountGraph")
@@ -102,6 +69,101 @@ public class WebDatabaseController {
             res.setCode(-1);
             res.setData("获取表格失败");
             log.error("WebDatabaseServiceImpl::getUserCount Failure:获取图失败");
+        }
+        return res;
+    }
+
+    /**
+     * 获取t_client_version的数据并传输给前端
+     *
+     *
+     * @Return APIResponse 传回前端的回复
+     *
+     */
+    @GetMapping("/getClientVersion")
+    public APIResponse getClientVersion(){
+        APIResponse res = new APIResponse();
+        try {
+            res.setMessage("获取版本信息成功");
+            res.setCode(1);
+            res.setData(webDatabaseService.getClientVersion());
+        } catch(Exception e){
+            res.setMessage("获取版本信息失败");
+            res.setCode(-1);
+            res.setData("获取版本信息失败");
+            log.error("WebDatabaseServiceImpl::getUserCount Failure:获取版本信息失败");
+        }
+        return res;
+    }
+
+    /**
+     * 往t_client_version表里添加新字段
+     *
+     * @Param ClientVersionDTO clientVersionDTO 需要添加的字段
+     * @Return APIResponse 传回前端的回复
+     *
+     */
+    @PostMapping("/addNewClientVersion")
+    public APIResponse addNewClientVersion(@RequestBody ClientVersionDTO clientVersionDTO){
+        APIResponse res = new APIResponse();
+        try{
+            webDatabaseService.addNewClientVersion(clientVersionDTO);
+            res.setMessage("添加新版本成功");
+            res.setCode(1);
+            res.setData("添加新版本成功");
+        } catch(Exception e){
+            res.setMessage("添加新版本失败");
+            res.setCode(-1);
+            res.setData("添加新版本失败");
+            log.error("WebDatabaseServiceImpl::addNewClientVersion Failure:添加新版本失败");
+        }
+        return res;
+    }
+
+    /**
+     * 往t_client_version表里更新字段
+     *
+     * @Param ClientVersionDTO clientVersionDTO 需要更新的字段
+     * @Return APIResponse 传回前端的回复
+     *
+     */
+    @PostMapping("/updateClientVersion")
+    public APIResponse updateClientVersion(@RequestBody ClientVersionDTO clientVersionDTO){
+        APIResponse res = new APIResponse();
+        try{
+            webDatabaseService.updateClientVersion(clientVersionDTO);
+            res.setMessage("修改版本成功");
+            res.setCode(1);
+            res.setData("修改版本成功");
+        } catch(Exception e){
+            res.setMessage("修改版本失败");
+            res.setCode(-1);
+            res.setData("修改版本失败");
+            log.error("WebDatabaseServiceImpl::addNewClientVersion Failure:修改版本失败");
+        }
+        return res;
+    }
+
+    /**
+     * 往t_client_version表里删除一个字段
+     *
+     * @Param ClientVersionDTO clientVersionDTO 需要删除的字段
+     * @Return APIResponse 传回前端的回复
+     *
+     */
+    @PostMapping("/deleteClientVersion")
+    public APIResponse deleteClientVersion(@RequestBody long id){
+        APIResponse res = new APIResponse();
+        try{
+            webDatabaseService.deleteClientVersion(id);
+            res.setMessage("删除版本成功");
+            res.setCode(1);
+            res.setData("删除版本成功");
+        } catch(Exception e){
+            res.setMessage("删除版本失败");
+            res.setCode(-1);
+            res.setData("删除版本失败");
+            log.error("WebDatabaseServiceImpl::addNewClientVersion Failure:删除版本失败");
         }
         return res;
     }

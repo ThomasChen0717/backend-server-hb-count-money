@@ -40,8 +40,8 @@ public class WebRouterServiceImpl implements IWebRouterService {
             if (roleList.contains(role)) {
                 roleList.remove(role);
                 String res = convertListToString(roleList);
-                WebRouterDTO dto = webRouterDTOMap.get(key).setRoles(res);
-                webRouterRepository.update(dto);
+                WebRouterDTO webUserDTO = webRouterDTOMap.get(key).setRoles(res);
+                webRouterRepository.update(webUserDTO);
             }
         }
     }
@@ -58,8 +58,8 @@ public class WebRouterServiceImpl implements IWebRouterService {
         if(!allRoleList.contains(roleDTO.getName())) {
             allRoleList.add(roleDTO.getName());
             String res = convertListToString(allRoleList);
-            WebRouterDTO dto = webRouterDTOMap.get("AllRoles").setRoles(res);
-            webRouterRepository.update(dto);
+            WebRouterDTO webUserDTO = webRouterDTOMap.get("AllRoles").setRoles(res);
+            webRouterRepository.update(webUserDTO);
         }
         else{
             return false;
@@ -72,8 +72,8 @@ public class WebRouterServiceImpl implements IWebRouterService {
                 List<String> roleList = convertRoles(roles);
                 roleList.add(roleDTO.getName());
                 String res = convertListToString(roleList);
-                WebRouterDTO dto = webRouterDTOMap.get(routeName).setRoles(res);
-                webRouterRepository.update(dto);
+                WebRouterDTO webUserDTO = webRouterDTOMap.get(routeName).setRoles(res);
+                webRouterRepository.update(webUserDTO);
             }
         }
         return true;
@@ -98,8 +98,8 @@ public class WebRouterServiceImpl implements IWebRouterService {
                     if (!roleList.contains(roleDTO.getName())) {
                         roleList.add(roleDTO.getName());
                         String res = convertListToString(roleList);
-                        WebRouterDTO dto = webRouterDTOMap.get(key).setRoles(res);
-                        webRouterRepository.update(dto);
+                        WebRouterDTO webUserDTO = webRouterDTOMap.get(key).setRoles(res);
+                        webRouterRepository.update(webUserDTO);
                     }
                     break;
                 }
@@ -110,8 +110,8 @@ public class WebRouterServiceImpl implements IWebRouterService {
                 if(roleList.contains(roleDTO.getName())) {
                     roleList.remove(roleDTO.getName());
                     String res = convertListToString(roleList);
-                    WebRouterDTO dto = webRouterDTOMap.get(key).setRoles(res);
-                    webRouterRepository.update(dto);
+                    WebRouterDTO webUserDTO = webRouterDTOMap.get(key).setRoles(res);
+                    webRouterRepository.update(webUserDTO);
                 }
             }
         }

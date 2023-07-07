@@ -29,7 +29,7 @@ public class WebLoginController {
      * 登出
      *
      * @Param String token 在线用户的token
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/logout")
@@ -57,7 +57,7 @@ public class WebLoginController {
      * 获取用户信息
      *
      * @Param String token 在线用户的token
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @GetMapping("/info")
@@ -91,7 +91,7 @@ public class WebLoginController {
      * 登录
      *
      * @Param WebUserDTO user 用于检查用户的账号密码
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/login")
@@ -126,7 +126,7 @@ public class WebLoginController {
      * 注册
      *
      * @Param WebUserDTO user 注册时的用户信息
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/register")

@@ -24,7 +24,7 @@ public class WebInfoController {
      * 将前端传来的新密码替换数据库中的老密码
      *
      * @Param WebUserDTO dto
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/changePassword")
@@ -48,7 +48,7 @@ public class WebInfoController {
      * 将前端传来的新昵称替换数据库中的老昵称
      *
      * @Param WebUserDTO dto
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/changeName")
@@ -72,7 +72,7 @@ public class WebInfoController {
      * 将前端传来的新头像替换数据库中的老头像
      *
      * @Param WebUserDTO dto
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/changeAvatar")

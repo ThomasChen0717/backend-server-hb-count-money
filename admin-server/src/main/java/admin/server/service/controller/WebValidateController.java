@@ -24,7 +24,7 @@ public class WebValidateController {
      * 检查用户名是否已存在
      *
      * @Param String Username 需要检查的用户名
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/checkUsername")
@@ -47,7 +47,7 @@ public class WebValidateController {
      * 检查用户名是否已存在
      *
      * @Param String DisplayName 需要检查的用户名
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/checkDisplayName")
@@ -70,7 +70,7 @@ public class WebValidateController {
      * 检查老密码是否匹配
      *
      * @Param WebUserDTO dto 需要检查的密码
-     * @Retyrn APIResponse 传回前端的回复
+     * @Return APIResponse 传回前端的回复
      *
      */
     @PostMapping("/checkOldPassword")
