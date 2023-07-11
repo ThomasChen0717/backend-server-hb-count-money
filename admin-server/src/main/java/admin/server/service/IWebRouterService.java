@@ -12,5 +12,5 @@ public interface IWebRouterService {
 
     boolean addRole(RoleDTO roleDTO);
 
-    void updateRole(RoleDTO roleDTO);
+    void updateRole(RoleDTO roleDTO, String oldName);
 }

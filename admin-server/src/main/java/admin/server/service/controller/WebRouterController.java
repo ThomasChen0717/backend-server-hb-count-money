@@ -4,12 +4,10 @@ import admin.server.dto.WebRouterDTO;
 import admin.server.entity.APIResponse;
 import admin.server.dto.RoleDTO;
 import admin.server.service.IWebRouterService;
+import com.alibaba.nacos.shaded.com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -113,10 +111,11 @@ public class WebRouterController {
      *
      */
     @PostMapping("/updateRole")
-    public APIResponse updateRole(@RequestBody RoleDTO roleDTO){
+    public APIResponse updateRole(@RequestPart("body") String roleJson, @RequestParam("oldName") String oldName){
         APIResponse res = new APIResponse();
+        RoleDTO role = new Gson().fromJson(roleJson, RoleDTO.class);
         try{
-            this.webRouterService.updateRole(roleDTO);
+            this.webRouterService.updateRole(role, oldName);
             res.setCode(1);
             res.setData("更新成功!");
             res.setMessage("更新成功!");
