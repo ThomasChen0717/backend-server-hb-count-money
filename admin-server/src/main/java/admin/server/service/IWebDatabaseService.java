@@ -1,8 +1,8 @@
 package admin.server.service;
 
 import admin.server.dto.ClientVersionDTO;
+import admin.server.entity.UserActivityCount;
 import admin.server.dto.UserCountDTO;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,4 +20,7 @@ public interface IWebDatabaseService {
     void updateClientVersion(ClientVersionDTO clientVersionDTO);
 
     void deleteClientVersion(long id);
+    UserActivityCount getUserActivity(List<LocalDateTime> dateRange);
+
+    List<List<UserActivityCount>> getUserActivityTable(List<LocalDateTime> dateRange);
 }

@@ -87,7 +87,7 @@ public class WebInfoController {
             res.setCode(-1);
             res.setMessage("头像更新失败");
             res.setData("头像更新失败");
-            log.error("WebInfoServiceImpl::changePassword Failure:头像更新失败");
+            log.error("WebInfoServiceImpl::changeAvatar Failure:头像更新失败");
         }
         return res;
     }

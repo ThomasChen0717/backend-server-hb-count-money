@@ -48,6 +48,7 @@ public class WebLoginController {
             res.setMessage("登出失败");
             res.setData("登出失败");
             res.setCode(-1);
+            log.error("WebLoginServiceImpl::logout Failure:登出失败");
         }
         return res;
     }

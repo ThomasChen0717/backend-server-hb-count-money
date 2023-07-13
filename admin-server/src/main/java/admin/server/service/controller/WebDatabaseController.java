@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import admin.server.service.IWebDatabaseService;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 /**
  * 后端接口RestController: 数据库操作
@@ -66,7 +69,7 @@ public class WebDatabaseController {
             res.setMessage("获取表格失败");
             res.setCode(-1);
             res.setData("获取表格失败");
-            log.error("WebDatabaseServiceImpl::getUserCount Failure:获取图失败");
+            log.error("WebDatabaseServiceImpl::getUserCountGraph Failure:获取图失败");
         }
         return res;
     }
@@ -89,7 +92,7 @@ public class WebDatabaseController {
             res.setMessage("获取版本信息失败");
             res.setCode(-1);
             res.setData("获取版本信息失败");
-            log.error("WebDatabaseServiceImpl::getUserCount Failure:获取版本信息失败");
+            log.error("WebDatabaseServiceImpl::getClientVersion Failure:获取版本信息失败");
         }
         return res;
     }
@@ -137,7 +140,7 @@ public class WebDatabaseController {
             res.setMessage("修改版本失败");
             res.setCode(-1);
             res.setData("修改版本失败");
-            log.error("WebDatabaseServiceImpl::addNewClientVersion Failure:修改版本失败");
+            log.error("WebDatabaseServiceImpl::updateClientVersion Failure:修改版本失败");
         }
         return res;
     }
@@ -161,8 +164,41 @@ public class WebDatabaseController {
             res.setMessage("删除版本失败");
             res.setCode(-1);
             res.setData("删除版本失败");
-            log.error("WebDatabaseServiceImpl::addNewClientVersion Failure:删除版本失败");
+            log.error("WebDatabaseServiceImpl::deleteClientVersion Failure:删除版本失败");
         }
         return res;
     }
+
+    @PostMapping("getUserActivity")
+    public APIResponse getUserActivity(@RequestBody List<LocalDateTime> dateRange){
+        APIResponse res = new APIResponse();
+        try{
+            res.setMessage("获取用户活跃成功");
+            res.setCode(1);
+            res.setData(webDatabaseService.getUserActivity(dateRange));
+        } catch(Exception e){
+            res.setMessage("获取用户活跃失败");
+            res.setCode(-1);
+            res.setData("获取用户活跃失败");
+            log.error("WebDatabaseServiceImpl::getUserActivity Failure:获取用户活跃失败");
+        }
+        return res;
+    }
+
+    @PostMapping("getUserActivityTable")
+    public APIResponse getUserActivityTable(@RequestBody List<LocalDateTime> dateRange){
+        APIResponse res = new APIResponse();
+        try{
+            res.setMessage("获取用户活跃表成功");
+            res.setCode(1);
+            res.setData(webDatabaseService.getUserActivityTable(dateRange));
+        } catch(Exception e){
+            res.setMessage("获取用户活跃表失败");
+            res.setCode(-1);
+            res.setData("获取用户活跃表失败");
+            log.error("WebDatabaseServiceImpl::getUserActivityTable Failure:获取用户活跃表失败");
+        }
+        return res;
+    }
+
 }
