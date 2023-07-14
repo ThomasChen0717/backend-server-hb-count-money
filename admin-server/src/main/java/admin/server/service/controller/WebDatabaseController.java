@@ -169,6 +169,13 @@ public class WebDatabaseController {
         return res;
     }
 
+    /**
+     * 获取一个时间段内的统计信息
+     *
+     * @Param List<LocalDateTime> dateRange 时间段
+     * @Return APIResponse 传回前端的回复
+     *
+     */
     @PostMapping("getUserActivity")
     public APIResponse getUserActivity(@RequestBody List<LocalDateTime> dateRange){
         APIResponse res = new APIResponse();
@@ -185,6 +192,14 @@ public class WebDatabaseController {
         return res;
     }
 
+    /**
+     * 获取一个时间段内的分成每天每小时的统计信息
+     *
+     * @Param List<LocalDateTime> dateRange 时间段
+     * @Return APIResponse 传回前端的回复
+     *
+     *
+     */
     @PostMapping("getUserActivityTable")
     public APIResponse getUserActivityTable(@RequestBody List<LocalDateTime> dateRange){
         APIResponse res = new APIResponse();

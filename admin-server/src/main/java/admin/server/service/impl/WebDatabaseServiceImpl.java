@@ -25,7 +25,8 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
     @Autowired
     private ClientVersionRepository clientVersionRepository;
 
-    @Autowired UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<UserCountDTO> getUserCount(LocalDateTime date, String hour){
@@ -103,6 +104,9 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
             UserDTO userDTO = userDTOMap.get(key);
             LocalDateTime createTime = userDTO.getCreateTime();
             LocalDateTime updateTime = userDTO.getUpdateTime();
+            if(createTime.compareTo(dateRange.get(1)) > 0){
+                break;
+            }
             if(createTime.compareTo(dateRange.get(0)) >= 0 && createTime.compareTo(dateRange.get(1)) <= 0) {
                 newUserCount++;
             }
@@ -133,28 +137,35 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
 
         for (int day = 0; day < totalDays; day++) {
             List<UserActivityCount> activityPerHour = new ArrayList<>();
-
+            int activeUserCountDay = 0;
+            int newUserCountDay = 0;
+            int totalUserCountDay = 0;
+            UserActivityCount total = new UserActivityCount();
             for (int hour = 0; hour < 24; hour++) {
                 LocalDateTime currentDateTime = startDate.plusDays(day).plusHours(hour);
+                LocalDateTime nextHourStart = currentDateTime.plusHours(1);
                 String time = DateTimeFormatter.ofPattern("HH:mm:ss").format(currentDateTime);
                 UserActivityCount res = new UserActivityCount();
                 int activeUserCount = 0;
                 int newUserCount = 0;
                 int totalUserCount = 0;
 
-                for (Long key : userDTOMap.keySet()) {
-                    UserDTO userDTO = userDTOMap.get(key);
+                for (UserDTO userDTO : userDTOMap.values()) {
                     LocalDateTime createTime = userDTO.getCreateTime();
                     LocalDateTime updateTime = userDTO.getUpdateTime();
 
-                    if (createTime.compareTo(currentDateTime) >= 0 && createTime.compareTo(currentDateTime.plusHours(1)) < 0) {
+                    if (createTime.compareTo(nextHourStart) >= 0) {
+                        break;
+                    }
+
+                    if (createTime.compareTo(currentDateTime) >= 0 && createTime.compareTo(nextHourStart) < 0) {
                         newUserCount++;
                     }
 
-                    if (updateTime.compareTo(currentDateTime) >= 0 && updateTime.compareTo(currentDateTime.plusHours(1)) < 0) {
+                    if (updateTime.compareTo(currentDateTime) >= 0 && updateTime.compareTo(nextHourStart) < 0) {
                         activeUserCount++;
                     }
-                    if(createTime.compareTo(currentDateTime.plusHours(1)) < 0) {
+                    if(createTime.compareTo(nextHourStart) < 0) {
                         totalUserCount++;
                     }
                 }
@@ -163,10 +174,16 @@ public class WebDatabaseServiceImpl implements IWebDatabaseService {
                 res.setNewUserCount(newUserCount);
                 res.setTotalUserCount(totalUserCount);
                 res.setTime(time);
-
+                activeUserCountDay += activeUserCount;
+                newUserCountDay += newUserCount;
                 activityPerHour.add(res);
             }
-
+            totalUserCountDay = activityPerHour.get(23).getTotalUserCount();
+            total.setActiveUserCount(activeUserCountDay);
+            total.setNewUserCount(newUserCountDay);
+            total.setTotalUserCount(totalUserCountDay);
+            total.setTime("总计");
+            activityPerHour.add(total);
             activityByHour.add(activityPerHour);
         }
 
